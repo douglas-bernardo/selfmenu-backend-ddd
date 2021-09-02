@@ -2,11 +2,12 @@ import {
     Column,
     CreateDateColumn,
     Entity,
-    OneToMany,
+    JoinColumn,
+    ManyToOne,
     PrimaryGeneratedColumn,
     UpdateDateColumn,
 } from 'typeorm';
-import Account from '@modules/accounts/infra/typeorm/entities/Account';
+import Plan from './Plan';
 
 @Entity('user')
 class User {
@@ -20,19 +21,20 @@ class User {
     password: string;
 
     @Column()
-    first_name: string;
-
-    @Column()
-    last_name: string;
-
-    @Column()
-    avatar: string;
+    profile_name: string;
 
     @Column()
     active: boolean;
 
-    @OneToMany(() => Account, account => account.user)
-    accounts: Account[];
+    @ManyToOne(() => Plan, plan => plan.user)
+    @JoinColumn({ name: 'plan_id' })
+    plan: Plan;
+
+    @Column()
+    plan_id: number;
+
+    @Column()
+    avatar: string;
 
     @CreateDateColumn()
     created_at: Date;

@@ -1,23 +1,20 @@
+import FakePlanRepository from '@modules/users/repositories/fakes/FakePlanRepository';
 import AppError from '@shared/errors/AppError';
 import FakeHashProvider from '../providers/HashProvider/fakes/FakeHashProvider';
 import FakeUsersRepository from '../repositories/fakes/FakeUserRepository';
 import AuthenticateUserService from './AuthenticateUserService';
-import CreateUserService from './CreateUserService';
 
+let fakePlanRepository: FakePlanRepository;
 let fakeHashProvider: FakeHashProvider;
 let fakeUsersRepository: FakeUsersRepository;
-let createUserService: CreateUserService;
 let authenticateUsersService: AuthenticateUserService;
 
 describe('AuthenticateUser', () => {
     beforeEach(() => {
+        fakePlanRepository = new FakePlanRepository();
         fakeHashProvider = new FakeHashProvider();
         fakeUsersRepository = new FakeUsersRepository();
 
-        createUserService = new CreateUserService(
-            fakeUsersRepository,
-            fakeHashProvider,
-        );
         authenticateUsersService = new AuthenticateUserService(
             fakeUsersRepository,
             fakeHashProvider,
@@ -25,11 +22,16 @@ describe('AuthenticateUser', () => {
     });
 
     it('should be able to authenticate', async () => {
-        const user = await createUserService.execute({
-            first_name: 'John',
-            last_name: 'Doe',
+        const plan = await fakePlanRepository.create(
+            'Free',
+            'Selfmenu free plan',
+        );
+
+        const user = await fakeUsersRepository.create({
             email: 'johndoe@example.com',
             password: '123456',
+            profile_name: 'John',
+            plan_id: plan.id,
         });
 
         const response = await authenticateUsersService.execute({
@@ -51,11 +53,16 @@ describe('AuthenticateUser', () => {
     });
 
     it('should not be able to authenticate with wrong password', async () => {
-        await createUserService.execute({
-            first_name: 'John',
-            last_name: 'Doe',
+        const plan = await fakePlanRepository.create(
+            'Free',
+            'Selfmenu free plan',
+        );
+
+        await fakeUsersRepository.create({
             email: 'johndoe@example.com',
             password: '123456',
+            profile_name: 'John',
+            plan_id: plan.id,
         });
 
         await expect(

@@ -12,15 +12,34 @@ class RestaurantRepository implements IRestaurantRepository {
         this.ormRepository = getRepository(Restaurant);
     }
 
+    public async findById(
+        restaurant_id: string,
+        owner_id: string,
+    ): Promise<Restaurant | undefined> {
+        let restaurant: Restaurant | undefined;
+
+        if (owner_id) {
+            restaurant = await this.ormRepository.findOne({
+                where: {
+                    id: restaurant_id,
+                    owner_id,
+                },
+            });
+        } else {
+            restaurant = await this.ormRepository.findOne(restaurant_id);
+        }
+        return restaurant;
+    }
+
     public async findAll({
-        account_id,
+        owner_id,
     }: IFindAllRestaurantsDTO): Promise<Restaurant[]> {
         let restaurants: Restaurant[];
 
-        if (account_id) {
+        if (owner_id) {
             restaurants = await this.ormRepository.find({
                 where: {
-                    account_id,
+                    owner_id,
                 },
             });
         } else {

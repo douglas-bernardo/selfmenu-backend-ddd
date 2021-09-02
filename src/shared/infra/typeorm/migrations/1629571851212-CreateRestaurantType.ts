@@ -22,6 +22,46 @@ export default class CreateRestaurantType1629571851212
                 ],
             }),
         );
+
+        await queryRunner.query(
+            `INSERT INTO restaurant_type (name) VALUES ('Restaurante Típico')`,
+        );
+
+        await queryRunner.query(
+            `INSERT INTO restaurant_type (name) VALUES ('Restaurante Grill')`,
+        );
+
+        await queryRunner.query(
+            `INSERT INTO restaurant_type (name) VALUES ('Jantar Fino')`,
+        );
+
+        await queryRunner.query(
+            `INSERT INTO restaurant_type (name) VALUES ('Pub')`,
+        );
+
+        await queryRunner.query(
+            `INSERT INTO restaurant_type (name) VALUES ('Lanchonete')`,
+        );
+
+        await queryRunner.query(
+            `INSERT INTO restaurant_type (name) VALUES ('Pastelaria')`,
+        );
+
+        await queryRunner.query(
+            `INSERT INTO restaurant_type (name) VALUES ('Café ou Bistrô')`,
+        );
+
+        await queryRunner.query(
+            `INSERT INTO restaurant_type (name) VALUES ('Food Truck')`,
+        );
+
+        await queryRunner.query(
+            `INSERT INTO restaurant_type (name) VALUES ('Hamburgueria')`,
+        );
+
+        await queryRunner.query(
+            `INSERT INTO restaurant_type (name) VALUES ('Pizzaria')`,
+        );
     }
 
     public async down(queryRunner: QueryRunner): Promise<void> {

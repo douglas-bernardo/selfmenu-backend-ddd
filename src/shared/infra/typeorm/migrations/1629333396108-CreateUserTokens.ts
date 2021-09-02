@@ -13,13 +13,11 @@ export default class CreateUserTokens1629333396108
                         type: 'varchar',
                         isPrimary: true,
                         generationStrategy: 'uuid',
-                        // default: 'uuid_generate_v4()', // only postgres
                     },
                     {
                         name: 'token',
                         type: 'varchar',
                         generationStrategy: 'uuid',
-                        // default: 'uuid_generate_v4()', // only postgres
                     },
                     {
                         name: 'user_id',

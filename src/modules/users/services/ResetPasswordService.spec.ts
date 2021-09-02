@@ -1,3 +1,4 @@
+import FakePlanRepository from '@modules/users/repositories/fakes/FakePlanRepository';
 import AppError from '@shared/errors/AppError';
 import FakeHashProvider from '../providers/HashProvider/fakes/FakeHashProvider';
 import IHashProvider from '../providers/HashProvider/models/IHashProvider';
@@ -5,6 +6,7 @@ import FakeUsersRepository from '../repositories/fakes/FakeUserRepository';
 import FakeUserTokenRepository from '../repositories/fakes/FakeUserTokenRepository';
 import ResetPasswordService from './ResetPasswordService';
 
+let fakePlanRepository: FakePlanRepository;
 let fakeUsersRepository: FakeUsersRepository;
 let fakeUserTokenRepository: FakeUserTokenRepository;
 let fakeHashProvider: IHashProvider;
@@ -13,6 +15,7 @@ let resetPasswordService: ResetPasswordService;
 
 describe('SendForgotPasswordEmail', () => {
     beforeEach(() => {
+        fakePlanRepository = new FakePlanRepository();
         fakeUsersRepository = new FakeUsersRepository();
         fakeUserTokenRepository = new FakeUserTokenRepository();
         fakeHashProvider = new FakeHashProvider();
@@ -25,11 +28,16 @@ describe('SendForgotPasswordEmail', () => {
     });
 
     it('should be able to reset password user', async () => {
+        const plan = await fakePlanRepository.create(
+            'Free',
+            'Selfmenu free plan',
+        );
+
         const user = await fakeUsersRepository.create({
-            first_name: 'John',
-            last_name: 'Doe',
-            email: 'john@example.com',
+            email: 'johndoe@example.com',
             password: '123456',
+            profile_name: 'John',
+            plan_id: plan.id,
         });
 
         const { token } = await fakeUserTokenRepository.generate(user.id);
@@ -70,11 +78,16 @@ describe('SendForgotPasswordEmail', () => {
     });
 
     it('should not be able to reset password if passed more than 2 hours', async () => {
+        const plan = await fakePlanRepository.create(
+            'Free',
+            'Selfmenu free plan',
+        );
+
         const user = await fakeUsersRepository.create({
-            first_name: 'John',
-            last_name: 'Doe',
-            email: 'john@example.com',
+            email: 'johndoe@example.com',
             password: '123456',
+            profile_name: 'John',
+            plan_id: plan.id,
         });
 
         const { token } = await fakeUserTokenRepository.generate(user.id);

@@ -1,14 +1,17 @@
+import FakePlanRepository from '@modules/users/repositories/fakes/FakePlanRepository';
 import FakeStorageProvider from '@shared/container/providers/StorageProvider/fakes/FakeStorageProvider';
 import AppError from '@shared/errors/AppError';
 import FakeUsersRepository from '../repositories/fakes/FakeUserRepository';
 import UpdateUserAvatarService from './UpdateUserAvatarService';
 
+let fakePlanRepository: FakePlanRepository;
 let fakeUsersRepository: FakeUsersRepository;
 let fakeStorageProvider: FakeStorageProvider;
 let updateUserAvatar: UpdateUserAvatarService;
 
 describe('UpdateUserAvatar', () => {
     beforeEach(() => {
+        fakePlanRepository = new FakePlanRepository();
         fakeUsersRepository = new FakeUsersRepository();
         fakeStorageProvider = new FakeStorageProvider();
 
@@ -19,11 +22,16 @@ describe('UpdateUserAvatar', () => {
     });
 
     it('should be able to update avatar from a user', async () => {
+        const plan = await fakePlanRepository.create(
+            'Free',
+            'Selfmenu free plan',
+        );
+
         const user = await fakeUsersRepository.create({
-            first_name: 'John Doe',
-            last_name: 'Brow',
             email: 'john@example.com',
             password: '123456',
+            profile_name: 'John Doe',
+            plan_id: plan.id,
         });
 
         await updateUserAvatar.execute({
@@ -46,11 +54,16 @@ describe('UpdateUserAvatar', () => {
     it('should delete old avatar when updating new one', async () => {
         const deleteFile = jest.spyOn(fakeStorageProvider, 'deleteFile');
 
+        const plan = await fakePlanRepository.create(
+            'Free',
+            'Selfmenu free plan',
+        );
+
         const user = await fakeUsersRepository.create({
-            first_name: 'John Doe',
-            last_name: 'Brow',
             email: 'john@example.com',
             password: '123456',
+            profile_name: 'John Doe',
+            plan_id: plan.id,
         });
 
         await updateUserAvatar.execute({

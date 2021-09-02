@@ -6,8 +6,7 @@ import UpdateUserAvatarService from '@modules/users/services/UpdateUserAvatarSer
 interface IUser {
     email: string;
     password?: string;
-    first_name: string;
-    last_name: string;
+    profile_name: string;
 }
 
 export default class UserAvatarController {

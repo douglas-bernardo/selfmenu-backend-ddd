@@ -8,8 +8,9 @@ export default class RestaurantController {
         request: Request,
         response: Response,
     ): Promise<Response> {
-        const { name, cnpj, description, restaurant_type_id, account_id } =
-            request.body;
+        const user_id = request.user.id;
+
+        const { name, cnpj, description, restaurant_type_id } = request.body;
 
         const createRestaurantService = container.resolve(
             CreateRestaurantService,
@@ -20,7 +21,7 @@ export default class RestaurantController {
             cnpj,
             description,
             restaurant_type_id,
-            account_id,
+            user_id,
         });
 
         return response.json(restaurant);

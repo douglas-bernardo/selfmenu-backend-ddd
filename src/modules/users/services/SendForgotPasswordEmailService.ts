@@ -41,14 +41,14 @@ class SendForgotPasswordEmailService {
 
         await this.mailProvider.sendMail({
             to: {
-                name: user.first_name,
+                name: user.profile_name,
                 email: user.email,
             },
             subject: '[SELFMENU] Recuperação de Senha',
             templateData: {
                 file: forgotPasswordTemplate,
                 variables: {
-                    name: user.first_name,
+                    name: user.profile_name,
                     link: `http://localhost:3000/reset_password?token=${token}`,
                 },
             },

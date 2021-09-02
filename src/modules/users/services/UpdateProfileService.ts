@@ -7,8 +7,7 @@ import IHashProvider from '../providers/HashProvider/models/IHashProvider';
 
 interface IRequest {
     user_id: string;
-    first_name: string;
-    last_name: string;
+    profile_name: string;
     email: string;
     old_password?: string;
     password?: string;
@@ -23,8 +22,7 @@ class UpdateProfileService {
 
     public async execute({
         user_id,
-        first_name,
-        last_name,
+        profile_name,
         email,
         old_password,
         password,
@@ -44,8 +42,7 @@ class UpdateProfileService {
         }
 
         const userEdited = Object.assign(user, {
-            first_name,
-            last_name,
+            profile_name,
             email,
         });
 

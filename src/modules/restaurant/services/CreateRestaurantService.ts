@@ -1,8 +1,8 @@
 import { injectable, inject } from 'tsyringe';
 
 import AppError from '@shared/errors/AppError';
-import IAccountRepository from '@modules/accounts/repositories/IAccountRepository';
 import slugify from '@shared/utils/Helpers';
+import IUsersRepository from '@modules/users/repositories/IUsersRepository';
 import IRestaurantRepository from '../repositories/IRestaurantRepository';
 import Restaurant from '../infra/typeorm/entities/Restaurant';
 
@@ -11,7 +11,7 @@ interface IRequest {
     cnpj: string;
     description: string;
     restaurant_type_id: number;
-    account_id: string;
+    user_id: string;
 }
 
 @injectable()
@@ -20,8 +20,8 @@ class CreateRestaurantService {
         @inject('RestaurantRepository')
         private restaurantRepository: IRestaurantRepository,
 
-        @inject('AccountRepository')
-        private accountRepository: IAccountRepository,
+        @inject('UsersRepository')
+        private usersRepository: IUsersRepository,
     ) {}
 
     public async execute({
@@ -29,25 +29,25 @@ class CreateRestaurantService {
         cnpj,
         description,
         restaurant_type_id,
-        account_id,
+        user_id,
     }: IRequest): Promise<Restaurant> {
-        const account = await this.accountRepository.findById(account_id);
+        const user = await this.usersRepository.findById(user_id);
 
-        if (!account) {
-            throw new AppError('Account not found');
+        if (!user) {
+            throw new AppError('User not found');
         }
 
-        if (!account.active) {
-            throw new AppError('Associate account inactive. Not allowed.');
+        if (!user.active) {
+            throw new AppError('Inactive User. Not allowed.');
         }
 
-        if (account.plan.name === 'Free') {
+        if (user.plan.name === 'Free') {
             const hasRestaurantCreated =
-                await this.restaurantRepository.findAll({ account_id });
+                await this.restaurantRepository.findAll({ owner_id: user.id });
 
             if (hasRestaurantCreated.length > 0) {
                 throw new AppError(
-                    'Only Premium accounts can create more than restaurant.',
+                    'Only Premium users can create more than one restaurant by account.',
                 );
             }
         }
@@ -57,7 +57,7 @@ class CreateRestaurantService {
             cnpj,
             description,
             restaurant_type_id,
-            account_id,
+            owner_id: user.id,
             subdomain: slugify(name),
         });
 

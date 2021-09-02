@@ -7,8 +7,7 @@ import CreateUserService from '@modules/users/services/CreateUserService';
 interface IUser {
     email: string;
     password?: string;
-    first_name: string;
-    last_name: string;
+    profile_name: string;
 }
 
 export default class UsersController {
@@ -25,15 +24,14 @@ export default class UsersController {
         request: Request,
         response: Response,
     ): Promise<Response> {
-        const { email, password, first_name, last_name } = request.body;
+        const { email, password, profile_name } = request.body;
 
         const createUserService = container.resolve(CreateUserService);
 
         const user: IUser = await createUserService.execute({
             email,
             password,
-            first_name,
-            last_name,
+            profile_name,
         });
 
         delete user.password;

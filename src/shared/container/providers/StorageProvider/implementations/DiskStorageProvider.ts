@@ -4,6 +4,10 @@ import uploadConfig from '@config/upload';
 
 import IStorageProvider from '../models/IStorageProvider';
 
+interface IImage {
+    url: string;
+}
+
 class DiskStorageProvider implements IStorageProvider {
     public async saveFile(file: string): Promise<string> {
         await fs.promises.rename(
@@ -22,6 +26,28 @@ class DiskStorageProvider implements IStorageProvider {
             return;
         }
         await fs.promises.unlink(filePath);
+    }
+
+    public async saveFiles(files: IImage[]): Promise<void> {
+        files.forEach(file => {
+            fs.promises.rename(
+                path.resolve(uploadConfig.tmpFolder, file.url),
+                path.resolve(uploadConfig.uploadsFolder, file.url),
+            );
+        });
+    }
+
+    public async deleteFiles(files: IImage[]): Promise<void> {
+        files.forEach(file => {
+            const filePath = path.resolve(uploadConfig.uploadsFolder, file.url);
+
+            try {
+                fs.promises.stat(filePath);
+            } catch {
+                return;
+            }
+            fs.promises.unlink(filePath);
+        });
     }
 }
 

@@ -8,7 +8,7 @@ import {
     UpdateDateColumn,
 } from 'typeorm';
 
-import Account from '@modules/accounts/infra/typeorm/entities/Account';
+import User from '@modules/users/infra/typeorm/entities/User';
 
 @Entity('restaurant')
 class Restaurant {
@@ -25,11 +25,11 @@ class Restaurant {
     cnpj: string;
 
     @Column()
-    account_id: string;
+    owner_id: string;
 
-    @ManyToOne(() => Account)
-    @JoinColumn({ name: 'account_id' })
-    account: Account;
+    @ManyToOne(() => User)
+    @JoinColumn({ name: 'owner_id' })
+    owner: User;
 
     @Column()
     active: boolean;

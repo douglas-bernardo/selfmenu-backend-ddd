@@ -8,14 +8,24 @@ import IRestaurantRepository from '../IRestaurantRepository';
 class FakeRestaurantRepository implements IRestaurantRepository {
     private restaurants: Restaurant[] = [];
 
+    public async findById(
+        restaurant_id: string,
+    ): Promise<Restaurant | undefined> {
+        const findRestaurant = this.restaurants.find(
+            restaurant => restaurant.id === restaurant_id,
+        );
+
+        return findRestaurant;
+    }
+
     public async findAll({
-        account_id,
+        owner_id,
     }: IFindAllRestaurantsDTO): Promise<Restaurant[]> {
         let { restaurants } = this;
 
-        if (account_id) {
+        if (owner_id) {
             restaurants = this.restaurants.filter(
-                restaurant => restaurant.account_id === account_id,
+                restaurant => restaurant.owner_id === owner_id,
             );
         }
 
@@ -25,9 +35,17 @@ class FakeRestaurantRepository implements IRestaurantRepository {
     public async create(data: ICreateRestaurantDTO): Promise<Restaurant> {
         const restaurant = new Restaurant();
 
-        Object.assign(restaurant, { id: uuid() }, data);
-
+        Object.assign(restaurant, { id: uuid(), active: true }, data);
         this.restaurants.push(restaurant);
+        return restaurant;
+    }
+
+    public async save(restaurant: Restaurant): Promise<Restaurant> {
+        const findIndex = this.restaurants.findIndex(
+            findRestaurant => findRestaurant.id === restaurant.id,
+        );
+
+        this.restaurants[findIndex] = restaurant;
         return restaurant;
     }
 }

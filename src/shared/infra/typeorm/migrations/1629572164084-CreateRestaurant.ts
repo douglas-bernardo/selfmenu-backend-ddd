@@ -27,7 +27,7 @@ export default class CreateRestaurant1629572164084
                         type: 'varchar',
                     },
                     {
-                        name: 'account_id',
+                        name: 'owner_id',
                         type: 'varchar',
                     },
                     {
@@ -56,9 +56,9 @@ export default class CreateRestaurant1629572164084
                 ],
                 foreignKeys: [
                     {
-                        name: 'fk_restaurant_account',
-                        columnNames: ['account_id'],
-                        referencedTableName: 'account',
+                        name: 'fk_restaurant_user',
+                        columnNames: ['owner_id'],
+                        referencedTableName: 'user',
                         referencedColumnNames: ['id'],
                     },
                     {

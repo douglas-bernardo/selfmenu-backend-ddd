@@ -11,7 +11,6 @@ export default class CreateUsers1628465810448 implements MigrationInterface {
                         type: 'varchar',
                         isPrimary: true,
                         generationStrategy: 'uuid',
-                        // default: 'uuid_generate_v4()',
                     },
                     {
                         name: 'email',
@@ -23,17 +22,22 @@ export default class CreateUsers1628465810448 implements MigrationInterface {
                         type: 'varchar',
                     },
                     {
-                        name: 'first_name',
-                        type: 'varchar',
-                    },
-                    {
-                        name: 'last_name',
+                        name: 'profile_name',
                         type: 'varchar',
                     },
                     {
                         name: 'active',
                         type: 'boolean',
                         default: true,
+                    },
+                    {
+                        name: 'plan_id',
+                        type: 'int',
+                    },
+                    {
+                        name: 'avatar',
+                        type: 'varchar',
+                        isNullable: true,
                     },
                     {
                         name: 'created_at',
@@ -44,6 +48,14 @@ export default class CreateUsers1628465810448 implements MigrationInterface {
                         name: 'updated_at',
                         type: 'timestamp',
                         default: 'now()',
+                    },
+                ],
+                foreignKeys: [
+                    {
+                        name: 'fk_user_plan',
+                        columnNames: ['plan_id'],
+                        referencedTableName: 'plan',
+                        referencedColumnNames: ['id'],
                     },
                 ],
             }),

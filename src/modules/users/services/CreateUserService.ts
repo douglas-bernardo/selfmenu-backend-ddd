@@ -8,8 +8,7 @@ import IHashProvider from '../providers/HashProvider/models/IHashProvider';
 interface IRequest {
     email: string;
     password: string;
-    first_name: string;
-    last_name: string;
+    profile_name: string;
 }
 
 @injectable()
@@ -21,9 +20,8 @@ class CreateUserService {
 
     public async execute({
         email,
-        first_name,
-        last_name,
         password,
+        profile_name,
     }: IRequest): Promise<User> {
         const userExists = await this.usersRepository.findByEmail(email);
 
@@ -35,9 +33,9 @@ class CreateUserService {
 
         const user = await this.usersRepository.create({
             email,
-            first_name,
-            last_name,
             password: hashedPassword,
+            profile_name,
+            plan_id: 1, // by default user is created with a free plan - improve this later
         });
 
         return user;

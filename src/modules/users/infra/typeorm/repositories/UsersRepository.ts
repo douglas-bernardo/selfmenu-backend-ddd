@@ -20,7 +20,7 @@ class UsersRepository implements IUsersRepository {
             where: {
                 id,
             },
-            relations: ['accounts'],
+            relations: ['plan'],
         });
 
         return user;
@@ -31,6 +31,7 @@ class UsersRepository implements IUsersRepository {
             where: {
                 email,
             },
+            relations: ['plan'],
         });
 
         return user;

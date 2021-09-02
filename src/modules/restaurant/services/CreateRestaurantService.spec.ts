@@ -1,80 +1,78 @@
 import AppError from '@shared/errors/AppError';
-import FakeAccountRepository from '@modules/accounts/repositories/fakes/FakeAccountRepository';
-import FakePlanRepository from '@modules/plans/repositories/fakes/FakePlanRepository';
+import FakePlanRepository from '@modules/users/repositories/fakes/FakePlanRepository';
 import FakeUsersRepository from '@modules/users/repositories/fakes/FakeUserRepository';
 import FakeRestaurantRepository from '../repositories/fakes/FakeRestaurantRepository';
 import CreateRestaurantService from './CreateRestaurantService';
 
 let fakeUsersRepository: FakeUsersRepository;
 let fakePlanRepository: FakePlanRepository;
-let fakeAccountRepository: FakeAccountRepository;
 let fakeRestaurantRepository: FakeRestaurantRepository;
 let createRestaurantService: CreateRestaurantService;
 
 describe('CreateRestaurant', () => {
     beforeEach(() => {
         fakeUsersRepository = new FakeUsersRepository();
-        fakeAccountRepository = new FakeAccountRepository();
         fakePlanRepository = new FakePlanRepository();
         fakeRestaurantRepository = new FakeRestaurantRepository();
 
         createRestaurantService = new CreateRestaurantService(
             fakeRestaurantRepository,
-            fakeAccountRepository,
+            fakeUsersRepository,
         );
     });
 
     it('should be able to create a new restaurant associated with his account', async () => {
-        const user = await fakeUsersRepository.create({
-            first_name: 'John',
-            last_name: 'Doe',
-            email: 'johndoe@gmail.com',
-            password: '123123',
-        });
-
         const plan = await fakePlanRepository.create(
             'Free',
             'Selfmenu free plan',
         );
 
-        const account = await fakeAccountRepository.create({
-            user_id: user.id,
+        const user = await fakeUsersRepository.create({
+            email: 'john@example.com',
+            password: '123456',
+            profile_name: 'John Doe',
             plan_id: plan.id,
         });
-        account.plan = plan;
-        await fakeAccountRepository.save(account);
+        user.plan = plan;
+        await fakeUsersRepository.save(user);
 
         const restaurant = await createRestaurantService.execute({
             cnpj: '989865986598',
             name: "Doe's Dinner",
             description: 'A new restaurant',
             restaurant_type_id: 1,
-            account_id: account.id,
+            user_id: user.id,
         });
 
         expect(restaurant).toHaveProperty('id');
     });
 
-    it('should not be able to create a restaurant to inactive accounts', async () => {
-        const user = await fakeUsersRepository.create({
-            first_name: 'John',
-            last_name: 'Doe',
-            email: 'johndoe@gmail.com',
-            password: '123123',
-        });
+    it('should not be able to create a menu to non-existing user', async () => {
+        await expect(
+            createRestaurantService.execute({
+                cnpj: '989865986598',
+                name: "Doe's Dinner",
+                description: 'A new restaurant',
+                restaurant_type_id: 1,
+                user_id: 'non-existing-user',
+            }),
+        ).rejects.toBeInstanceOf(AppError);
+    });
 
+    it('should not be able to create a restaurant to inactive user', async () => {
         const plan = await fakePlanRepository.create(
             'Free',
             'Selfmenu free plan',
         );
 
-        const account = await fakeAccountRepository.create({
-            user_id: user.id,
+        const user = await fakeUsersRepository.create({
+            email: 'john@example.com',
+            password: '123456',
+            profile_name: 'John Doe',
             plan_id: plan.id,
         });
-
-        account.active = false;
-        await fakeAccountRepository.save(account);
+        user.active = false;
+        await fakeUsersRepository.save(user);
 
         await expect(
             createRestaurantService.execute({
@@ -82,46 +80,41 @@ describe('CreateRestaurant', () => {
                 name: "Doe's Dinner",
                 description: 'A new restaurant',
                 restaurant_type_id: 1,
-                account_id: account.id,
+                user_id: user.id,
             }),
         ).rejects.toBeInstanceOf(AppError);
     });
 
-    it('should not be able to create more than one restaurant to free account', async () => {
-        const user = await fakeUsersRepository.create({
-            first_name: 'John',
-            last_name: 'Doe',
-            email: 'johndoe@gmail.com',
-            password: '123123',
-        });
-
+    it('should not be able to create more than one restaurant to free user account', async () => {
         const plan = await fakePlanRepository.create(
             'Free',
             'Selfmenu free plan',
         );
 
-        const account = await fakeAccountRepository.create({
-            user_id: user.id,
+        const user = await fakeUsersRepository.create({
+            email: 'john@example.com',
+            password: '123456',
+            profile_name: 'John Doe',
             plan_id: plan.id,
         });
-        account.plan = plan;
-        await fakeAccountRepository.save(account);
+        user.plan = plan;
+        await fakeUsersRepository.save(user);
 
         await createRestaurantService.execute({
             cnpj: '989865986598',
             name: "Doe's Dinner",
             description: 'A new restaurant',
             restaurant_type_id: 1,
-            account_id: account.id,
+            user_id: user.id,
         });
 
         await expect(
             createRestaurantService.execute({
                 cnpj: '7856985698569',
-                name: "Doe's Café",
+                name: "Doe's Café 2",
                 description: "A new john's café",
                 restaurant_type_id: 1,
-                account_id: account.id,
+                user_id: user.id,
             }),
         ).rejects.toBeInstanceOf(AppError);
     });
