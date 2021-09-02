@@ -46,7 +46,7 @@ class CreateWaiterService {
         });
 
         if (waiterExists) {
-            throw new AppError('Waiter already exists');
+            throw new AppError('Waiter already exists with this cpf');
         }
 
         const user = await this.usersRepository.findById(owner_id);
