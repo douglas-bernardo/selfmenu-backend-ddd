@@ -18,6 +18,8 @@ import IItemRepository from '@modules/item/repositories/IItemRepository';
 import ItemRepository from '@modules/item/infra/typeorm/repositories/ItemRepository';
 import WaiterRepository from '@modules/waiter/infra/typeorm/repositories/WaiterRepository';
 import IWaiterRepository from '@modules/waiter/repositories/IWaiterRepository';
+import ITableRepository from '@modules/table/repositories/ITableRepository';
+import TableRepository from '@modules/table/infra/typeorm/repositories/TableRepository';
 
 container.registerSingleton<IUsersRepository>(
     'UsersRepository',
@@ -43,4 +45,9 @@ container.registerSingleton<IItemRepository>('ItemRepository', ItemRepository);
 container.registerSingleton<IWaiterRepository>(
     'WaiterRepository',
     WaiterRepository,
+);
+
+container.registerSingleton<ITableRepository>(
+    'TableRepository',
+    TableRepository,
 );

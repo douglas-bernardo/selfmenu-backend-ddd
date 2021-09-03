@@ -9,6 +9,7 @@ import restaurantRouter from '@modules/restaurant/infra/http/routes/restaurant.r
 import menuRouter from '@modules/menu/infra/http/routes/menu.routes';
 import itemsRoutes from '@modules/item/infra/http/routes/item.routes';
 import waiterRouter from '@modules/waiter/infra/http/routes/waiter.routes';
+import tableRouter from '@modules/table/infra/http/routes/table.routes';
 
 const routes = Router();
 
@@ -21,5 +22,6 @@ routes.use('/restaurant', restaurantRouter);
 routes.use('/menu', menuRouter);
 routes.use('/item', itemsRoutes);
 routes.use('/waiter', waiterRouter);
+routes.use('/table', tableRouter);
 
 export default routes;
