@@ -3,17 +3,29 @@ import { v4 as uuid } from 'uuid';
 import ICreateRestaurantDTO from '@modules/restaurant/dtos/ICreateRestaurantDTO';
 import Restaurant from '@modules/restaurant/infra/typeorm/entities/Restaurant';
 import IFindAllRestaurantsDTO from '@modules/restaurant/dtos/IFindAllRestaurantsDTO';
+import IFindByIdRestaurantDTO from '@modules/restaurant/dtos/IFindByIdRestaurantDTO';
 import IRestaurantRepository from '../IRestaurantRepository';
 
 class FakeRestaurantRepository implements IRestaurantRepository {
     private restaurants: Restaurant[] = [];
 
-    public async findById(
-        restaurant_id: string,
-    ): Promise<Restaurant | undefined> {
-        const findRestaurant = this.restaurants.find(
-            restaurant => restaurant.id === restaurant_id,
-        );
+    public async findById({
+        restaurant_id,
+        owner_id,
+    }: IFindByIdRestaurantDTO): Promise<Restaurant | undefined> {
+        let findRestaurant: Restaurant | undefined;
+
+        if (owner_id) {
+            findRestaurant = this.restaurants.find(
+                restaurant =>
+                    restaurant.id === restaurant_id &&
+                    restaurant.owner_id === owner_id,
+            );
+        } else {
+            findRestaurant = this.restaurants.find(
+                restaurant => restaurant.id === restaurant_id,
+            );
+        }
 
         return findRestaurant;
     }

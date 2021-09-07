@@ -1,4 +1,5 @@
 import MenuItem from '@modules/menu/infra/typeorm/entities/MenuItem';
+import OrderItem from '@modules/order/infra/typeorm/entities/OrderItem';
 import User from '@modules/users/infra/typeorm/entities/User';
 import {
     Column,
@@ -50,6 +51,9 @@ class Item {
     })
     @JoinColumn({ name: 'item_id' })
     images: ItemPhoto[];
+
+    @OneToMany(() => OrderItem, order_items => order_items.item)
+    order_items: OrderItem[];
 
     @CreateDateColumn()
     created_at: Date;

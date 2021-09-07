@@ -40,6 +40,21 @@ class CreateWaiterService {
         owner_id,
         restaurant_id,
     }: IRequest): Promise<Waiter> {
+        const user = await this.usersRepository.findById(owner_id);
+
+        if (!user) {
+            throw new AppError('User account not found');
+        }
+
+        if (user.plan.name === 'Free') {
+            const hasRestaurantCreated =
+                await this.restaurantRepository.findAll({ owner_id: user.id });
+
+            if (hasRestaurantCreated.length > 0) {
+                throw new AppError('Only Premium users can register waiters.');
+            }
+        }
+
         const waiterExists = await this.waiterRepository.findByCPF({
             cpf,
             owner_id,
@@ -49,16 +64,10 @@ class CreateWaiterService {
             throw new AppError('Waiter already exists with this cpf');
         }
 
-        const user = await this.usersRepository.findById(owner_id);
-
-        if (!user) {
-            throw new AppError('User account not found');
-        }
-
-        const restaurant = await this.restaurantRepository.findById(
+        const restaurant = await this.restaurantRepository.findById({
             restaurant_id,
             owner_id,
-        );
+        });
 
         if (!restaurant) {
             throw new AppError('Restaurant not found');

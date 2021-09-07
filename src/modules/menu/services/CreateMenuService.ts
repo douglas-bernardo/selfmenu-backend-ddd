@@ -52,10 +52,22 @@ class CreateMenuService {
             throw new AppError('User account not found');
         }
 
-        const restaurant = await this.restaurantRepository.findById(
+        if (user.plan.name === 'Free') {
+            const hasMenuCreated = await this.menuRepository.findAll({
+                owner_id: user.id,
+            });
+
+            if (hasMenuCreated.length > 0) {
+                throw new AppError(
+                    'Only Premium users can register more than one menu by account.',
+                );
+            }
+        }
+
+        const restaurant = await this.restaurantRepository.findById({
             restaurant_id,
-            user_id,
-        );
+            owner_id: user_id,
+        });
 
         if (!restaurant) {
             throw new AppError('Restaurant not found');

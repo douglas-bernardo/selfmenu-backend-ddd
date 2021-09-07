@@ -37,7 +37,7 @@ class TableRepository implements ITableRepository {
         if (restaurant_id) {
             findTable = await this.ormRepository.findOne({
                 where: {
-                    table_id,
+                    id: table_id,
                     restaurant_id,
                 },
             });

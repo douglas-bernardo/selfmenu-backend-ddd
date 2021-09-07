@@ -15,6 +15,7 @@ export default class CreateOrder1630500909222 implements MigrationInterface {
                     {
                         name: 'token',
                         type: 'varchar',
+                        isNullable: true,
                     },
                     {
                         name: 'status_order_id',

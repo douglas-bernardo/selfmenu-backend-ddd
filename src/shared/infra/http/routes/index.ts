@@ -10,6 +10,7 @@ import menuRouter from '@modules/menu/infra/http/routes/menu.routes';
 import itemsRoutes from '@modules/item/infra/http/routes/item.routes';
 import waiterRouter from '@modules/waiter/infra/http/routes/waiter.routes';
 import tableRouter from '@modules/table/infra/http/routes/table.routes';
+import orderRouter from '@modules/order/infra/http/routes/order.routes';
 
 const routes = Router();
 
@@ -23,5 +24,6 @@ routes.use('/menu', menuRouter);
 routes.use('/item', itemsRoutes);
 routes.use('/waiter', waiterRouter);
 routes.use('/table', tableRouter);
+routes.use('/order', orderRouter);
 
 export default routes;

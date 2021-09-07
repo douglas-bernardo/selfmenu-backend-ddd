@@ -44,10 +44,10 @@ class CreateTableService {
             throw new AppError('User account not found');
         }
 
-        const restaurant = await this.restaurantRepository.findById(
+        const restaurant = await this.restaurantRepository.findById({
             restaurant_id,
             owner_id,
-        );
+        });
 
         if (!restaurant) {
             throw new AppError('Restaurant not found');

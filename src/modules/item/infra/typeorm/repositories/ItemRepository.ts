@@ -1,4 +1,5 @@
 import ICreateItemDTO from '@modules/item/dtos/ICreateItemDTO';
+import IUpdateItemsQuantityDTO from '@modules/item/dtos/IUpdateItemsQuantityDTO';
 import Item from '@modules/item/infra/typeorm/entities/Item';
 import IItemRepository from '@modules/item/repositories/IItemRepository';
 import { getRepository, In, Repository } from 'typeorm';
@@ -73,6 +74,12 @@ class ItemRepository implements IItemRepository {
 
     public async save(item: Item): Promise<Item> {
         return this.ormRepository.save(item);
+    }
+
+    public async updateQuantity(
+        items: IUpdateItemsQuantityDTO[],
+    ): Promise<Item[]> {
+        return this.ormRepository.save(items);
     }
 }
 

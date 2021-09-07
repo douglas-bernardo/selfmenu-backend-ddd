@@ -2,13 +2,20 @@ import { v4 as uuid } from 'uuid';
 
 import ICreateMenuDTO from '@modules/menu/dtos/ICreateMenuDTO';
 import Menu from '@modules/menu/infra/typeorm/entities/Menu';
+import IFindAllMenusDTO from '@modules/menu/dtos/IFindAllMenusDTO';
 import IMenuRepository from '../IMenuRepository';
 
 class FakeMenuRepository implements IMenuRepository {
     private menus: Menu[] = [];
 
-    public async findAll(owner_id?: string): Promise<Menu[]> {
-        return this.menus;
+    public async findAll({ owner_id }: IFindAllMenusDTO): Promise<Menu[]> {
+        let { menus } = this;
+
+        if (owner_id) {
+            menus = this.menus.filter(menu => menu.owner_id === owner_id);
+        }
+
+        return menus;
     }
 
     public async findByTitle(

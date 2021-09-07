@@ -4,6 +4,7 @@ import ICreateRestaurantDTO from '@modules/restaurant/dtos/ICreateRestaurantDTO'
 import Restaurant from '@modules/restaurant/infra/typeorm/entities/Restaurant';
 import IRestaurantRepository from '@modules/restaurant/repositories/IRestaurantRepository';
 import IFindAllRestaurantsDTO from '@modules/restaurant/dtos/IFindAllRestaurantsDTO';
+import IFindByIdRestaurantDTO from '@modules/restaurant/dtos/IFindByIdRestaurantDTO';
 
 class RestaurantRepository implements IRestaurantRepository {
     private ormRepository: Repository<Restaurant>;
@@ -12,10 +13,10 @@ class RestaurantRepository implements IRestaurantRepository {
         this.ormRepository = getRepository(Restaurant);
     }
 
-    public async findById(
-        restaurant_id: string,
-        owner_id: string,
-    ): Promise<Restaurant | undefined> {
+    public async findById({
+        restaurant_id,
+        owner_id,
+    }: IFindByIdRestaurantDTO): Promise<Restaurant | undefined> {
         let restaurant: Restaurant | undefined;
 
         if (owner_id) {

@@ -15,6 +15,7 @@ export default class CreateTable1630502293439 implements MigrationInterface {
                     {
                         name: 'token',
                         type: 'varchar',
+                        isNullable: true,
                     },
                     {
                         name: 'code',

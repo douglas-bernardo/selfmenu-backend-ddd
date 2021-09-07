@@ -42,6 +42,8 @@ describe('CreateMenu', () => {
             profile_name: 'John Doe',
             plan_id: plan.id,
         });
+        user.plan = plan;
+        await fakeUsersRepository.save(user);
 
         const restaurant = await fakeRestaurantRepository.create({
             cnpj: '989865986598',
@@ -88,6 +90,8 @@ describe('CreateMenu', () => {
             profile_name: 'John Doe',
             plan_id: plan.id,
         });
+        user.plan = plan;
+        await fakeUsersRepository.save(user);
 
         const item = await fakeItemRepository.create({
             name: 'Bolo de chocolate',
@@ -125,6 +129,8 @@ describe('CreateMenu', () => {
             profile_name: 'John Doe',
             plan_id: plan.id,
         });
+        user.plan = plan;
+        await fakeUsersRepository.save(user);
 
         const item = await fakeItemRepository.create({
             name: 'Bolo de chocolate',
@@ -162,6 +168,8 @@ describe('CreateMenu', () => {
             profile_name: 'John Doe',
             plan_id: plan.id,
         });
+        user.plan = plan;
+        await fakeUsersRepository.save(user);
 
         const restaurant = await fakeRestaurantRepository.create({
             cnpj: '989865986598',
@@ -211,6 +219,8 @@ describe('CreateMenu', () => {
             profile_name: 'John Doe',
             plan_id: plan.id,
         });
+        user.plan = plan;
+        await fakeUsersRepository.save(user);
 
         const restaurant = await fakeRestaurantRepository.create({
             cnpj: '989865986598',
@@ -269,6 +279,8 @@ describe('CreateMenu', () => {
             profile_name: 'John Doe',
             plan_id: plan.id,
         });
+        user.plan = plan;
+        await fakeUsersRepository.save(user);
 
         const restaurant = await fakeRestaurantRepository.create({
             cnpj: '989865986598',

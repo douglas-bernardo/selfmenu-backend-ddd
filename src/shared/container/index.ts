@@ -20,6 +20,8 @@ import WaiterRepository from '@modules/waiter/infra/typeorm/repositories/WaiterR
 import IWaiterRepository from '@modules/waiter/repositories/IWaiterRepository';
 import ITableRepository from '@modules/table/repositories/ITableRepository';
 import TableRepository from '@modules/table/infra/typeorm/repositories/TableRepository';
+import IOrderRepository from '@modules/order/repositories/IOrderRepository';
+import OrdersRepository from '@modules/order/infra/typeorm/repositories/OrderRepository';
 
 container.registerSingleton<IUsersRepository>(
     'UsersRepository',
@@ -50,4 +52,9 @@ container.registerSingleton<IWaiterRepository>(
 container.registerSingleton<ITableRepository>(
     'TableRepository',
     TableRepository,
+);
+
+container.registerSingleton<IOrderRepository>(
+    'OrderRepository',
+    OrdersRepository,
 );

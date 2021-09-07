@@ -1,4 +1,5 @@
 import ICreateItemDTO from '../dtos/ICreateItemDTO';
+import IUpdateItemsQuantityDTO from '../dtos/IUpdateItemsQuantityDTO';
 import Item from '../infra/typeorm/entities/Item';
 
 interface IFindItems {
@@ -12,4 +13,5 @@ export default interface IItemRepository {
     findAllById(items_ids: IFindItems[], owner_id?: string): Promise<Item[]>;
     create(data: ICreateItemDTO): Promise<Item>;
     save(item: Item): Promise<Item>;
+    updateQuantity(items: IUpdateItemsQuantityDTO[]): Promise<Item[]>;
 }

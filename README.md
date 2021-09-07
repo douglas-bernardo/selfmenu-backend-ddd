@@ -90,3 +90,22 @@
 - O garçon deve ser associado a um restaurante válido válido;
 - Garçons cadastrados devem possuir usuário e senha para acesso ao sistema e
 posterior acompanhamento de pedidos.
+
+
+# Criação de Pedido
+
+**RF**
+- Usuário (cliente final) deve visualizar itens e menus de acordo o estabelecimento (owner).
+- Usuário (cliente final) deve poder filtrar itens por categoria.
+- Usuário (cliente final) deve poder criar um pedido
+
+
+**RNF**
+
+**RN**
+- Somente estabelecimentos pertencentes a contas Premium (owner) podem registrar pedidos;
+- Pedidos devem ser associados a um estabelecimento válido;
+- Pedidos devem ser associados a uma mesa válida;
+- Pedidos devem ser associados a um garçom válido;
+- Pedidos precisam conter items válidos;
+- Ao realizar um pedido a quantidade do pedido cadastrado deve ser atualizada;

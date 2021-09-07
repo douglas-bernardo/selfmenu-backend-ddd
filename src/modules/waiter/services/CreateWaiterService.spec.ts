@@ -30,8 +30,8 @@ describe('CreateWaiter', () => {
 
     it('should be able to create a new waiter', async () => {
         const plan = await fakePlanRepository.create(
-            'Free',
-            'Selfmenu free plan',
+            'Premium',
+            'Selfmenu premium plan',
         );
 
         const user = await fakeUserRepository.create({
@@ -40,6 +40,8 @@ describe('CreateWaiter', () => {
             profile_name: 'John Doe',
             plan_id: plan.id,
         });
+        user.plan = plan;
+        await fakeUserRepository.save(user);
 
         const restaurant = await fakeRestaurantRepository.create({
             cnpj: '989865986598',
@@ -64,8 +66,8 @@ describe('CreateWaiter', () => {
 
     it('should not be able to create a new waiter with the same cpf code from another', async () => {
         const plan = await fakePlanRepository.create(
-            'Free',
-            'Selfmenu free plan',
+            'Premium',
+            'Selfmenu premium plan',
         );
 
         const user = await fakeUserRepository.create({
@@ -74,6 +76,8 @@ describe('CreateWaiter', () => {
             profile_name: 'John Doe',
             plan_id: plan.id,
         });
+        user.plan = plan;
+        await fakeUserRepository.save(user);
 
         const restaurant = await fakeRestaurantRepository.create({
             cnpj: '989865986598',
@@ -107,8 +111,8 @@ describe('CreateWaiter', () => {
 
     it('should not be able to create a waiter with a invalid owner', async () => {
         const plan = await fakePlanRepository.create(
-            'Free',
-            'Selfmenu free plan',
+            'Premium',
+            'Selfmenu premium plan',
         );
 
         const user = await fakeUserRepository.create({
@@ -117,6 +121,8 @@ describe('CreateWaiter', () => {
             profile_name: 'John Doe',
             plan_id: plan.id,
         });
+        user.plan = plan;
+        await fakeUserRepository.save(user);
 
         const restaurant = await fakeRestaurantRepository.create({
             cnpj: '989865986598',
@@ -150,8 +156,8 @@ describe('CreateWaiter', () => {
 
     it('should not be able to create a waiter to invalid restaurant', async () => {
         const plan = await fakePlanRepository.create(
-            'Free',
-            'Selfmenu free plan',
+            'Premium',
+            'Selfmenu premium plan',
         );
 
         const user = await fakeUserRepository.create({
@@ -160,6 +166,8 @@ describe('CreateWaiter', () => {
             profile_name: 'John Doe',
             plan_id: plan.id,
         });
+        user.plan = plan;
+        await fakeUserRepository.save(user);
 
         const restaurant = await fakeRestaurantRepository.create({
             cnpj: '989865986598',
@@ -193,8 +201,8 @@ describe('CreateWaiter', () => {
 
     it('should not be able to create a waiter to inactive restaurant', async () => {
         const plan = await fakePlanRepository.create(
-            'Free',
-            'Selfmenu free plan',
+            'Premium',
+            'Selfmenu premium plan',
         );
 
         const user = await fakeUserRepository.create({
@@ -203,6 +211,8 @@ describe('CreateWaiter', () => {
             profile_name: 'John Doe',
             plan_id: plan.id,
         });
+        user.plan = plan;
+        await fakeUserRepository.save(user);
 
         const restaurant = await fakeRestaurantRepository.create({
             cnpj: '989865986598',

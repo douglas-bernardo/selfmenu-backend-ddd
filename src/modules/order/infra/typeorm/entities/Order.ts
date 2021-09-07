@@ -1,10 +1,17 @@
+import Restaurant from '@modules/restaurant/infra/typeorm/entities/Restaurant';
+import Table from '@modules/table/infra/typeorm/entities/Table';
+import Waiter from '@modules/waiter/infra/typeorm/entities/Waiter';
 import {
     Column,
     CreateDateColumn,
     Entity,
+    JoinColumn,
+    ManyToOne,
+    OneToMany,
     PrimaryGeneratedColumn,
     UpdateDateColumn,
 } from 'typeorm';
+import OrderItem from './OrderItem';
 
 @Entity('order')
 class Order {
@@ -17,11 +24,22 @@ class Order {
     @Column()
     status_order_id: number;
 
-    @Column()
-    restaurant_id: string;
+    @ManyToOne(() => Restaurant)
+    @JoinColumn({ name: 'restaurant_id' })
+    restaurant: Restaurant;
 
-    @Column()
-    waiter_id: string;
+    @ManyToOne(() => Waiter)
+    @JoinColumn({ name: 'waiter_id' })
+    waiter: Waiter;
+
+    @ManyToOne(() => Table)
+    @JoinColumn({ name: 'table_id' })
+    table: Table;
+
+    @OneToMany(() => OrderItem, order_items => order_items.order, {
+        cascade: true,
+    })
+    order_items: OrderItem[];
 
     @CreateDateColumn()
     created_at: Date;

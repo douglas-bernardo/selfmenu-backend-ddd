@@ -47,7 +47,7 @@ class CreateRestaurantService {
 
             if (hasRestaurantCreated.length > 0) {
                 throw new AppError(
-                    'Only Premium users can create more than one restaurant by account.',
+                    'Only Premium users can register more than one restaurant by account.',
                 );
             }
         }
