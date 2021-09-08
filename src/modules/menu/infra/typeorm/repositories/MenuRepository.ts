@@ -1,4 +1,5 @@
 import ICreateMenuDTO from '@modules/menu/dtos/ICreateMenuDTO';
+import IFindAllMenusDTO from '@modules/menu/dtos/IFindAllMenusDTO';
 import Menu from '@modules/menu/infra/typeorm/entities/Menu';
 import IMenuRepository from '@modules/menu/repositories/IMenuRepository';
 import { getRepository, Repository } from 'typeorm';
@@ -10,7 +11,7 @@ class MenuRepository implements IMenuRepository {
         this.ormRepository = getRepository(Menu);
     }
 
-    public async findAll(owner_id?: string): Promise<Menu[]> {
+    public async findAll({ owner_id }: IFindAllMenusDTO): Promise<Menu[]> {
         let menus: Menu[] = [];
 
         if (owner_id) {

@@ -1,7 +1,10 @@
+import Restaurant from '@modules/restaurant/infra/typeorm/entities/Restaurant';
 import {
     Column,
     CreateDateColumn,
     Entity,
+    JoinColumn,
+    ManyToOne,
     PrimaryGeneratedColumn,
     UpdateDateColumn,
 } from 'typeorm';
@@ -19,6 +22,10 @@ class Table {
 
     @Column()
     capacity: number;
+
+    @ManyToOne(() => Restaurant)
+    @JoinColumn({ name: 'restaurant_id' })
+    restaurant: Restaurant;
 
     @Column()
     restaurant_id: string;

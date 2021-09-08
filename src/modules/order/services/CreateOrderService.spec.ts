@@ -4,7 +4,6 @@ import FakeTableRepository from '@modules/table/repositories/fakes/FakeTableRepo
 import FakeWaiterRepository from '@modules/waiter/repositories/fakes/FakeWaiterRepository';
 import FakeItemRepository from '@modules/item/repositories/fakes/FakeItemRepository';
 import FakePlanRepository from '@modules/users/repositories/fakes/FakePlanRepository';
-// import FakeMenuRepository from '@modules/menu/repositories/fakes/FakeMenuRepository';
 import AppError from '@shared/errors/AppError';
 import CreateOrderService from './CreateOrderService';
 import FakeOrderRepository from '../repositories/fakes/FakeOrderRepository';
@@ -15,7 +14,6 @@ let fakeRestaurantRepository: FakeRestaurantRepository;
 let fakeTableRepository: FakeTableRepository;
 let fakeWaiterRepository: FakeWaiterRepository;
 let fakeItemRepository: FakeItemRepository;
-// let fakeMenuRepository: FakeMenuRepository;
 let fakeOrderRepository: FakeOrderRepository;
 
 let createOrderService: CreateOrderService;
@@ -354,6 +352,127 @@ describe('CreateOrder', () => {
                     {
                         id: item.id,
                         quantity: 5,
+                    },
+                ],
+            }),
+        ).rejects.toBeInstanceOf(AppError);
+    });
+
+    it('should not be able to create an order with invalid products', async () => {
+        const plan = await fakePlanRepository.create(
+            'Premium',
+            'Selfmenu premium plan',
+        );
+
+        const user = await fakeUsersRepository.create({
+            email: 'john@example.com',
+            password: '123456',
+            profile_name: 'John Doe',
+            plan_id: plan.id,
+        });
+        user.plan = plan;
+        await fakeUsersRepository.save(user);
+
+        const restaurant = await fakeRestaurantRepository.create({
+            cnpj: '989865986598',
+            name: "Doe's Dinner",
+            description: 'A new restaurant',
+            restaurant_type_id: 1,
+            owner_id: user.id,
+            subdomain: 'does-dinner',
+        });
+
+        const waiter = await fakeWaiterRepository.create({
+            name: 'Moe',
+            username: 'moe',
+            cpf: '999.999.999-99',
+            password: '123456',
+            owner_id: user.id,
+            restaurant_id: restaurant.id,
+        });
+
+        const table = await fakeTableRepository.create({
+            code: 'T001',
+            capacity: 4,
+            restaurant_id: restaurant.id,
+            waiter_id: waiter.id,
+        });
+
+        await expect(
+            createOrderService.execute({
+                owner_id: user.id,
+                restaurant_id: restaurant.id,
+                table_id: table.id,
+                waiter_id: waiter.id,
+                items: [
+                    {
+                        id: 'invalid-item',
+                        quantity: 5,
+                    },
+                ],
+            }),
+        ).rejects.toBeInstanceOf(AppError);
+    });
+
+    it('should not be able to create an order with products with insufficient quantities', async () => {
+        const plan = await fakePlanRepository.create(
+            'Premium',
+            'Selfmenu premium plan',
+        );
+
+        const user = await fakeUsersRepository.create({
+            email: 'john@example.com',
+            password: '123456',
+            profile_name: 'John Doe',
+            plan_id: plan.id,
+        });
+        user.plan = plan;
+        await fakeUsersRepository.save(user);
+
+        const restaurant = await fakeRestaurantRepository.create({
+            cnpj: '989865986598',
+            name: "Doe's Dinner",
+            description: 'A new restaurant',
+            restaurant_type_id: 1,
+            owner_id: user.id,
+            subdomain: 'does-dinner',
+        });
+
+        const waiter = await fakeWaiterRepository.create({
+            name: 'Moe',
+            username: 'moe',
+            cpf: '999.999.999-99',
+            password: '123456',
+            owner_id: user.id,
+            restaurant_id: restaurant.id,
+        });
+
+        const table = await fakeTableRepository.create({
+            code: 'T001',
+            capacity: 4,
+            restaurant_id: restaurant.id,
+            waiter_id: waiter.id,
+        });
+
+        const item = await fakeItemRepository.create({
+            name: 'Bolo de chocolate',
+            description: 'Delicioso bolo de chocolate',
+            price: 9.9,
+            quantity: 10,
+            category_id: 1,
+            owner_id: user.id,
+        });
+
+        await expect(
+            createOrderService.execute({
+                owner_id: user.id,
+                restaurant_id: restaurant.id,
+                table_id: table.id,
+                waiter_id: waiter.id,
+                items: [
+                    {
+                        id: item.id,
+                        quantity: 15,
                     },
                 ],
             }),

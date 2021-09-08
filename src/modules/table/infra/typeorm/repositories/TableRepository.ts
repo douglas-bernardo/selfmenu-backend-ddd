@@ -4,6 +4,7 @@ import IFindByCodeTableDTO from '@modules/table/dtos/IFindByCodeTableDTO';
 import IFindByIdTableDTO from '@modules/table/dtos/IFindByIdTableDTO';
 import ITableRepository from '@modules/table/repositories/ITableRepository';
 import { getRepository, Repository } from 'typeorm';
+import IFindByTokenTableDTO from '@modules/table/dtos/IFindByTokenTableDTO';
 
 class TableRepository implements ITableRepository {
     private ormRepository: Repository<Table>;
@@ -70,6 +71,19 @@ class TableRepository implements ITableRepository {
         }
 
         return findTable;
+    }
+
+    public async findByToken({
+        token_table,
+    }: IFindByTokenTableDTO): Promise<Table | undefined> {
+        const table = await this.ormRepository.findOne({
+            where: {
+                token: token_table,
+            },
+            relations: ['restaurant'],
+        });
+
+        return table;
     }
 
     public async create({

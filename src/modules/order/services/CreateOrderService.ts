@@ -16,10 +16,7 @@ interface IItems {
 }
 
 interface IRequest {
-    owner_id: string;
-    restaurant_id: string;
-    waiter_id: string;
-    table_id: string;
+    token_table: string;
     items: IItems[];
 }
 
@@ -45,40 +42,39 @@ class CreateOrderService {
         private orderRepository: IOrderRepository,
     ) {}
 
-    public async execute({
-        owner_id,
-        restaurant_id,
-        table_id,
-        waiter_id,
-        items,
-    }: IRequest): Promise<Order> {
-        const user = await this.usersRepository.findById(owner_id);
+    public async execute({ token_table, items }: IRequest): Promise<Order> {
+        const table = await this.tableRepository.findByToken({
+            token_table,
+        });
+
+        if (!table) {
+            throw new AppError(
+                'Cannot find any table with the given token table',
+            );
+        }
+
+        console.log(table);
+
+        const user = await this.usersRepository.findById(
+            table.restaurant.owner_id,
+        );
 
         if (!user) {
             throw new AppError('User account not found');
         }
 
         const restaurantExist = await this.restaurantRepository.findById({
-            restaurant_id,
-            owner_id,
+            restaurant_id: table.restaurant_id,
+            owner_id: user.id,
         });
 
         if (!restaurantExist) {
             throw new AppError('Cannot find any restaurant with the given id');
         }
 
-        const tableExist = await this.tableRepository.findById({
-            restaurant_id,
-            table_id,
-        });
-
-        if (!tableExist) {
-            throw new AppError('Cannot find any table with the given id');
-        }
-
         const waiterExist = await this.waiterRepository.findById({
-            waiter_id,
-            owner_id,
+            waiter_id: table.waiter_id,
+            owner_id: user.id,
         });
 
         if (!waiterExist) {
@@ -87,7 +83,7 @@ class CreateOrderService {
 
         const existentProducts = await this.itemRepository.findAllById(
             items,
-            owner_id,
+            user.id,
         );
 
         if (!existentProducts.length) {
@@ -128,7 +124,7 @@ class CreateOrderService {
         const order = await this.orderRepository.create({
             status_order_id: 1,
             restaurant: restaurantExist,
-            table: tableExist,
+            table,
             waiter: waiterExist,
             items: serializeItems,
         });

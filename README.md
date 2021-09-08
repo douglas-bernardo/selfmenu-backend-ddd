@@ -95,15 +95,15 @@ posterior acompanhamento de pedidos.
 # Criação de Pedido
 
 **RF**
-- Usuário (cliente final) deve visualizar itens e menus de acordo o estabelecimento (owner).
-- Usuário (cliente final) deve poder filtrar itens por categoria.
 - Usuário (cliente final) deve poder criar um pedido
-
+- Usuário (cliente final) deve poder filtrar itens por categoria.
+- O usuário deve receber um código unico que identifica a mesa para realizar seu pedido.
 
 **RNF**
+- Utilizar estratégia de hash que gere um código curto de fácil digitação.
 
 **RN**
-- Somente estabelecimentos pertencentes a contas Premium (owner) podem registrar pedidos;
+- Somente estabelecimentos pertencentes a contas Premium (owner) podem registrar/gerenciar pedidos;
 - Pedidos devem ser associados a um estabelecimento válido;
 - Pedidos devem ser associados a uma mesa válida;
 - Pedidos devem ser associados a um garçom válido;

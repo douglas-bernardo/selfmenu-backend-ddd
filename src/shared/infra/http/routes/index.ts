@@ -11,6 +11,7 @@ import itemsRoutes from '@modules/item/infra/http/routes/item.routes';
 import waiterRouter from '@modules/waiter/infra/http/routes/waiter.routes';
 import tableRouter from '@modules/table/infra/http/routes/table.routes';
 import orderRouter from '@modules/order/infra/http/routes/order.routes';
+import tokenTable from '@modules/table/infra/http/routes/tokenTable.routes';
 
 const routes = Router();
 
@@ -24,6 +25,7 @@ routes.use('/menu', menuRouter);
 routes.use('/item', itemsRoutes);
 routes.use('/waiter', waiterRouter);
 routes.use('/table', tableRouter);
+routes.use('/table-token', tokenTable);
 routes.use('/order', orderRouter);
 
 export default routes;

@@ -8,16 +8,12 @@ export default class OrderController {
         request: Request,
         response: Response,
     ): Promise<Response> {
-        const { owner_id } = request.params;
-        const { restaurant_id, waiter_id, table_id, items } = request.body;
+        const { token_table, items } = request.body;
 
         const createOrder = container.resolve(CreateOrderService);
 
         const order = await createOrder.execute({
-            owner_id,
-            restaurant_id,
-            waiter_id,
-            table_id,
+            token_table,
             items,
         });
 

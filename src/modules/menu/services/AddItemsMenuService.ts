@@ -7,10 +7,6 @@ import IMenuRepository from '../repositories/IMenuRepository';
 import Menu from '../infra/typeorm/entities/Menu';
 import MenuItem from '../infra/typeorm/entities/MenuItem';
 
-// interface IItem {
-//     item_id: string;
-// }
-
 interface IRequestItem {
     id: string;
 }

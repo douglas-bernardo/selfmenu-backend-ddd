@@ -4,10 +4,21 @@ import Table from '@modules/table/infra/typeorm/entities/Table';
 import ICreateTableDTO from '@modules/table/dtos/ICreateTableDTO';
 import IFindByCodeTableDTO from '@modules/table/dtos/IFindByCodeTableDTO';
 import IFindByIdTableDTO from '@modules/table/dtos/IFindByIdTableDTO';
+import IFindByTokenTableDTO from '@modules/table/dtos/IFindByTokenTableDTO';
 import ITableRepository from '../ITableRepository';
 
 class FakeTableRepository implements ITableRepository {
     private tables: Table[] = [];
+
+    public async findByToken({
+        token_table,
+    }: IFindByTokenTableDTO): Promise<Table | undefined> {
+        const findTable = this.tables.find(
+            table => table.token === token_table,
+        );
+
+        return findTable;
+    }
 
     public async findAll(restaurant_id?: string): Promise<Table[]> {
         let { tables } = this;
