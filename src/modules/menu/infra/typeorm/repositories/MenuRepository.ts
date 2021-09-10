@@ -53,7 +53,7 @@ class MenuRepository implements IMenuRepository {
 
     public async findById(menu_id: string): Promise<Menu | undefined> {
         const menu = await this.ormRepository.findOne(menu_id, {
-            relations: ['menu_item'],
+            relations: ['menu_items', 'owner'],
         });
 
         return menu;
@@ -62,16 +62,16 @@ class MenuRepository implements IMenuRepository {
     public async create({
         title,
         description,
-        owner_id,
-        restaurant_id,
+        owner,
+        restaurant,
         items,
     }: ICreateMenuDTO): Promise<Menu> {
         const menu = this.ormRepository.create({
             title,
             description,
-            owner_id,
-            restaurant_id,
-            menu_item: items,
+            owner,
+            restaurant,
+            menu_items: items,
         });
 
         await this.ormRepository.save(menu);

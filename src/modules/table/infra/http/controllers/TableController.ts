@@ -2,35 +2,27 @@ import { Request, Response } from 'express';
 import { container } from 'tsyringe';
 
 import CreateTableService from '@modules/table/services/CreateTableService';
+import ListTablesServices from '@modules/table/services/ListTablesService';
 
 export default class TableController {
-    // public async index(
-    //     request: Request,
-    //     response: Response,
-    // ): Promise<Response> {
-    //     const user_id = request.user.id;
-    //     const listTable = container.resolve(ListMenuService);
+    public async index(
+        request: Request,
+        response: Response,
+    ): Promise<Response> {
+        const { id: restaurant_id } = request.params;
+        const listTables = container.resolve(ListTablesServices);
 
-    //     const menus = await listTable.execute({ user_id });
-    //     return response.json(menus);
-    // }
-
-    // public async show(request: Request, response: Response): Promise<Response> {
-    //     const { id } = request.params;
-
-    //     const showMenu = container.resolve(ShowMenuService);
-
-    //     const menu = await showMenu.execute({ id });
-
-    //     return response.json(menu);
-    // }
+        const restaurants = await listTables.execute({ restaurant_id });
+        return response.json(restaurants);
+    }
 
     public async create(
         request: Request,
         response: Response,
     ): Promise<Response> {
         const user_id = request.user.id;
-        const { code, capacity, restaurant_id, waiter_id } = request.body;
+        const { id: restaurant_id } = request.params;
+        const { code, capacity, waiter_id } = request.body;
 
         const createTableService = container.resolve(CreateTableService);
 

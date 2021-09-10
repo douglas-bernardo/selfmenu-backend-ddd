@@ -24,25 +24,6 @@ class UpdateTableTokenService {
         table_code,
         restaurant_id,
     }: IRequest): Promise<IResponse> {
-        // const user = await this.usersRepository.findById(owner_id);
-
-        // if (!user) {
-        //     throw new AppError('User account not found');
-        // }
-
-        // const restaurant = await this.restaurantRepository.findById({
-        //     restaurant_id,
-        //     owner_id,
-        // });
-
-        // if (!restaurant) {
-        //     throw new AppError('Restaurant not found');
-        // }
-
-        // if (!restaurant.active) {
-        //     throw new AppError('Restaurant inactive. Not allowed.');
-        // }
-
         const table = await this.tableRepository.findByCode({
             code: table_code,
             restaurant_id,

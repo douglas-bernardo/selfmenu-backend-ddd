@@ -44,7 +44,7 @@ class Item {
     category_id: number;
 
     @OneToMany(() => MenuItem, menu_items => menu_items.item)
-    menu_item: MenuItem[];
+    menu_items: MenuItem[];
 
     @OneToMany(() => ItemPhoto, image => image.item, {
         cascade: ['insert', 'update'],

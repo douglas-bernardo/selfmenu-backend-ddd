@@ -40,7 +40,7 @@ class Menu {
     @OneToMany(() => MenuItem, menu_items => menu_items.menu, {
         cascade: true,
     })
-    menu_item: MenuItem[];
+    menu_items: MenuItem[];
 
     @Column()
     active: boolean;

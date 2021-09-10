@@ -13,7 +13,7 @@ class ListMenuService {
     ) {}
 
     public async execute({ user_id }: IRequest): Promise<Menu[]> {
-        return this.menuRepository.findAll(user_id);
+        return this.menuRepository.findAll({ owner_id: user_id });
     }
 }
 

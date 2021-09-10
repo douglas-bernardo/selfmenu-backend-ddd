@@ -13,19 +13,19 @@ class MenuItem {
     @PrimaryGeneratedColumn('uuid')
     id: string;
 
-    @Column()
-    menu_id: string;
-
-    @ManyToOne(() => Menu, menu => menu.menu_item)
+    @ManyToOne(() => Menu, menu => menu.menu_items)
     @JoinColumn({ name: 'menu_id' })
     menu: Menu;
 
-    @Column()
-    item_id: string;
-
-    @ManyToOne(() => Item, item => item.menu_item)
+    @ManyToOne(() => Item, item => item.menu_items)
     @JoinColumn({ name: 'item_id' })
     item: Item;
+
+    @Column()
+    menu_id: string;
+
+    @Column()
+    item_id: string;
 
     @Column()
     active: boolean;

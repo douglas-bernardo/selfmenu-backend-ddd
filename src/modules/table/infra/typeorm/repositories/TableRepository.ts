@@ -5,6 +5,7 @@ import IFindByIdTableDTO from '@modules/table/dtos/IFindByIdTableDTO';
 import ITableRepository from '@modules/table/repositories/ITableRepository';
 import { getRepository, Repository } from 'typeorm';
 import IFindByTokenTableDTO from '@modules/table/dtos/IFindByTokenTableDTO';
+import IFindAllTablesDTO from '@modules/table/dtos/IFindAllTablesDTO';
 
 class TableRepository implements ITableRepository {
     private ormRepository: Repository<Table>;
@@ -13,7 +14,9 @@ class TableRepository implements ITableRepository {
         this.ormRepository = getRepository(Table);
     }
 
-    public async findAll(restaurant_id?: string): Promise<Table[]> {
+    public async findAll({
+        restaurant_id,
+    }: IFindAllTablesDTO): Promise<Table[]> {
         let tables: Table[] = [];
 
         if (restaurant_id) {

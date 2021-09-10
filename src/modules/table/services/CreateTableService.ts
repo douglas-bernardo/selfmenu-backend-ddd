@@ -63,7 +63,7 @@ class CreateTableService {
         });
 
         if (codeTableExists) {
-            throw new AppError('Table Code already used');
+            throw new AppError('Table code already used');
         }
 
         const waiter = await this.waiterRepository.findById({

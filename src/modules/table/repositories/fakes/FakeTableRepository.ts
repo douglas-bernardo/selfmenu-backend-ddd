@@ -5,6 +5,7 @@ import ICreateTableDTO from '@modules/table/dtos/ICreateTableDTO';
 import IFindByCodeTableDTO from '@modules/table/dtos/IFindByCodeTableDTO';
 import IFindByIdTableDTO from '@modules/table/dtos/IFindByIdTableDTO';
 import IFindByTokenTableDTO from '@modules/table/dtos/IFindByTokenTableDTO';
+import IFindAllTablesDTO from '@modules/table/dtos/IFindAllTablesDTO';
 import ITableRepository from '../ITableRepository';
 
 class FakeTableRepository implements ITableRepository {
@@ -20,7 +21,9 @@ class FakeTableRepository implements ITableRepository {
         return findTable;
     }
 
-    public async findAll(restaurant_id?: string): Promise<Table[]> {
+    public async findAll({
+        restaurant_id,
+    }: IFindAllTablesDTO): Promise<Table[]> {
         let { tables } = this;
 
         if (restaurant_id) {

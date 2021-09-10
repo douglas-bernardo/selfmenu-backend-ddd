@@ -12,7 +12,7 @@ class FakeMenuRepository implements IMenuRepository {
         let { menus } = this;
 
         if (owner_id) {
-            menus = this.menus.filter(menu => menu.owner_id === owner_id);
+            menus = this.menus.filter(menu => menu.owner.id === owner_id);
         }
 
         return menus;

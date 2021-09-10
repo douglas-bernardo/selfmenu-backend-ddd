@@ -1,3 +1,6 @@
+import Restaurant from '@modules/restaurant/infra/typeorm/entities/Restaurant';
+import User from '@modules/users/infra/typeorm/entities/User';
+
 interface IItem {
     item_id: string;
 }
@@ -5,7 +8,7 @@ interface IItem {
 export default interface ICreateMenuDTO {
     title: string;
     description?: string;
-    owner_id: string;
-    restaurant_id: string;
+    owner: User;
+    restaurant: Restaurant;
     items?: IItem[];
 }

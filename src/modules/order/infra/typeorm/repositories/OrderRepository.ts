@@ -1,4 +1,5 @@
 import ICreateOrderDTO from '@modules/order/dtos/ICreateOrderDTO';
+import IFindAllOrdersDTO from '@modules/order/dtos/IFindAllOrdersDTO';
 import IOrderRepository from '@modules/order/repositories/IOrderRepository';
 import { getRepository, Repository } from 'typeorm';
 
@@ -9,6 +10,18 @@ class OrdersRepository implements IOrderRepository {
 
     constructor() {
         this.ormRepository = getRepository(Order);
+    }
+
+    public async findAll({
+        restaurant_id,
+    }: IFindAllOrdersDTO): Promise<Order[]> {
+        const findOrders = await this.ormRepository.find({
+            where: {
+                restaurant_id,
+            },
+        });
+
+        return findOrders;
     }
 
     public async create({

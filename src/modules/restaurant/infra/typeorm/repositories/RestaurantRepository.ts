@@ -25,6 +25,7 @@ class RestaurantRepository implements IRestaurantRepository {
                     id: restaurant_id,
                     owner_id,
                 },
+                relations: ['owner'],
             });
         } else {
             restaurant = await this.ormRepository.findOne(restaurant_id);

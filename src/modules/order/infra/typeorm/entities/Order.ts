@@ -28,6 +28,9 @@ class Order {
     @JoinColumn({ name: 'restaurant_id' })
     restaurant: Restaurant;
 
+    @Column()
+    restaurant_id: string;
+
     @ManyToOne(() => Waiter)
     @JoinColumn({ name: 'waiter_id' })
     waiter: Waiter;

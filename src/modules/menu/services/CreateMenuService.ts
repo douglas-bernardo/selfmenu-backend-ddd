@@ -111,11 +111,11 @@ class CreateMenuService {
             }));
         }
 
-        const menu = this.menuRepository.create({
+        const menu = await this.menuRepository.create({
             title,
             description,
-            owner_id: user.id,
-            restaurant_id,
+            owner: user,
+            restaurant,
             items: serializeItems,
         });
 

@@ -48,12 +48,8 @@ class CreateOrderService {
         });
 
         if (!table) {
-            throw new AppError(
-                'Cannot find any table with the given token table',
-            );
+            throw new AppError('Invalid token or table not found');
         }
-
-        console.log(table);
 
         const user = await this.usersRepository.findById(
             table.restaurant.owner_id,
@@ -80,7 +76,7 @@ class CreateOrderService {
         if (!waiterExist) {
             throw new AppError('Cannot find any waiter with the given id');
         }
-
+        // [3,4,8,9]
         const existentProducts = await this.itemRepository.findAllById(
             items,
             user.id,
@@ -96,6 +92,7 @@ class CreateOrderService {
             item => !existentProductsIds.includes(item.id),
         );
 
+        // [9]
         if (checkInexistentProducts.length) {
             throw new AppError(
                 `Could not find product ${checkInexistentProducts[0].id}`,
