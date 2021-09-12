@@ -44,7 +44,7 @@ describe('CreateWaiter', () => {
         await fakeUserRepository.save(user);
 
         const restaurant = await fakeRestaurantRepository.create({
-            cnpj: '989865986598',
+            cnpj: 63655798024,
             name: "Doe's Dinner",
             description: 'A new restaurant',
             restaurant_type_id: 1,
@@ -55,7 +55,7 @@ describe('CreateWaiter', () => {
         const waiter = await createWaiterService.execute({
             name: 'Moe',
             username: 'moe',
-            cpf: '999.999.999-99',
+            cpf: 63655798024,
             password: '123456',
             owner_id: user.id,
             restaurant_id: restaurant.id,
@@ -80,7 +80,7 @@ describe('CreateWaiter', () => {
         await fakeUserRepository.save(user);
 
         const restaurant = await fakeRestaurantRepository.create({
-            cnpj: '989865986598',
+            cnpj: 63655798024,
             name: "Doe's Dinner",
             description: 'A new restaurant',
             restaurant_type_id: 1,
@@ -91,7 +91,7 @@ describe('CreateWaiter', () => {
         await createWaiterService.execute({
             name: 'Moe',
             username: 'moe',
-            cpf: '999.999.999-99',
+            cpf: 63655798024,
             password: '123456',
             owner_id: user.id,
             restaurant_id: restaurant.id,
@@ -101,7 +101,7 @@ describe('CreateWaiter', () => {
             createWaiterService.execute({
                 name: 'Moe',
                 username: 'moe',
-                cpf: '999.999.999-99',
+                cpf: 63655798024,
                 password: '123456',
                 owner_id: user.id,
                 restaurant_id: restaurant.id,
@@ -125,7 +125,7 @@ describe('CreateWaiter', () => {
         await fakeUserRepository.save(user);
 
         const restaurant = await fakeRestaurantRepository.create({
-            cnpj: '989865986598',
+            cnpj: 63655798024,
             name: "Doe's Dinner",
             description: 'A new restaurant',
             restaurant_type_id: 1,
@@ -136,7 +136,7 @@ describe('CreateWaiter', () => {
         await createWaiterService.execute({
             name: 'Moe',
             username: 'moe',
-            cpf: '999.999.999-99',
+            cpf: 63655798024,
             password: '123456',
             owner_id: user.id,
             restaurant_id: restaurant.id,
@@ -146,7 +146,7 @@ describe('CreateWaiter', () => {
             createWaiterService.execute({
                 name: 'Moe',
                 username: 'moe',
-                cpf: '999.999.999-99',
+                cpf: 63655798024,
                 password: '123456',
                 owner_id: 'invalid-owner',
                 restaurant_id: restaurant.id,
@@ -170,7 +170,7 @@ describe('CreateWaiter', () => {
         await fakeUserRepository.save(user);
 
         const restaurant = await fakeRestaurantRepository.create({
-            cnpj: '989865986598',
+            cnpj: 63655798024,
             name: "Doe's Dinner",
             description: 'A new restaurant',
             restaurant_type_id: 1,
@@ -181,7 +181,7 @@ describe('CreateWaiter', () => {
         await createWaiterService.execute({
             name: 'Moe',
             username: 'moe',
-            cpf: '999.999.999-99',
+            cpf: 63655798024,
             password: '123456',
             owner_id: user.id,
             restaurant_id: restaurant.id,
@@ -191,7 +191,7 @@ describe('CreateWaiter', () => {
             createWaiterService.execute({
                 name: 'Moe',
                 username: 'moe',
-                cpf: '999.999.999-99',
+                cpf: 63655798024,
                 password: '123456',
                 owner_id: user.id,
                 restaurant_id: 'invalid-restaurant',
@@ -215,7 +215,7 @@ describe('CreateWaiter', () => {
         await fakeUserRepository.save(user);
 
         const restaurant = await fakeRestaurantRepository.create({
-            cnpj: '989865986598',
+            cnpj: 63655798024,
             name: "Doe's Dinner",
             description: 'A new restaurant',
             restaurant_type_id: 1,
@@ -230,7 +230,7 @@ describe('CreateWaiter', () => {
             createWaiterService.execute({
                 name: 'Moe',
                 username: 'moe',
-                cpf: '999.999.999-99',
+                cpf: 63655798024,
                 password: '123456',
                 owner_id: user.id,
                 restaurant_id: restaurant.id,

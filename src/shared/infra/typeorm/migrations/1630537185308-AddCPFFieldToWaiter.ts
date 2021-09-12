@@ -8,7 +8,7 @@ export default class AddCPFFieldToWaiter1630537185308
             'waiter',
             new TableColumn({
                 name: 'cpf',
-                type: 'varchar',
+                type: 'bigint',
                 isUnique: true,
             }),
         );

@@ -9,7 +9,7 @@ import IWaiterRepository from '../repositories/IWaiterRepository';
 
 interface IRequest {
     name: string;
-    cpf: string;
+    cpf: number;
     username: string;
     password: string;
     owner_id: string;

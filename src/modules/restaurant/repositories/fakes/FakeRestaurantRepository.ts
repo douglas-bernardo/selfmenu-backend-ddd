@@ -4,10 +4,21 @@ import ICreateRestaurantDTO from '@modules/restaurant/dtos/ICreateRestaurantDTO'
 import Restaurant from '@modules/restaurant/infra/typeorm/entities/Restaurant';
 import IFindAllRestaurantsDTO from '@modules/restaurant/dtos/IFindAllRestaurantsDTO';
 import IFindByIdRestaurantDTO from '@modules/restaurant/dtos/IFindByIdRestaurantDTO';
+import IFindByCNPJRestaurantDTO from '@modules/restaurant/dtos/IFindByCNPJRestaurantDTO';
 import IRestaurantRepository from '../IRestaurantRepository';
 
 class FakeRestaurantRepository implements IRestaurantRepository {
     private restaurants: Restaurant[] = [];
+
+    public async findByCNPJ({
+        cnpj,
+    }: IFindByCNPJRestaurantDTO): Promise<Restaurant | undefined> {
+        const findRestaurant = this.restaurants.find(
+            restaurant => restaurant.cnpj === cnpj,
+        );
+
+        return findRestaurant;
+    }
 
     public async findById({
         restaurant_id,

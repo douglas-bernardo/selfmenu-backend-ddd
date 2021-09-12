@@ -37,7 +37,7 @@ describe('CreateRestaurant', () => {
         await fakeUsersRepository.save(user);
 
         const restaurant = await createRestaurantService.execute({
-            cnpj: '989865986598',
+            cnpj: 31132548000119,
             name: "Doe's Dinner",
             description: 'A new restaurant',
             restaurant_type_id: 1,
@@ -50,7 +50,7 @@ describe('CreateRestaurant', () => {
     it('should not be able to create a menu to non-existing user', async () => {
         await expect(
             createRestaurantService.execute({
-                cnpj: '989865986598',
+                cnpj: 31132548000119,
                 name: "Doe's Dinner",
                 description: 'A new restaurant',
                 restaurant_type_id: 1,
@@ -76,7 +76,7 @@ describe('CreateRestaurant', () => {
 
         await expect(
             createRestaurantService.execute({
-                cnpj: '989865986598',
+                cnpj: 31132548000119,
                 name: "Doe's Dinner",
                 description: 'A new restaurant',
                 restaurant_type_id: 1,
@@ -101,7 +101,7 @@ describe('CreateRestaurant', () => {
         await fakeUsersRepository.save(user);
 
         await createRestaurantService.execute({
-            cnpj: '989865986598',
+            cnpj: 31132548000119,
             name: "Doe's Dinner",
             description: 'A new restaurant',
             restaurant_type_id: 1,
@@ -110,7 +110,7 @@ describe('CreateRestaurant', () => {
 
         await expect(
             createRestaurantService.execute({
-                cnpj: '7856985698569',
+                cnpj: 31132548000119,
                 name: "Doe's Café 2",
                 description: "A new john's café",
                 restaurant_type_id: 1,

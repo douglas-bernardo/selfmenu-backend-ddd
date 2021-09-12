@@ -16,7 +16,7 @@ interface IItems {
 }
 
 interface IRequest {
-    token_table: string;
+    table_token: string;
     items: IItems[];
 }
 
@@ -42,10 +42,12 @@ class CreateOrderService {
         private orderRepository: IOrderRepository,
     ) {}
 
-    public async execute({ token_table, items }: IRequest): Promise<Order> {
+    public async execute({ table_token, items }: IRequest): Promise<Order> {
         const table = await this.tableRepository.findByToken({
-            token_table,
+            table_token,
         });
+
+        console.log(table);
 
         if (!table) {
             throw new AppError('Invalid token or table not found');
@@ -119,6 +121,7 @@ class CreateOrderService {
         }));
 
         const order = await this.orderRepository.create({
+            token: table_token,
             status_order_id: 1,
             restaurant: restaurantExist,
             table,

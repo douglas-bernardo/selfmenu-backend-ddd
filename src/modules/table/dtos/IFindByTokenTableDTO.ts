@@ -1,3 +1,3 @@
 export default interface IFindByTokenTableDTO {
-    token_table: string;
+    table_token: string;
 }

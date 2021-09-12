@@ -35,7 +35,7 @@ describe('ListRestaurants', () => {
         await fakeUsersRepository.save(user);
 
         const restaurant1 = await fakeRestaurantRepository.create({
-            cnpj: '989865986598',
+            cnpj: 31132548000119,
             name: "Doe's Dinner",
             description: 'A new restaurant',
             restaurant_type_id: 1,
@@ -44,7 +44,7 @@ describe('ListRestaurants', () => {
         });
 
         const restaurant2 = await fakeRestaurantRepository.create({
-            cnpj: '989865986598',
+            cnpj: 31132548000119,
             name: "Doe's Dinner",
             description: 'A new restaurant',
             restaurant_type_id: 1,

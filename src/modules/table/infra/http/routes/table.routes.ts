@@ -11,5 +11,6 @@ tableRouter.use(ensureAuthenticated);
 
 tableRouter.post('/', tableController.create);
 tableRouter.get('/', tableController.index);
+tableRouter.get('/:id', tableController.show);
 
 export default tableRouter;

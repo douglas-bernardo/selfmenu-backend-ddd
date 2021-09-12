@@ -36,7 +36,10 @@ class Order {
     waiter: Waiter;
 
     @ManyToOne(() => Table)
-    @JoinColumn({ name: 'table_id' })
+    @JoinColumn([
+        { name: 'table_id', referencedColumnName: 'id' },
+        { name: 'token', referencedColumnName: 'token' },
+    ])
     table: Table;
 
     @OneToMany(() => OrderItem, order_items => order_items.order, {

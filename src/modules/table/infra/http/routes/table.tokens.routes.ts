@@ -1,10 +1,10 @@
 import { Router } from 'express';
 import UpdateTableTokenController from '../controllers/UpdateTableTokenController';
 
-const tokenTable = Router();
+const tableTokensRouter = Router({ mergeParams: true });
 
 const updateTokenTable = new UpdateTableTokenController();
 
-tokenTable.post('/', updateTokenTable.create);
+tableTokensRouter.post('/', updateTokenTable.create);
 
-export default tokenTable;
+export default tableTokensRouter;

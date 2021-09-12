@@ -1,4 +1,4 @@
 export default interface IFindByCPFWaiterDTO {
-    cpf: string;
+    cpf: number;
     owner_id?: string;
 }

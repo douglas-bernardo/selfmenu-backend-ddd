@@ -43,7 +43,10 @@ describe('CreateItem', () => {
             plan_id: plan.id,
         });
 
-        const category = await fakeCategoryRepository.create('Bolos', user.id);
+        const category = await fakeCategoryRepository.create({
+            name: 'Bolos',
+            owner: user,
+        });
 
         const item = await createItemService.execute({
             name: 'Cake Chocolate',
@@ -70,7 +73,10 @@ describe('CreateItem', () => {
             plan_id: plan.id,
         });
 
-        const category = await fakeCategoryRepository.create('Bolos', user.id);
+        const category = await fakeCategoryRepository.create({
+            name: 'Bolos',
+            owner: user,
+        });
 
         await expect(
             createItemService.execute({
@@ -99,7 +105,10 @@ describe('CreateItem', () => {
         user.active = false;
         await fakeUsersRepository.save(user);
 
-        const category = await fakeCategoryRepository.create('Bolos', user.id);
+        const category = await fakeCategoryRepository.create({
+            name: 'Bolos',
+            owner: user,
+        });
 
         await expect(
             createItemService.execute({
@@ -126,7 +135,10 @@ describe('CreateItem', () => {
             plan_id: plan.id,
         });
 
-        const category = await fakeCategoryRepository.create('Bolos', user.id);
+        const category = await fakeCategoryRepository.create({
+            name: 'Bolos',
+            owner: user,
+        });
 
         await createItemService.execute({
             name: 'Cake Chocolate',

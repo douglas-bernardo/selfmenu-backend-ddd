@@ -44,6 +44,7 @@ class TableRepository implements ITableRepository {
                     id: table_id,
                     restaurant_id,
                 },
+                relations: ['orders'],
             });
         } else {
             findTable = await this.ormRepository.findOne(table_id);
@@ -77,11 +78,11 @@ class TableRepository implements ITableRepository {
     }
 
     public async findByToken({
-        token_table,
+        table_token,
     }: IFindByTokenTableDTO): Promise<Table | undefined> {
         const table = await this.ormRepository.findOne({
             where: {
-                token: token_table,
+                token: table_token,
             },
             relations: ['restaurant'],
         });

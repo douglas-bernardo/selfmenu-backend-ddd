@@ -8,7 +8,7 @@ import Restaurant from '../infra/typeorm/entities/Restaurant';
 
 interface IRequest {
     name: string;
-    cnpj: string;
+    cnpj: number;
     description: string;
     restaurant_type_id: number;
     user_id: string;
@@ -50,6 +50,16 @@ class CreateRestaurantService {
                     'Only Premium users can register more than one restaurant by account.',
                 );
             }
+        }
+
+        const restaurantExists = await this.restaurantRepository.findByCNPJ({
+            cnpj,
+        });
+
+        if (restaurantExists) {
+            throw new AppError(
+                'There is already a restaurant registered with this cnpj',
+            );
         }
 
         const restaurant = await this.restaurantRepository.create({

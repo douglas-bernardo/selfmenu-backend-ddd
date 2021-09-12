@@ -3,6 +3,7 @@ import { container } from 'tsyringe';
 
 import CreateItemService from '@modules/item/services/CreateItemService';
 import ListItemsService from '@modules/item/services/ListItemsService';
+import ShowItemService from '@modules/item/services/ShowItemService';
 
 export default class ItemController {
     public async index(
@@ -10,9 +11,9 @@ export default class ItemController {
         response: Response,
     ): Promise<Response> {
         const user_id = request.user.id;
-        const listItems = container.resolve(ListItemsService);
+        const showItems = container.resolve(ListItemsService);
 
-        const items = await listItems.execute({ user_id });
+        const items = await showItems.execute({ user_id });
         return response.json(items);
     }
 
@@ -39,5 +40,18 @@ export default class ItemController {
         });
 
         return response.json(restaurant);
+    }
+
+    public async show(request: Request, response: Response): Promise<Response> {
+        const user_id = request.user.id;
+        const { id } = request.params;
+        const showItem = container.resolve(ShowItemService);
+
+        const item = await showItem.execute({
+            item_id: id,
+            owner_id: user_id,
+        });
+
+        return response.json(item);
     }
 }

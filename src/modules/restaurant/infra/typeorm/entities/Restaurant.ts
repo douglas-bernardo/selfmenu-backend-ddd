@@ -22,7 +22,7 @@ class Restaurant {
     subdomain: string;
 
     @Column()
-    cnpj: string;
+    cnpj: number;
 
     @Column()
     owner_id: string;

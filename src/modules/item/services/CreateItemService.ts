@@ -60,7 +60,7 @@ class CreateItemService {
             await this.storageProvider.saveFiles(toDelete);
         }
 
-        const item = this.itemRepository.create({
+        const item = await this.itemRepository.create({
             name,
             description,
             price,

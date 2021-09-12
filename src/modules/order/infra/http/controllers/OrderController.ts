@@ -23,12 +23,12 @@ export default class OrderController {
         request: Request,
         response: Response,
     ): Promise<Response> {
-        const { token_table, items } = request.body;
+        const { table_token, items } = request.body;
 
         const createOrder = container.resolve(CreateOrderService);
 
         const order = await createOrder.execute({
-            token_table,
+            table_token,
             items,
         });
 

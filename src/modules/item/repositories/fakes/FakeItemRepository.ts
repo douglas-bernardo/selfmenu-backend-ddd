@@ -3,6 +3,7 @@ import { v4 as uuid } from 'uuid';
 import ICreateItemDTO from '@modules/item/dtos/ICreateItemDTO';
 import Item from '@modules/item/infra/typeorm/entities/Item';
 import IUpdateItemsQuantityDTO from '@modules/item/dtos/IUpdateItemsQuantityDTO';
+import IFindByIdItemDTO from '@modules/item/dtos/IFindByIdItemDTO';
 import IItemRepository from '../IItemRepository';
 
 interface IFindItems {
@@ -48,8 +49,19 @@ class FakeItemRepository implements IItemRepository {
         return this.items;
     }
 
-    public async findById(id: string): Promise<Item | undefined> {
-        const findItem = this.items.find(item => item.id === id);
+    public async findById({
+        id,
+        owner_id,
+    }: IFindByIdItemDTO): Promise<Item | undefined> {
+        let findItem: Item | undefined;
+
+        if (owner_id) {
+            findItem = this.items.find(
+                item => item.id === id && item.owner_id === owner_id,
+            );
+        } else {
+            findItem = this.items.find(item => item.id === id);
+        }
 
         return findItem;
     }

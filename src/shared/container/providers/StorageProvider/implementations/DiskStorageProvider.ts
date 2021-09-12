@@ -29,25 +29,31 @@ class DiskStorageProvider implements IStorageProvider {
     }
 
     public async saveFiles(files: IImage[]): Promise<void> {
-        files.forEach(file => {
-            fs.promises.rename(
-                path.resolve(uploadConfig.tmpFolder, file.url),
-                path.resolve(uploadConfig.uploadsFolder, file.url),
-            );
-        });
+        await Promise.all(
+            files.map(async file => {
+                await fs.promises.rename(
+                    path.resolve(uploadConfig.tmpFolder, file.url),
+                    path.resolve(uploadConfig.uploadsFolder, file.url),
+                );
+            }),
+        );
     }
 
     public async deleteFiles(files: IImage[]): Promise<void> {
-        files.forEach(file => {
-            const filePath = path.resolve(uploadConfig.uploadsFolder, file.url);
-
-            try {
-                fs.promises.stat(filePath);
-            } catch {
-                return;
-            }
-            fs.promises.unlink(filePath);
-        });
+        await Promise.all(
+            files.map(async file => {
+                const filePath = path.resolve(
+                    uploadConfig.uploadsFolder,
+                    file.url,
+                );
+                try {
+                    await fs.promises.stat(filePath);
+                } catch {
+                    return;
+                }
+                await fs.promises.unlink(filePath);
+            }),
+        );
     }
 }
 

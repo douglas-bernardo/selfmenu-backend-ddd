@@ -21,6 +21,16 @@ export default class CreateCategory1629670647959 implements MigrationInterface {
                         name: 'owner_id',
                         type: 'varchar',
                     },
+                    {
+                        name: 'created_at',
+                        type: 'timestamp',
+                        default: 'now()',
+                    },
+                    {
+                        name: 'updated_at',
+                        type: 'timestamp',
+                        default: 'now()',
+                    },
                 ],
                 foreignKeys: [
                     {

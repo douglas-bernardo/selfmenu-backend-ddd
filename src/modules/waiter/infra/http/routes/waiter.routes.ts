@@ -10,6 +10,8 @@ const waiterController = new WaiterController();
 waiterRouter.use(ensureAuthenticated);
 
 waiterRouter.get('/', waiterController.index);
+waiterRouter.get('/:id', waiterController.show);
+
 waiterRouter.post('/', waiterController.create);
 
 export default waiterRouter;

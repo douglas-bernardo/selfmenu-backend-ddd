@@ -24,7 +24,8 @@ export default class CreateRestaurant1629572164084
                     },
                     {
                         name: 'cnpj',
-                        type: 'varchar',
+                        type: 'bigint',
+                        isUnique: true,
                     },
                     {
                         name: 'owner_id',

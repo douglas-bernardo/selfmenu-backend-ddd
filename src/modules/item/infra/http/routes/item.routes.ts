@@ -13,6 +13,7 @@ const itemController = new ItemController();
 itemsRoutes.use(ensureAuthenticated);
 
 itemsRoutes.get('/', itemController.index);
+itemsRoutes.get('/:id', itemController.show);
 itemsRoutes.post('/', upload.array('images'), itemController.create);
 
 export default itemsRoutes;

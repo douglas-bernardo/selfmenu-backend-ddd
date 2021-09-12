@@ -1,10 +1,12 @@
 import User from '@modules/users/infra/typeorm/entities/User';
 import {
     Column,
+    CreateDateColumn,
     Entity,
     JoinColumn,
     ManyToOne,
     PrimaryGeneratedColumn,
+    UpdateDateColumn,
 } from 'typeorm';
 
 @Entity('category')
@@ -17,10 +19,16 @@ class Category {
 
     @ManyToOne(() => User, user => user)
     @JoinColumn({ name: 'owner_id' })
-    user: User;
+    owner: User;
 
     @Column()
     owner_id: string;
+
+    @CreateDateColumn()
+    created_at: Date;
+
+    @UpdateDateColumn()
+    updated_at: Date;
 }
 
 export default Category;

@@ -22,6 +22,8 @@ import ITableRepository from '@modules/table/repositories/ITableRepository';
 import TableRepository from '@modules/table/infra/typeorm/repositories/TableRepository';
 import IOrderRepository from '@modules/order/repositories/IOrderRepository';
 import OrdersRepository from '@modules/order/infra/typeorm/repositories/OrderRepository';
+import ICategoryRepository from '@modules/item/repositories/ICategoryRepository';
+import CategoryRepository from '@modules/item/infra/typeorm/repositories/CategoryRepository';
 
 container.registerSingleton<IUsersRepository>(
     'UsersRepository',
@@ -41,6 +43,11 @@ container.registerSingleton<IRestaurantRepository>(
 container.registerSingleton<IPlanRepository>('PlanRepository', PlanRepository);
 
 container.registerSingleton<IMenuRepository>('MenuRepository', MenuRepository);
+
+container.registerSingleton<ICategoryRepository>(
+    'CategoryRepository',
+    CategoryRepository,
+);
 
 container.registerSingleton<IItemRepository>('ItemRepository', ItemRepository);
 

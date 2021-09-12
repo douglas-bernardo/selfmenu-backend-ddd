@@ -5,12 +5,25 @@ import Restaurant from '@modules/restaurant/infra/typeorm/entities/Restaurant';
 import IRestaurantRepository from '@modules/restaurant/repositories/IRestaurantRepository';
 import IFindAllRestaurantsDTO from '@modules/restaurant/dtos/IFindAllRestaurantsDTO';
 import IFindByIdRestaurantDTO from '@modules/restaurant/dtos/IFindByIdRestaurantDTO';
+import IFindByCNPJRestaurantDTO from '@modules/restaurant/dtos/IFindByCNPJRestaurantDTO';
 
 class RestaurantRepository implements IRestaurantRepository {
     private ormRepository: Repository<Restaurant>;
 
     constructor() {
         this.ormRepository = getRepository(Restaurant);
+    }
+
+    public async findByCNPJ({
+        cnpj,
+    }: IFindByCNPJRestaurantDTO): Promise<Restaurant | undefined> {
+        const findRestaurant = await this.ormRepository.findOne({
+            where: {
+                cnpj,
+            },
+        });
+
+        return findRestaurant;
     }
 
     public async findById({

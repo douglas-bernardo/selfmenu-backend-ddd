@@ -10,6 +10,7 @@ interface IItem {
 }
 
 export default interface ICreateOrderDTO {
+    token: string;
     status_order_id: number;
     restaurant: Restaurant;
     waiter: Waiter;

@@ -1,5 +1,6 @@
 import CreateWaiterService from '@modules/waiter/services/CreateWaiterService';
 import ListWaitersService from '@modules/waiter/services/ListWaitersService';
+import ShowWaiterService from '@modules/waiter/services/ShowWaiterService';
 import { Request, Response } from 'express';
 import { container } from 'tsyringe';
 
@@ -36,5 +37,19 @@ export default class WaiterController {
         });
 
         return response.json(restaurant);
+    }
+
+    public async show(request: Request, response: Response): Promise<Response> {
+        const user_id = request.user.id;
+        const { id } = request.params;
+
+        const showWaiter = container.resolve(ShowWaiterService);
+
+        const waiter = await showWaiter.execute({
+            id,
+            owner_id: user_id,
+        });
+
+        return response.json(waiter);
     }
 }

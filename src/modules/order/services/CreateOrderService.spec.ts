@@ -103,7 +103,7 @@ describe('CreateOrder', () => {
         });
 
         const order = await createOrderService.execute({
-            token_table: token,
+            table_token: token,
             items: [
                 {
                     id: item.id,
@@ -139,7 +139,7 @@ describe('CreateOrder', () => {
 
         await expect(
             createOrderService.execute({
-                token_table: 'invalid-table',
+                table_token: 'invalid-table',
                 items: [
                     {
                         id: item.id,
@@ -212,7 +212,7 @@ describe('CreateOrder', () => {
 
         await expect(
             createOrderService.execute({
-                token_table: token,
+                table_token: token,
                 items: [
                     {
                         id: item.id,
@@ -284,7 +284,7 @@ describe('CreateOrder', () => {
 
         await expect(
             createOrderService.execute({
-                token_table: token,
+                table_token: token,
                 items: [
                     {
                         id: item.id,
@@ -354,7 +354,7 @@ describe('CreateOrder', () => {
 
         await expect(
             createOrderService.execute({
-                token_table: token,
+                table_token: token,
                 items: [
                     {
                         id: item.id,
@@ -414,7 +414,7 @@ describe('CreateOrder', () => {
 
         await expect(
             createOrderService.execute({
-                token_table: token,
+                table_token: token,
                 items: [
                     {
                         id: 'invalid-item',
@@ -484,7 +484,7 @@ describe('CreateOrder', () => {
 
         await expect(
             createOrderService.execute({
-                token_table: token,
+                table_token: token,
                 items: [
                     {
                         id: item.id,
@@ -557,7 +557,7 @@ describe('CreateOrder', () => {
 
         await expect(
             createOrderService.execute({
-                token_table: token,
+                table_token: token,
                 items: [
                     {
                         id: item.id,

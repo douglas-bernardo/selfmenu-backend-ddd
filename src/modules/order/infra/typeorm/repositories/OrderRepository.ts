@@ -25,6 +25,7 @@ class OrdersRepository implements IOrderRepository {
     }
 
     public async create({
+        token,
         status_order_id,
         items,
         restaurant,
@@ -32,6 +33,7 @@ class OrdersRepository implements IOrderRepository {
         waiter,
     }: ICreateOrderDTO): Promise<Order> {
         const order = this.ormRepository.create({
+            token,
             status_order_id,
             restaurant,
             waiter,

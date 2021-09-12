@@ -12,7 +12,7 @@ class Waiter {
     id: string;
 
     @Column()
-    cpf: string;
+    cpf: number;
 
     @Column()
     name: string;

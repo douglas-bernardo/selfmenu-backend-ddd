@@ -1,3 +1,4 @@
+import Order from '@modules/order/infra/typeorm/entities/Order';
 import Restaurant from '@modules/restaurant/infra/typeorm/entities/Restaurant';
 import {
     Column,
@@ -5,6 +6,7 @@ import {
     Entity,
     JoinColumn,
     ManyToOne,
+    OneToMany,
     PrimaryGeneratedColumn,
     UpdateDateColumn,
 } from 'typeorm';
@@ -26,6 +28,13 @@ class Table {
     @ManyToOne(() => Restaurant)
     @JoinColumn({ name: 'restaurant_id' })
     restaurant: Restaurant;
+
+    @OneToMany(() => Order, order => order.table)
+    @JoinColumn([
+        { name: 'table_id', referencedColumnName: 'id' },
+        { name: 'token', referencedColumnName: 'token' },
+    ])
+    orders: Order[];
 
     @Column()
     restaurant_id: string;
