@@ -15,7 +15,8 @@ class FakeCategoryRepository implements ICategoryRepository {
         owner_id,
     }: IFindByIdCategoryDTO): Promise<Category | undefined> {
         const findCategory = this.categories.find(
-            category => category.id === id && category.owner.id === owner_id,
+            category =>
+                category.id === Number(id) && category.owner.id === owner_id,
         );
 
         return findCategory;

@@ -6,6 +6,7 @@ import FakeItemRepository from '@modules/item/repositories/fakes/FakeItemReposit
 import FakePlanRepository from '@modules/users/repositories/fakes/FakePlanRepository';
 import AppError from '@shared/errors/AppError';
 import UpdateTableTokenService from '@modules/table/services/UpdateTableTokenService';
+import FakeNotificationsRepository from '@modules/notifications/repositories/fakes/FakeNotificationsRepository';
 import CreateOrderService from './CreateOrderService';
 import FakeOrderRepository from '../repositories/fakes/FakeOrderRepository';
 
@@ -16,6 +17,7 @@ let fakeTableRepository: FakeTableRepository;
 let fakeWaiterRepository: FakeWaiterRepository;
 let fakeItemRepository: FakeItemRepository;
 let fakeOrderRepository: FakeOrderRepository;
+let fakeNotificationsRepository: FakeNotificationsRepository;
 
 let updateTableTokenService: UpdateTableTokenService;
 let createOrderService: CreateOrderService;
@@ -30,6 +32,7 @@ describe('CreateOrder', () => {
         fakeItemRepository = new FakeItemRepository();
 
         fakeOrderRepository = new FakeOrderRepository();
+        fakeNotificationsRepository = new FakeNotificationsRepository();
 
         updateTableTokenService = new UpdateTableTokenService(
             fakeTableRepository,
@@ -42,6 +45,7 @@ describe('CreateOrder', () => {
             fakeWaiterRepository,
             fakeItemRepository,
             fakeOrderRepository,
+            fakeNotificationsRepository,
         );
     });
 
@@ -61,7 +65,7 @@ describe('CreateOrder', () => {
         await fakeUsersRepository.save(user);
 
         const restaurant = await fakeRestaurantRepository.create({
-            cnpj: '989865986598',
+            cnpj: 98986598659800,
             name: "Doe's Dinner",
             description: 'A new restaurant',
             restaurant_type_id: 1,
@@ -72,7 +76,7 @@ describe('CreateOrder', () => {
         const waiter = await fakeWaiterRepository.create({
             name: 'Moe',
             username: 'moe',
-            cpf: '999.999.999-99',
+            cpf: 99999999999,
             password: '123456',
             owner_id: user.id,
             restaurant_id: restaurant.id,
@@ -166,7 +170,7 @@ describe('CreateOrder', () => {
         await fakeUsersRepository.save(user);
 
         const restaurant = await fakeRestaurantRepository.create({
-            cnpj: '989865986598',
+            cnpj: 98986598659800,
             name: "Doe's Dinner",
             description: 'A new restaurant',
             restaurant_type_id: 1,
@@ -177,7 +181,7 @@ describe('CreateOrder', () => {
         const waiter = await fakeWaiterRepository.create({
             name: 'Moe',
             username: 'moe',
-            cpf: '999.999.999-99',
+            cpf: 99999999999,
             password: '123456',
             owner_id: user.id,
             restaurant_id: restaurant.id,
@@ -239,7 +243,7 @@ describe('CreateOrder', () => {
         await fakeUsersRepository.save(user);
 
         const restaurant = await fakeRestaurantRepository.create({
-            cnpj: '989865986598',
+            cnpj: 98986598659800,
             name: "Doe's Dinner",
             description: 'A new restaurant',
             restaurant_type_id: 1,
@@ -250,7 +254,7 @@ describe('CreateOrder', () => {
         const waiter = await fakeWaiterRepository.create({
             name: 'Moe',
             username: 'moe',
-            cpf: '999.999.999-99',
+            cpf: 99999999999,
             password: '123456',
             owner_id: user.id,
             restaurant_id: restaurant.id,
@@ -311,7 +315,7 @@ describe('CreateOrder', () => {
         await fakeUsersRepository.save(user);
 
         const restaurant = await fakeRestaurantRepository.create({
-            cnpj: '989865986598',
+            cnpj: 98986598659800,
             name: "Doe's Dinner",
             description: 'A new restaurant',
             restaurant_type_id: 1,
@@ -322,7 +326,7 @@ describe('CreateOrder', () => {
         const waiter = await fakeWaiterRepository.create({
             name: 'Moe',
             username: 'moe',
-            cpf: '999.999.999-99',
+            cpf: 99999999999,
             password: '123456',
             owner_id: user.id,
             restaurant_id: restaurant.id,
@@ -381,7 +385,7 @@ describe('CreateOrder', () => {
         await fakeUsersRepository.save(user);
 
         const restaurant = await fakeRestaurantRepository.create({
-            cnpj: '989865986598',
+            cnpj: 98986598659800,
             name: "Doe's Dinner",
             description: 'A new restaurant',
             restaurant_type_id: 1,
@@ -392,7 +396,7 @@ describe('CreateOrder', () => {
         const waiter = await fakeWaiterRepository.create({
             name: 'Moe',
             username: 'moe',
-            cpf: '999.999.999-99',
+            cpf: 99999999999,
             password: '123456',
             owner_id: user.id,
             restaurant_id: restaurant.id,
@@ -441,7 +445,7 @@ describe('CreateOrder', () => {
         await fakeUsersRepository.save(user);
 
         const restaurant = await fakeRestaurantRepository.create({
-            cnpj: '989865986598',
+            cnpj: 98986598659800,
             name: "Doe's Dinner",
             description: 'A new restaurant',
             restaurant_type_id: 1,
@@ -452,7 +456,7 @@ describe('CreateOrder', () => {
         const waiter = await fakeWaiterRepository.create({
             name: 'Moe',
             username: 'moe',
-            cpf: '999.999.999-99',
+            cpf: 99999999999,
             password: '123456',
             owner_id: user.id,
             restaurant_id: restaurant.id,
@@ -515,7 +519,7 @@ describe('CreateOrder', () => {
         await fakeUsersRepository.save(user);
 
         const restaurant = await fakeRestaurantRepository.create({
-            cnpj: '989865986598',
+            cnpj: 98986598659800,
             name: "Doe's Dinner",
             description: 'A new restaurant',
             restaurant_type_id: 1,
@@ -526,7 +530,7 @@ describe('CreateOrder', () => {
         const waiter = await fakeWaiterRepository.create({
             name: 'Moe',
             username: 'moe',
-            cpf: '999.999.999-99',
+            cpf: 99999999999,
             password: '123456',
             owner_id: user.id,
             restaurant_id: restaurant.id,

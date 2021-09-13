@@ -24,6 +24,8 @@ import IOrderRepository from '@modules/order/repositories/IOrderRepository';
 import OrdersRepository from '@modules/order/infra/typeorm/repositories/OrderRepository';
 import ICategoryRepository from '@modules/item/repositories/ICategoryRepository';
 import CategoryRepository from '@modules/item/infra/typeorm/repositories/CategoryRepository';
+import INotificationsRepository from '@modules/notifications/repositories/INotificationsRepository';
+import NotificationsRepository from '@modules/notifications/infra/typeorm/repositories/NotificationsRepository';
 
 container.registerSingleton<IUsersRepository>(
     'UsersRepository',
@@ -64,4 +66,9 @@ container.registerSingleton<ITableRepository>(
 container.registerSingleton<IOrderRepository>(
     'OrderRepository',
     OrdersRepository,
+);
+
+container.registerSingleton<INotificationsRepository>(
+    'NotificationsRepository',
+    NotificationsRepository,
 );

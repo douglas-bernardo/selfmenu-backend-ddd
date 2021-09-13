@@ -34,7 +34,10 @@ describe('ListItems', () => {
             plan_id: plan.id,
         });
 
-        const category = await fakeCategoryRepository.create('Bolos', user.id);
+        const category = await fakeCategoryRepository.create({
+            name: 'Sobremesas',
+            owner: user,
+        });
 
         const item1 = await fakeItemRepository.create({
             name: 'Cake Chocolate',

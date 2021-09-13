@@ -1,5 +1,6 @@
 import ICreateItemDTO from '@modules/item/dtos/ICreateItemDTO';
 import IFindByIdItemDTO from '@modules/item/dtos/IFindByIdItemDTO';
+import IFindByNameItemDTO from '@modules/item/dtos/IFindByNameItemDTO';
 import IUpdateItemsQuantityDTO from '@modules/item/dtos/IUpdateItemsQuantityDTO';
 import Item from '@modules/item/infra/typeorm/entities/Item';
 import IItemRepository from '@modules/item/repositories/IItemRepository';
@@ -75,10 +76,14 @@ class ItemRepository implements IItemRepository {
         return findItem;
     }
 
-    public async findByName(name: string): Promise<Item | undefined> {
+    public async findByName({
+        name,
+        owner_id,
+    }: IFindByNameItemDTO): Promise<Item | undefined> {
         const item = await this.ormRepository.findOne({
             where: {
                 name,
+                owner_id,
             },
         });
 

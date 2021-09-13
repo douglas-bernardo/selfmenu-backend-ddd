@@ -46,7 +46,7 @@ describe('CreateMenu', () => {
         await fakeUsersRepository.save(user);
 
         const restaurant = await fakeRestaurantRepository.create({
-            cnpj: '989865986598',
+            cnpj: 98986598659800,
             name: "Doe's Dinner",
             description: 'A new restaurant',
             restaurant_type_id: 1,
@@ -172,7 +172,7 @@ describe('CreateMenu', () => {
         await fakeUsersRepository.save(user);
 
         const restaurant = await fakeRestaurantRepository.create({
-            cnpj: '989865986598',
+            cnpj: 98986598659800,
             name: "Doe's Dinner",
             description: 'A new restaurant',
             restaurant_type_id: 1,
@@ -223,7 +223,7 @@ describe('CreateMenu', () => {
         await fakeUsersRepository.save(user);
 
         const restaurant = await fakeRestaurantRepository.create({
-            cnpj: '989865986598',
+            cnpj: 98986598659800,
             name: "Doe's Dinner",
             description: 'A new restaurant',
             restaurant_type_id: 1,
@@ -283,7 +283,7 @@ describe('CreateMenu', () => {
         await fakeUsersRepository.save(user);
 
         const restaurant = await fakeRestaurantRepository.create({
-            cnpj: '989865986598',
+            cnpj: 98986598659800,
             name: "Doe's Dinner",
             description: 'A new restaurant',
             restaurant_type_id: 1,

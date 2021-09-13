@@ -12,10 +12,10 @@ class FakeTableRepository implements ITableRepository {
     private tables: Table[] = [];
 
     public async findByToken({
-        token_table,
+        table_token,
     }: IFindByTokenTableDTO): Promise<Table | undefined> {
         const findTable = this.tables.find(
-            table => table.token === token_table,
+            table => table.token === table_token,
         );
 
         return findTable;

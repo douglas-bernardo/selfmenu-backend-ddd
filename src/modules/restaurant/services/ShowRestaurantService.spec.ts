@@ -51,7 +51,7 @@ describe('ShowRestaurant', () => {
             owner_id: user.id,
         });
 
-        expect(findRestaurant.cnpj).toBe('989865986598');
+        expect(findRestaurant.cnpj).toBe(31132548000119);
     });
 
     it('should not be able to show restaurant from non-existing account', async () => {

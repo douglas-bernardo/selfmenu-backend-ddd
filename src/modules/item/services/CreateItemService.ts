@@ -44,9 +44,10 @@ class CreateItemService {
         }
 
         const namePrepared = name.trim();
-        const checkIfItemExists = await this.itemRepository.findByName(
-            namePrepared,
-        );
+        const checkIfItemExists = await this.itemRepository.findByName({
+            name: namePrepared,
+            owner_id: user.id,
+        });
 
         if (checkIfItemExists) {
             throw new AppError('Item already exists');

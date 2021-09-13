@@ -4,6 +4,7 @@ import ICreateItemDTO from '@modules/item/dtos/ICreateItemDTO';
 import Item from '@modules/item/infra/typeorm/entities/Item';
 import IUpdateItemsQuantityDTO from '@modules/item/dtos/IUpdateItemsQuantityDTO';
 import IFindByIdItemDTO from '@modules/item/dtos/IFindByIdItemDTO';
+import IFindByNameItemDTO from '@modules/item/dtos/IFindByNameItemDTO';
 import IItemRepository from '../IItemRepository';
 
 interface IFindItems {
@@ -39,8 +40,13 @@ class FakeItemRepository implements IItemRepository {
         return itemsFiltered;
     }
 
-    public async findByName(name: string): Promise<Item | undefined> {
-        const findItem = this.items.find(item => item.name === name);
+    public async findByName({
+        name,
+        owner_id,
+    }: IFindByNameItemDTO): Promise<Item | undefined> {
+        const findItem = this.items.find(
+            item => item.name === name && item.owner_id === owner_id,
+        );
 
         return findItem;
     }

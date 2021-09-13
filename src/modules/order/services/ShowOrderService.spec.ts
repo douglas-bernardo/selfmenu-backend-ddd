@@ -53,7 +53,7 @@ describe('ShowOrder', () => {
         await fakeUsersRepository.save(user);
 
         const restaurant = await fakeRestaurantRepository.create({
-            cnpj: '989865986598',
+            cnpj: 98986598659800,
             name: "Doe's Dinner",
             description: 'A new restaurant',
             restaurant_type_id: 1,
@@ -64,7 +64,7 @@ describe('ShowOrder', () => {
         const waiter = await fakeWaiterRepository.create({
             name: 'Moe',
             username: 'moe',
-            cpf: '999.999.999-99',
+            cpf: 99999999999,
             password: '123456',
             owner_id: user.id,
             restaurant_id: restaurant.id,
@@ -89,12 +89,13 @@ describe('ShowOrder', () => {
             owner_id: user.id,
         });
 
-        await updateTableTokenService.execute({
+        const { token } = await updateTableTokenService.execute({
             table_code: table.code,
             restaurant_id: restaurant.id,
         });
 
         const order = await fakeOrderRepository.create({
+            token,
             status_order_id: 1,
             waiter,
             restaurant,

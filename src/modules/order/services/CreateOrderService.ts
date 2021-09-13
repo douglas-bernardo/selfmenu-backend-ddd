@@ -7,6 +7,7 @@ import IRestaurantRepository from '@modules/restaurant/repositories/IRestaurantR
 import IWaiterRepository from '@modules/waiter/repositories/IWaiterRepository';
 import ITableRepository from '@modules/table/repositories/ITableRepository';
 import IUsersRepository from '@modules/users/repositories/IUsersRepository';
+import INotificationsRepository from '@modules/notifications/repositories/INotificationsRepository';
 import IOrderRepository from '../repositories/IOrderRepository';
 import Order from '../infra/typeorm/entities/Order';
 
@@ -40,14 +41,15 @@ class CreateOrderService {
 
         @inject('OrderRepository')
         private orderRepository: IOrderRepository,
+
+        @inject('NotificationsRepository')
+        private notificationsRepository: INotificationsRepository,
     ) {}
 
     public async execute({ table_token, items }: IRequest): Promise<Order> {
         const table = await this.tableRepository.findByToken({
             table_token,
         });
-
-        console.log(table);
 
         if (!table) {
             throw new AppError('Invalid token or table not found');
@@ -139,6 +141,11 @@ class CreateOrderService {
         }));
 
         await this.itemRepository.updateQuantity(orderedItemsQuantity);
+
+        await this.notificationsRepository.create({
+            content: `Novo pedido realizado na mesa ${table.code}`,
+            recipient_id: waiterExist.id,
+        });
 
         return order;
     }

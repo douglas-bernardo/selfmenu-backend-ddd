@@ -41,7 +41,7 @@ describe('UpdateTableToken', () => {
         });
 
         const restaurant = await fakeRestaurantRepository.create({
-            cnpj: '989865986598',
+            cnpj: 98986598659800,
             name: "Doe's Dinner",
             description: 'A new restaurant',
             restaurant_type_id: 1,
@@ -52,7 +52,7 @@ describe('UpdateTableToken', () => {
         const waiter = await fakeWaiterRepository.create({
             name: 'Moe',
             username: 'moe',
-            cpf: '999.999.999-99',
+            cpf: 99999999999,
             password: '123456',
             owner_id: user.id,
             restaurant_id: restaurant.id,
@@ -87,7 +87,7 @@ describe('UpdateTableToken', () => {
         });
 
         const restaurant = await fakeRestaurantRepository.create({
-            cnpj: '989865986598',
+            cnpj: 98986598659800,
             name: "Doe's Dinner",
             description: 'A new restaurant',
             restaurant_type_id: 1,

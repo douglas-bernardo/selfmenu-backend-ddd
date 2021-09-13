@@ -8,7 +8,8 @@ export default class UpdateTableTokenController {
         request: Request,
         response: Response,
     ): Promise<Response> {
-        const { table_code, restaurant_id } = request.body;
+        const { restaurant_id } = request.params;
+        const { table_code } = request.body;
 
         const updateTableTokenService = container.resolve(
             UpdateTableTokenService,
