@@ -6,7 +6,7 @@ import ensureAuthenticated from '@modules/users/infra/http/middlewares/ensureAut
 import ItemController from '../controllers/ItemController';
 
 const itemsRoutes = Router();
-const upload = multer(uploadConfig);
+const upload = multer(uploadConfig.multer);
 
 const itemController = new ItemController();
 

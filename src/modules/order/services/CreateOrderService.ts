@@ -18,6 +18,7 @@ interface IItems {
 
 interface IRequest {
     table_token: string;
+    restaurant_id: string;
     items: IItems[];
 }
 
@@ -46,7 +47,11 @@ class CreateOrderService {
         private notificationsRepository: INotificationsRepository,
     ) {}
 
-    public async execute({ table_token, items }: IRequest): Promise<Order> {
+    public async execute({
+        table_token,
+        restaurant_id,
+        items,
+    }: IRequest): Promise<Order> {
         const table = await this.tableRepository.findByToken({
             table_token,
         });
@@ -64,7 +69,7 @@ class CreateOrderService {
         }
 
         const restaurantExist = await this.restaurantRepository.findById({
-            restaurant_id: table.restaurant_id,
+            restaurant_id,
             owner_id: user.id,
         });
 

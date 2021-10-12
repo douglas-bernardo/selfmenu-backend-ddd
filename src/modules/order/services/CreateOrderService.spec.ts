@@ -108,6 +108,7 @@ describe('CreateOrder', () => {
 
         const order = await createOrderService.execute({
             table_token: token,
+            restaurant_id: restaurant.id,
             items: [
                 {
                     id: item.id,
@@ -131,6 +132,14 @@ describe('CreateOrder', () => {
             profile_name: 'John Doe',
             plan_id: plan.id,
         });
+        const restaurant = await fakeRestaurantRepository.create({
+            cnpj: 98986598659800,
+            name: "Doe's Dinner",
+            description: 'A new restaurant',
+            restaurant_type_id: 1,
+            owner_id: user.id,
+            subdomain: 'does-dinner',
+        });
 
         const item = await fakeItemRepository.create({
             name: 'Bolo de chocolate',
@@ -144,6 +153,7 @@ describe('CreateOrder', () => {
         await expect(
             createOrderService.execute({
                 table_token: 'invalid-table',
+                restaurant_id: restaurant.id,
                 items: [
                     {
                         id: item.id,
@@ -217,6 +227,7 @@ describe('CreateOrder', () => {
         await expect(
             createOrderService.execute({
                 table_token: token,
+                restaurant_id: restaurant.id,
                 items: [
                     {
                         id: item.id,
@@ -283,12 +294,12 @@ describe('CreateOrder', () => {
             restaurant_id: restaurant.id,
         });
 
-        table.restaurant_id = 'non-existing-restaurant';
         await fakeTableRepository.save(table);
 
         await expect(
             createOrderService.execute({
                 table_token: token,
+                restaurant_id: 'non-existing-restaurant',
                 items: [
                     {
                         id: item.id,
@@ -359,6 +370,7 @@ describe('CreateOrder', () => {
         await expect(
             createOrderService.execute({
                 table_token: token,
+                restaurant_id: restaurant.id,
                 items: [
                     {
                         id: item.id,
@@ -419,6 +431,7 @@ describe('CreateOrder', () => {
         await expect(
             createOrderService.execute({
                 table_token: token,
+                restaurant_id: restaurant.id,
                 items: [
                     {
                         id: 'invalid-item',
@@ -489,6 +502,7 @@ describe('CreateOrder', () => {
         await expect(
             createOrderService.execute({
                 table_token: token,
+                restaurant_id: restaurant.id,
                 items: [
                     {
                         id: item.id,
@@ -562,6 +576,7 @@ describe('CreateOrder', () => {
         await expect(
             createOrderService.execute({
                 table_token: token,
+                restaurant_id: restaurant.id,
                 items: [
                     {
                         id: item.id,

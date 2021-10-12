@@ -7,7 +7,7 @@ import Restaurant from '../infra/typeorm/entities/Restaurant';
 
 interface IRequest {
     id: string;
-    owner_id: string;
+    owner_id?: string;
 }
 
 @injectable()
@@ -21,10 +21,12 @@ class ShowRestaurantService {
     ) {}
 
     public async execute({ id, owner_id }: IRequest): Promise<Restaurant> {
-        const user = await this.usersRepository.findById(owner_id);
+        if (owner_id) {
+            const user = await this.usersRepository.findById(owner_id);
 
-        if (!user) {
-            throw new AppError('User account not found');
+            if (!user) {
+                throw new AppError('User account not found');
+            }
         }
 
         const restaurant = await this.restaurantRepository.findById({

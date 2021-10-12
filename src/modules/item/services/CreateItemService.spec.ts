@@ -2,6 +2,7 @@ import AppError from '@shared/errors/AppError';
 import FakePlanRepository from '@modules/users/repositories/fakes/FakePlanRepository';
 import FakeUsersRepository from '@modules/users/repositories/fakes/FakeUserRepository';
 import FakeStorageProvider from '@shared/container/providers/StorageProvider/fakes/FakeStorageProvider';
+import FakeCacheProvider from '@shared/container/providers/CacheProvider/fakes/FakeCacheProvider';
 import FakeItemRepository from '../repositories/fakes/FakeItemRepository';
 import CreateItemService from './CreateItemService';
 import FakeCategoryRepository from '../repositories/fakes/FakeCategoryRepository';
@@ -11,6 +12,7 @@ let fakeUsersRepository: FakeUsersRepository;
 let fakeStorageProvider: FakeStorageProvider;
 let fakeCategoryRepository: FakeCategoryRepository;
 let fakeItemRepository: FakeItemRepository;
+let fakeCacheProvider: FakeCacheProvider;
 
 let createItemService: CreateItemService;
 
@@ -22,11 +24,13 @@ describe('CreateItem', () => {
 
         fakeCategoryRepository = new FakeCategoryRepository();
         fakeItemRepository = new FakeItemRepository();
+        fakeCacheProvider = new FakeCacheProvider();
 
         createItemService = new CreateItemService(
             fakeUsersRepository,
             fakeItemRepository,
             fakeStorageProvider,
+            fakeCacheProvider,
         );
     });
 

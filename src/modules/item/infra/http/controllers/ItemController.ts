@@ -1,5 +1,6 @@
 import { Request, Response } from 'express';
 import { container } from 'tsyringe';
+import { classToClass } from 'class-transformer';
 
 import CreateItemService from '@modules/item/services/CreateItemService';
 import ListItemsService from '@modules/item/services/ListItemsService';
@@ -11,10 +12,14 @@ export default class ItemController {
         response: Response,
     ): Promise<Response> {
         const user_id = request.user.id;
+        const { category } = request.query;
         const showItems = container.resolve(ListItemsService);
 
-        const items = await showItems.execute({ user_id });
-        return response.json(items);
+        const items = await showItems.execute({
+            owner_id: user_id,
+            category_id: Number(category),
+        });
+        return response.json(classToClass(items));
     }
 
     public async create(

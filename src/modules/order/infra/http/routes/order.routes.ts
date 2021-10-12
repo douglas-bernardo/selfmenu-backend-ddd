@@ -3,7 +3,8 @@ import { celebrate, Segments, Joi } from 'celebrate';
 
 import OrderController from '../controllers/OrderController';
 
-const orderRouter = Router();
+const orderRouter = Router({ mergeParams: true });
+
 const orderController = new OrderController();
 
 const objectSchema = Joi.object({
@@ -23,7 +24,8 @@ orderRouter.post(
     }),
     orderController.create,
 );
-orderRouter.get('/:restaurant_id/list', orderController.index);
+
+orderRouter.get('/', orderController.index);
 orderRouter.get('/:id', orderController.show);
 
 export default orderRouter;

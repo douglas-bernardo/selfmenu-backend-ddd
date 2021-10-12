@@ -1,5 +1,6 @@
 import FakePlanRepository from '@modules/users/repositories/fakes/FakePlanRepository';
 import FakeUsersRepository from '@modules/users/repositories/fakes/FakeUserRepository';
+import FakeCacheProvider from '@shared/container/providers/CacheProvider/fakes/FakeCacheProvider';
 import FakeItemRepository from '../repositories/fakes/FakeItemRepository';
 import FakeCategoryRepository from '../repositories/fakes/FakeCategoryRepository';
 import ListItemsService from './ListItemsService';
@@ -8,6 +9,7 @@ let fakePlanRepository: FakePlanRepository;
 let fakeUsersRepository: FakeUsersRepository;
 let fakeCategoryRepository: FakeCategoryRepository;
 let fakeItemRepository: FakeItemRepository;
+let fakeCacheProvider: FakeCacheProvider;
 
 let listItemsService: ListItemsService;
 
@@ -17,8 +19,12 @@ describe('ListItems', () => {
         fakeUsersRepository = new FakeUsersRepository();
         fakeCategoryRepository = new FakeCategoryRepository();
         fakeItemRepository = new FakeItemRepository();
+        fakeCacheProvider = new FakeCacheProvider();
 
-        listItemsService = new ListItemsService(fakeItemRepository);
+        listItemsService = new ListItemsService(
+            fakeItemRepository,
+            fakeCacheProvider,
+        );
     });
 
     it('should be able to list items', async () => {
@@ -57,7 +63,7 @@ describe('ListItems', () => {
             owner_id: user.id,
         });
 
-        const list = await listItemsService.execute({ user_id: user.id });
+        const list = await listItemsService.execute({ owner_id: user.id });
 
         expect(list).toEqual([item1, item2]);
     });

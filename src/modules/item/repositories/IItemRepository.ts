@@ -1,4 +1,6 @@
 import ICreateItemDTO from '../dtos/ICreateItemDTO';
+import IFindAllItemsByCategoryIdDTO from '../dtos/IFindAllItemsByCategoryIdDTO';
+import IFindAllItemsDTO from '../dtos/IFindAllItemsDTO';
 import IFindByIdItemDTO from '../dtos/IFindByIdItemDTO';
 import IFindByNameItemDTO from '../dtos/IFindByNameItemDTO';
 import IUpdateItemsQuantityDTO from '../dtos/IUpdateItemsQuantityDTO';
@@ -9,7 +11,8 @@ interface IFindItems {
 }
 
 export default interface IItemRepository {
-    findAll(owner_id?: string): Promise<Item[]>;
+    findAll(data: IFindAllItemsDTO): Promise<Item[]>;
+    findAllByCategoryId(data: IFindAllItemsByCategoryIdDTO): Promise<Item[]>;
     findById(data: IFindByIdItemDTO): Promise<Item | undefined>;
     findByName(data: IFindByNameItemDTO): Promise<Item | undefined>;
     findAllById(items_ids: IFindItems[], owner_id?: string): Promise<Item[]>;

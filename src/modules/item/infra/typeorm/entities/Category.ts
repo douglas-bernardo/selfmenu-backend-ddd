@@ -24,6 +24,9 @@ class Category {
     @Column()
     owner_id: string;
 
+    @Column()
+    active: boolean;
+
     @CreateDateColumn()
     created_at: Date;
 

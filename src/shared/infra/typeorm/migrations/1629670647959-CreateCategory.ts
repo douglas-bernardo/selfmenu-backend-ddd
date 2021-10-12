@@ -22,6 +22,11 @@ export default class CreateCategory1629670647959 implements MigrationInterface {
                         type: 'varchar',
                     },
                     {
+                        name: 'active',
+                        type: 'boolean',
+                        default: true,
+                    },
+                    {
                         name: 'created_at',
                         type: 'timestamp',
                         default: 'now()',

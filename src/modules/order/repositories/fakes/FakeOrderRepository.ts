@@ -4,6 +4,7 @@ import ICreateOrderDTO from '@modules/order/dtos/ICreateOrderDTO';
 import Order from '@modules/order/infra/typeorm/entities/Order';
 
 import IFindAllOrdersDTO from '@modules/order/dtos/IFindAllOrdersDTO';
+import IFindByIdOrderDTO from '@modules/order/dtos/IFindByIdOrderDTO';
 import IOrderRepository from '../IOrderRepository';
 
 class FakeOrderRepository implements IOrderRepository {
@@ -24,14 +25,30 @@ class FakeOrderRepository implements IOrderRepository {
 
         const order_items = data.items.map(item => item);
 
-        Object.assign(order, { id: uuid(), order_items }, data);
+        Object.assign(
+            order,
+            { id: uuid(), restaurant_id: data.restaurant.id, order_items },
+            data,
+        );
 
         this.orders.push(order);
         return order;
     }
 
-    public async findById(id: string): Promise<Order | undefined> {
-        const findOrder = this.orders.find(order => order.id === id);
+    public async findById({
+        id,
+        restaurant_id,
+    }: IFindByIdOrderDTO): Promise<Order | undefined> {
+        let findOrder: Order | undefined;
+
+        if (restaurant_id) {
+            findOrder = this.orders.find(
+                order =>
+                    order.id === id && order.restaurant_id === restaurant_id,
+            );
+        } else {
+            findOrder = this.orders.find(order => order.id === id);
+        }
 
         return findOrder;
     }

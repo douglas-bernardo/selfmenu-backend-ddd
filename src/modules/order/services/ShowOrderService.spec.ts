@@ -109,7 +109,10 @@ describe('ShowOrder', () => {
             ],
         });
 
-        const findOrder = await showOrderService.execute({ id: order.id });
+        const findOrder = await showOrderService.execute({
+            id: order.id,
+            restaurant_id: restaurant.id,
+        });
 
         expect(findOrder.status_order_id).toBe(1);
     });

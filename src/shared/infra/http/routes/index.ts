@@ -10,9 +10,16 @@ import menuRouter from '@modules/menu/infra/http/routes/menu.routes';
 import categoryRoutes from '@modules/item/infra/http/routes/category.routes';
 import itemsRoutes from '@modules/item/infra/http/routes/item.routes';
 import waiterRouter from '@modules/waiter/infra/http/routes/waiter.routes';
-import orderRouter from '@modules/order/infra/http/routes/order.routes';
+
+import appRestaurantRouter from '@modules/restaurant/infra/http/routes/app.restaurant.routes';
+import appCategoryRoutes from '@modules/item/infra/http/routes/app.category.routes';
+import appItemsRoutes from '@modules/item/infra/http/routes/app.item.routes';
 
 const routes = Router();
+
+/**
+ * API Routes
+ */
 
 routes.use('/users', usersRouter);
 routes.use('/sessions', sessionsRouter);
@@ -24,6 +31,12 @@ routes.use('/menus', menuRouter);
 routes.use('/categories', categoryRoutes);
 routes.use('/items', itemsRoutes);
 routes.use('/waiters', waiterRouter);
-routes.use('/orders', orderRouter);
+
+/**
+ * App Routes
+ */
+routes.use('/app/restaurants', appRestaurantRouter);
+routes.use('/app/categories', appCategoryRoutes);
+routes.use('/app/items', appItemsRoutes);
 
 export default routes;

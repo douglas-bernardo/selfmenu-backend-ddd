@@ -19,7 +19,7 @@ export default class UsersController {
         request: Request,
         response: Response,
     ): Promise<Response> {
-        const { email, password, profile_name } = request.body;
+        const { profile_name, email, password } = request.body;
 
         const createUserService = container.resolve(CreateUserService);
 

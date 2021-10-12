@@ -23,12 +23,15 @@ export default class OrderController {
         request: Request,
         response: Response,
     ): Promise<Response> {
+        const { restaurant_id } = request.params;
+
         const { table_token, items } = request.body;
 
         const createOrder = container.resolve(CreateOrderService);
 
         const order = await createOrder.execute({
             table_token,
+            restaurant_id,
             items,
         });
 
@@ -36,12 +39,13 @@ export default class OrderController {
     }
 
     public async show(request: Request, response: Response): Promise<Response> {
-        const { id } = request.params;
+        const { restaurant_id, id } = request.params;
 
         const findOrder = container.resolve(ShowOrderService);
 
         const order = await findOrder.execute({
             id,
+            restaurant_id,
         });
 
         return response.json(order);

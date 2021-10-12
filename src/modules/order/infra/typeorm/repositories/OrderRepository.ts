@@ -1,5 +1,6 @@
 import ICreateOrderDTO from '@modules/order/dtos/ICreateOrderDTO';
 import IFindAllOrdersDTO from '@modules/order/dtos/IFindAllOrdersDTO';
+import IFindByIdOrderDTO from '@modules/order/dtos/IFindByIdOrderDTO';
 import IOrderRepository from '@modules/order/repositories/IOrderRepository';
 import { getRepository, Repository } from 'typeorm';
 
@@ -46,12 +47,25 @@ class OrdersRepository implements IOrderRepository {
         return order;
     }
 
-    public async findById(id: string): Promise<Order | undefined> {
-        const order = this.ormRepository.findOne(id, {
-            relations: ['order_items', 'table'],
-        });
+    public async findById({
+        id,
+        restaurant_id,
+    }: IFindByIdOrderDTO): Promise<Order | undefined> {
+        let findOrder: Order | undefined;
 
-        return order;
+        if (restaurant_id) {
+            findOrder = await this.ormRepository.findOne({
+                where: {
+                    id,
+                    restaurant_id,
+                },
+                relations: ['order_items', 'table'],
+            });
+        } else {
+            findOrder = await this.ormRepository.findOne(id);
+        }
+
+        return findOrder;
     }
 }
 

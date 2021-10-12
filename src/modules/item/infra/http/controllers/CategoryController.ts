@@ -9,10 +9,10 @@ export default class CategoryController {
         request: Request,
         response: Response,
     ): Promise<Response> {
-        const user_id = request.user.id;
+        const owner_id = request.user.id;
         const listCategories = container.resolve(ListCategoriesService);
 
-        const categories = await listCategories.execute({ owner_id: user_id });
+        const categories = await listCategories.execute({ owner_id });
 
         return response.json(categories);
     }

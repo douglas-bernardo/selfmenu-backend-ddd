@@ -3,6 +3,7 @@ import { injectable, inject } from 'tsyringe';
 import IUsersRepository from '@modules/users/repositories/IUsersRepository';
 import AppError from '@shared/errors/AppError';
 import IStorageProvider from '@shared/container/providers/StorageProvider/models/IStorageProvider';
+import ICacheProvider from '@shared/container/providers/CacheProvider/models/ICacheProvider';
 import IItemRepository from '../repositories/IItemRepository';
 import Item from '../infra/typeorm/entities/Item';
 
@@ -19,9 +20,17 @@ interface IRequest {
 @injectable()
 class CreateItemService {
     constructor(
-        @inject('UsersRepository') private usersRepository: IUsersRepository,
-        @inject('ItemRepository') private itemRepository: IItemRepository,
-        @inject('StorageProvider') private storageProvider: IStorageProvider,
+        @inject('UsersRepository')
+        private usersRepository: IUsersRepository,
+
+        @inject('ItemRepository')
+        private itemRepository: IItemRepository,
+
+        @inject('StorageProvider')
+        private storageProvider: IStorageProvider,
+
+        @inject('CacheProvider')
+        private cacheProvider: ICacheProvider,
     ) {}
 
     public async execute({
@@ -74,6 +83,8 @@ class CreateItemService {
                     return { url: image.filename };
                 }),
         });
+
+        await this.cacheProvider.invalidatePrefix('items-list');
 
         return item;
     }

@@ -5,6 +5,8 @@ import Item from '@modules/item/infra/typeorm/entities/Item';
 import IUpdateItemsQuantityDTO from '@modules/item/dtos/IUpdateItemsQuantityDTO';
 import IFindByIdItemDTO from '@modules/item/dtos/IFindByIdItemDTO';
 import IFindByNameItemDTO from '@modules/item/dtos/IFindByNameItemDTO';
+import IFindAllItemsDTO from '@modules/item/dtos/IFindAllItemsDTO';
+import IFindAllItemsByCategoryIdDTO from '@modules/item/dtos/IFindAllItemsByCategoryIdDTO';
 import IItemRepository from '../IItemRepository';
 
 interface IFindItems {
@@ -13,6 +15,18 @@ interface IFindItems {
 
 class FakeItemRepository implements IItemRepository {
     private items: Item[] = [];
+
+    public async findAllByCategoryId({
+        owner_id,
+        category_id,
+    }: IFindAllItemsByCategoryIdDTO): Promise<Item[]> {
+        const itemsFiltered = this.items.filter(
+            item =>
+                item.owner_id === owner_id && item.category_id === category_id,
+        );
+
+        return itemsFiltered;
+    }
 
     public async updateQuantity(
         items: IUpdateItemsQuantityDTO[],
@@ -51,8 +65,14 @@ class FakeItemRepository implements IItemRepository {
         return findItem;
     }
 
-    public async findAll(): Promise<Item[]> {
-        return this.items;
+    public async findAll({ owner_id }: IFindAllItemsDTO): Promise<Item[]> {
+        let { items } = this;
+
+        if (owner_id) {
+            items = this.items.filter(item => item.owner_id === owner_id);
+        }
+
+        return items;
     }
 
     public async findById({

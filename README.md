@@ -96,11 +96,12 @@ posterior acompanhamento de pedidos.
 
 **RF**
 - Usuário (cliente final) deve poder criar um pedido
-- Usuário (cliente final) deve poder filtrar itens por categoria.
+- Usuário (cliente final) deve poder filtrar itens por categoria. [pendente]
 - O usuário deve receber um código unico que identifica a mesa para realizar seu pedido.
 
 **RNF**
-- Utilizar estratégia de hash que gere um código curto de fácil digitação.
+- Para geração de código unico da mesa, utilizar estratégia de hash que gere um
+ código curto de fácil digitação.
 
 **RN**
 - Somente estabelecimentos pertencentes a contas Premium (owner) podem registrar/gerenciar pedidos;

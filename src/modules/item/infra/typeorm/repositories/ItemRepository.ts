@@ -1,4 +1,6 @@
 import ICreateItemDTO from '@modules/item/dtos/ICreateItemDTO';
+import IFindAllItemsByCategoryIdDTO from '@modules/item/dtos/IFindAllItemsByCategoryIdDTO';
+import IFindAllItemsDTO from '@modules/item/dtos/IFindAllItemsDTO';
 import IFindByIdItemDTO from '@modules/item/dtos/IFindByIdItemDTO';
 import IFindByNameItemDTO from '@modules/item/dtos/IFindByNameItemDTO';
 import IUpdateItemsQuantityDTO from '@modules/item/dtos/IUpdateItemsQuantityDTO';
@@ -17,6 +19,21 @@ class ItemRepository implements IItemRepository {
         this.ormRepository = getRepository(Item);
     }
 
+    public async findAllByCategoryId({
+        owner_id,
+        category_id,
+    }: IFindAllItemsByCategoryIdDTO): Promise<Item[]> {
+        const items = await this.ormRepository.find({
+            where: {
+                owner_id,
+                category_id,
+            },
+            relations: ['images'],
+        });
+
+        return items;
+    }
+
     public async findAllById(
         items_ids: IFindItems[],
         owner_id: string,
@@ -33,7 +50,7 @@ class ItemRepository implements IItemRepository {
         return existentItems;
     }
 
-    public async findAll(owner_id?: string): Promise<Item[]> {
+    public async findAll({ owner_id }: IFindAllItemsDTO): Promise<Item[]> {
         let items: Item[] = [];
 
         if (owner_id) {

@@ -6,6 +6,7 @@ import IOrderRepository from '../repositories/IOrderRepository';
 
 interface IRequest {
     id: string;
+    restaurant_id: string;
 }
 
 @injectable()
@@ -15,8 +16,11 @@ class ShowOrderService {
         private orderRepository: IOrderRepository,
     ) {}
 
-    public async execute({ id }: IRequest): Promise<Order> {
-        const order = await this.orderRepository.findById(id);
+    public async execute({ id, restaurant_id }: IRequest): Promise<Order> {
+        const order = await this.orderRepository.findById({
+            id,
+            restaurant_id,
+        });
 
         if (!order) {
             throw new AppError('Order not found');
