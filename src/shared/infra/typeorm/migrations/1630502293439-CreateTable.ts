@@ -18,8 +18,8 @@ export default class CreateTable1630502293439 implements MigrationInterface {
                         isNullable: true,
                     },
                     {
-                        name: 'code',
-                        type: 'varchar',
+                        name: 'number',
+                        type: 'int',
                     },
                     {
                         name: 'capacity',
@@ -31,6 +31,10 @@ export default class CreateTable1630502293439 implements MigrationInterface {
                     },
                     {
                         name: 'waiter_id',
+                        type: 'varchar',
+                    },
+                    {
+                        name: 'owner_id',
                         type: 'varchar',
                     },
                     {
@@ -60,6 +64,12 @@ export default class CreateTable1630502293439 implements MigrationInterface {
                         name: 'fk_table_waiter',
                         columnNames: ['waiter_id'],
                         referencedTableName: 'waiter',
+                        referencedColumnNames: ['id'],
+                    },
+                    {
+                        name: 'fk_table_owner',
+                        columnNames: ['owner_id'],
+                        referencedTableName: 'user',
                         referencedColumnNames: ['id'],
                     },
                 ],

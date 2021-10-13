@@ -8,7 +8,6 @@ import Table from '../infra/typeorm/entities/Table';
 import ITableRepository from '../repositories/ITableRepository';
 
 interface IRequest {
-    code: string;
     capacity: number;
     restaurant_id: string;
     waiter_id: string;
@@ -32,7 +31,6 @@ class CreateTableService {
     ) {}
 
     public async execute({
-        code,
         capacity,
         restaurant_id,
         waiter_id,
@@ -57,13 +55,13 @@ class CreateTableService {
             throw new AppError('Restaurant inactive. Not allowed.');
         }
 
-        const codeTableExists = await this.tableRepository.findByCode({
-            code,
+        let table_number = 1;
+        const lastTableCreated = await this.tableRepository.findLastCreated(
             restaurant_id,
-        });
+        );
 
-        if (codeTableExists) {
-            throw new AppError('Table code already used');
+        if (lastTableCreated) {
+            table_number += lastTableCreated.number;
         }
 
         const waiter = await this.waiterRepository.findById({
@@ -76,10 +74,11 @@ class CreateTableService {
         }
 
         const table = await this.tableRepository.create({
-            code,
+            number: table_number,
             capacity,
-            restaurant_id,
-            waiter_id,
+            restaurant,
+            waiter,
+            owner: user,
         });
 
         return table;

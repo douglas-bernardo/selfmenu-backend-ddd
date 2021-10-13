@@ -71,10 +71,11 @@ describe('ShowOrder', () => {
         });
 
         const table = await fakeTableRepository.create({
-            code: 'T001',
+            number: 1,
             capacity: 4,
-            restaurant_id: restaurant.id,
-            waiter_id: waiter.id,
+            restaurant,
+            waiter,
+            owner: user,
         });
 
         table.restaurant = restaurant;
@@ -90,7 +91,7 @@ describe('ShowOrder', () => {
         });
 
         const { token } = await updateTableTokenService.execute({
-            table_code: table.code,
+            table_number: table.number,
             restaurant_id: restaurant.id,
         });
 

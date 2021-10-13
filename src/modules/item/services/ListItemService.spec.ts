@@ -63,7 +63,10 @@ describe('ListItems', () => {
             owner_id: user.id,
         });
 
-        const list = await listItemsService.execute({ owner_id: user.id });
+        const list = await listItemsService.execute({
+            owner_id: user.id,
+            category_id: category.id,
+        });
 
         expect(list).toEqual([item1, item2]);
     });

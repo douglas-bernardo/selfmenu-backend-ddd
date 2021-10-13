@@ -2,7 +2,7 @@ import { v4 as uuid } from 'uuid';
 
 import Table from '@modules/table/infra/typeorm/entities/Table';
 import ICreateTableDTO from '@modules/table/dtos/ICreateTableDTO';
-import IFindByCodeTableDTO from '@modules/table/dtos/IFindByCodeTableDTO';
+import IFindByNumberTableDTO from '@modules/table/dtos/IFindByNumberTableDTO';
 import IFindByIdTableDTO from '@modules/table/dtos/IFindByIdTableDTO';
 import IFindByTokenTableDTO from '@modules/table/dtos/IFindByTokenTableDTO';
 import IFindAllTablesDTO from '@modules/table/dtos/IFindAllTablesDTO';
@@ -10,6 +10,26 @@ import ITableRepository from '../ITableRepository';
 
 class FakeTableRepository implements ITableRepository {
     private tables: Table[] = [];
+
+    public async findLastCreated(
+        restaurant_id: string,
+    ): Promise<Table | undefined> {
+        let findTable: Table | undefined;
+
+        const maxTableNumber = Math.max(
+            ...this.tables.map(table => table.number),
+        );
+
+        if (maxTableNumber > 0) {
+            findTable = this.tables.find(
+                table =>
+                    table.number === maxTableNumber &&
+                    table.restaurant_id === restaurant_id,
+            );
+        }
+
+        return findTable;
+    }
 
     public async findByToken({
         table_token,
@@ -45,7 +65,7 @@ class FakeTableRepository implements ITableRepository {
             findTable = this.tables.find(
                 table =>
                     table.id === table_id &&
-                    table.restaurant_id === restaurant_id,
+                    table.restaurant.id === restaurant_id,
             );
         } else {
             findTable = this.tables.find(table => table.id === table_id);
@@ -54,20 +74,20 @@ class FakeTableRepository implements ITableRepository {
         return findTable;
     }
 
-    public async findByCode({
-        code,
+    public async findByNumber({
+        number,
         restaurant_id,
-    }: IFindByCodeTableDTO): Promise<Table | undefined> {
+    }: IFindByNumberTableDTO): Promise<Table | undefined> {
         let findTable: Table | undefined;
 
         if (restaurant_id) {
             findTable = this.tables.find(
                 table =>
-                    table.code === code &&
-                    table.restaurant_id === restaurant_id,
+                    table.number === number &&
+                    table.restaurant.id === restaurant_id,
             );
         } else {
-            findTable = this.tables.find(table => table.code === code);
+            findTable = this.tables.find(table => table.number === number);
         }
 
         return findTable;
@@ -76,7 +96,11 @@ class FakeTableRepository implements ITableRepository {
     public async create(data: ICreateTableDTO): Promise<Table> {
         const table = new Table();
 
-        Object.assign(table, { id: uuid(), active: true }, data);
+        Object.assign(
+            table,
+            { id: uuid(), active: true, waiter_id: data.waiter.id },
+            data,
+        );
 
         this.tables.push(table);
         return table;

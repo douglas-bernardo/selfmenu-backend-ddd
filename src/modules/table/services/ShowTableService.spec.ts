@@ -58,10 +58,11 @@ describe('ShowTable', () => {
         });
 
         const table = await fakeTableRepository.create({
-            code: 'T0001',
+            number: 1,
             capacity: 4,
-            restaurant_id: restaurant.id,
-            waiter_id: waiter.id,
+            restaurant,
+            waiter,
+            owner: user,
         });
 
         const findTable = await showTableService.execute({
@@ -69,7 +70,7 @@ describe('ShowTable', () => {
             restaurant_id: restaurant.id,
         });
 
-        expect(findTable.code).toBe('T0001');
+        expect(findTable.number).toBe(1);
     });
 
     it('should not be able to show table from non-existing table', async () => {

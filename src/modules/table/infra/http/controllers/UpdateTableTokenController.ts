@@ -9,17 +9,17 @@ export default class UpdateTableTokenController {
         response: Response,
     ): Promise<Response> {
         const { restaurant_id } = request.params;
-        const { table_code } = request.body;
+        const { table_number } = request.body;
 
         const updateTableTokenService = container.resolve(
             UpdateTableTokenService,
         );
 
-        const { table, token } = await updateTableTokenService.execute({
-            table_code,
+        const { number, token } = await updateTableTokenService.execute({
+            table_number,
             restaurant_id,
         });
 
-        return response.json({ table, token });
+        return response.json({ number, token });
     }
 }

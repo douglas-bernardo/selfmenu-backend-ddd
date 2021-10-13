@@ -4,6 +4,7 @@ import { container } from 'tsyringe';
 import CreateTableService from '@modules/table/services/CreateTableService';
 import ListTablesServices from '@modules/table/services/ListTablesService';
 import ShowTableService from '@modules/table/services/ShowTableService';
+import { classToClass } from 'class-transformer';
 
 export default class TableController {
     public async index(
@@ -14,7 +15,7 @@ export default class TableController {
         const showTable = container.resolve(ListTablesServices);
 
         const tables = await showTable.execute({ restaurant_id });
-        return response.json(tables);
+        return response.json(classToClass(tables));
     }
 
     public async create(
@@ -23,19 +24,18 @@ export default class TableController {
     ): Promise<Response> {
         const user_id = request.user.id;
         const { restaurant_id } = request.params;
-        const { code, capacity, waiter_id } = request.body;
+        const { capacity, waiter_id } = request.body;
 
         const createTableService = container.resolve(CreateTableService);
 
         const table = await createTableService.execute({
-            code,
             capacity,
             restaurant_id,
             waiter_id,
             owner_id: user_id,
         });
 
-        return response.json(table);
+        return response.json(classToClass(table));
     }
 
     public async show(request: Request, response: Response): Promise<Response> {

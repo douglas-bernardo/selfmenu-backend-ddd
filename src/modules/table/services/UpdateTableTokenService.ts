@@ -4,12 +4,12 @@ import AppError from '@shared/errors/AppError';
 import ITableRepository from '../repositories/ITableRepository';
 
 interface IRequest {
-    table_code: string;
+    table_number: number;
     restaurant_id: string;
 }
 
 interface IResponse {
-    table: string;
+    number: number;
     token: string;
 }
 
@@ -21,11 +21,11 @@ class UpdateTableTokenService {
     ) {}
 
     public async execute({
-        table_code,
+        table_number,
         restaurant_id,
     }: IRequest): Promise<IResponse> {
-        const table = await this.tableRepository.findByCode({
-            code: table_code,
+        const table = await this.tableRepository.findByNumber({
+            number: table_number,
             restaurant_id,
         });
 
@@ -42,10 +42,10 @@ class UpdateTableTokenService {
 
         await this.tableRepository.save(table);
 
-        const { code, token: table_token } = table;
+        const { number, token: table_token } = table;
 
         return {
-            table: code,
+            number,
             token: table_token,
         };
     }

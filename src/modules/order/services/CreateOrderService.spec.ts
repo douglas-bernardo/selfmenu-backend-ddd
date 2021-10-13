@@ -83,10 +83,11 @@ describe('CreateOrder', () => {
         });
 
         const table = await fakeTableRepository.create({
-            code: 'T001',
+            number: 1,
             capacity: 4,
-            restaurant_id: restaurant.id,
-            waiter_id: waiter.id,
+            restaurant,
+            waiter,
+            owner: user,
         });
 
         table.restaurant = restaurant;
@@ -102,7 +103,7 @@ describe('CreateOrder', () => {
         });
 
         const { token } = await updateTableTokenService.execute({
-            table_code: table.code,
+            table_number: table.number,
             restaurant_id: restaurant.id,
         });
 
@@ -198,10 +199,11 @@ describe('CreateOrder', () => {
         });
 
         const table = await fakeTableRepository.create({
-            code: 'T001',
+            number: 1,
             capacity: 4,
-            restaurant_id: restaurant.id,
-            waiter_id: waiter.id,
+            restaurant,
+            waiter,
+            owner: user,
         });
 
         table.restaurant = restaurant;
@@ -217,7 +219,7 @@ describe('CreateOrder', () => {
         });
 
         const { token } = await updateTableTokenService.execute({
-            table_code: table.code,
+            table_number: table.number,
             restaurant_id: restaurant.id,
         });
 
@@ -272,10 +274,11 @@ describe('CreateOrder', () => {
         });
 
         const table = await fakeTableRepository.create({
-            code: 'T001',
+            number: 1,
             capacity: 4,
-            restaurant_id: restaurant.id,
-            waiter_id: waiter.id,
+            restaurant,
+            waiter,
+            owner: user,
         });
         table.restaurant = restaurant;
         await fakeTableRepository.save(table);
@@ -290,7 +293,7 @@ describe('CreateOrder', () => {
         });
 
         const { token } = await updateTableTokenService.execute({
-            table_code: table.code,
+            table_number: table.number,
             restaurant_id: restaurant.id,
         });
 
@@ -344,10 +347,11 @@ describe('CreateOrder', () => {
         });
 
         const table = await fakeTableRepository.create({
-            code: 'T001',
+            number: 1,
             capacity: 4,
-            restaurant_id: restaurant.id,
-            waiter_id: waiter.id,
+            restaurant,
+            waiter,
+            owner: user,
         });
         table.restaurant = restaurant;
         table.waiter_id = 'invalid-waiter';
@@ -363,7 +367,7 @@ describe('CreateOrder', () => {
         });
 
         const { token } = await updateTableTokenService.execute({
-            table_code: table.code,
+            table_number: table.number,
             restaurant_id: restaurant.id,
         });
 
@@ -415,16 +419,17 @@ describe('CreateOrder', () => {
         });
 
         const table = await fakeTableRepository.create({
-            code: 'T001',
+            number: 1,
             capacity: 4,
-            restaurant_id: restaurant.id,
-            waiter_id: waiter.id,
+            restaurant,
+            waiter,
+            owner: user,
         });
         table.restaurant = restaurant;
         await fakeTableRepository.save(table);
 
         const { token } = await updateTableTokenService.execute({
-            table_code: table.code,
+            table_number: table.number,
             restaurant_id: restaurant.id,
         });
 
@@ -476,10 +481,11 @@ describe('CreateOrder', () => {
         });
 
         const table = await fakeTableRepository.create({
-            code: 'T001',
+            number: 1,
             capacity: 4,
-            restaurant_id: restaurant.id,
-            waiter_id: waiter.id,
+            restaurant,
+            waiter,
+            owner: user,
         });
 
         table.restaurant = restaurant;
@@ -495,7 +501,7 @@ describe('CreateOrder', () => {
         });
 
         const { token } = await updateTableTokenService.execute({
-            table_code: table.code,
+            table_number: table.number,
             restaurant_id: restaurant.id,
         });
 
@@ -551,10 +557,11 @@ describe('CreateOrder', () => {
         });
 
         const table = await fakeTableRepository.create({
-            code: 'T001',
+            number: 1,
             capacity: 4,
-            restaurant_id: restaurant.id,
-            waiter_id: waiter.id,
+            restaurant,
+            waiter,
+            owner: user,
         });
         table.restaurant = restaurant;
         await fakeTableRepository.save(table);
@@ -569,7 +576,7 @@ describe('CreateOrder', () => {
         });
 
         const { token } = await updateTableTokenService.execute({
-            table_code: table.code,
+            table_number: table.number,
             restaurant_id: restaurant.id,
         });
 

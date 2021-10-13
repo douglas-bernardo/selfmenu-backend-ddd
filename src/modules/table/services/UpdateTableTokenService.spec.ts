@@ -27,7 +27,7 @@ describe('UpdateTableToken', () => {
         );
     });
 
-    it('should be able to update table token using table code', async () => {
+    it('should be able to update table token using table number', async () => {
         const plan = await fakePlanRepository.create(
             'Free',
             'Selfmenu free plan',
@@ -59,15 +59,16 @@ describe('UpdateTableToken', () => {
         });
 
         const table = await fakeTableRepository.create({
-            code: 'T001',
+            number: 1,
             capacity: 4,
-            restaurant_id: restaurant.id,
-            waiter_id: waiter.id,
+            restaurant,
+            waiter,
+            owner: user,
         });
 
         const tableEdited = await updateTableTokenService.execute({
             restaurant_id: restaurant.id,
-            table_code: table.code,
+            table_number: table.number,
         });
 
         expect(tableEdited).not.toBe(null);
@@ -98,7 +99,7 @@ describe('UpdateTableToken', () => {
         await expect(
             updateTableTokenService.execute({
                 restaurant_id: restaurant.id,
-                table_code: 'non-existing-table',
+                table_number: 99999,
             }),
         ).rejects.toBeInstanceOf(AppError);
     });

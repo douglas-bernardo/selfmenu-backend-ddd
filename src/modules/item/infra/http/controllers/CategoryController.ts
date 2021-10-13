@@ -1,8 +1,10 @@
+import { classToClass } from 'class-transformer';
+import { Request, Response } from 'express';
+import { container } from 'tsyringe';
+
 import CreateCategoryService from '@modules/item/services/CreateCategoryService';
 import ListCategoriesService from '@modules/item/services/ListCategoriesService';
 import ShowCategoryService from '@modules/item/services/ShowCategoryService';
-import { Request, Response } from 'express';
-import { container } from 'tsyringe';
 
 export default class CategoryController {
     public async index(
@@ -31,7 +33,7 @@ export default class CategoryController {
             owner_id: user_id,
         });
 
-        return response.json(category);
+        return response.json(classToClass(category));
     }
 
     public async show(request: Request, response: Response): Promise<Response> {

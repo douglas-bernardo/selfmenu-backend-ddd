@@ -1,6 +1,6 @@
 import Table from '@modules/table/infra/typeorm/entities/Table';
 import ICreateTableDTO from '@modules/table/dtos/ICreateTableDTO';
-import IFindByCodeTableDTO from '@modules/table/dtos/IFindByCodeTableDTO';
+import IFindByNumberTableDTO from '@modules/table/dtos/IFindByNumberTableDTO';
 import IFindByIdTableDTO from '@modules/table/dtos/IFindByIdTableDTO';
 import ITableRepository from '@modules/table/repositories/ITableRepository';
 import { getRepository, Repository } from 'typeorm';
@@ -53,23 +53,43 @@ class TableRepository implements ITableRepository {
         return findTable;
     }
 
-    public async findByCode({
-        code,
-        restaurant_id,
-    }: IFindByCodeTableDTO): Promise<Table | undefined> {
+    public async findLastCreated(
+        restaurant_id: string,
+    ): Promise<Table | undefined> {
         let findTable: Table | undefined;
 
+        const query = this.ormRepository.createQueryBuilder('table');
+        query.select('MAX(table.number)', 'max');
+        const result = await query.getRawOne();
+
+        if (result.max) {
+            findTable = await this.ormRepository.findOne({
+                where: {
+                    number: result.max,
+                    restaurant_id,
+                },
+            });
+        }
+
+        return findTable;
+    }
+
+    public async findByNumber({
+        number,
+        restaurant_id,
+    }: IFindByNumberTableDTO): Promise<Table | undefined> {
+        let findTable: Table | undefined;
         if (restaurant_id) {
             findTable = await this.ormRepository.findOne({
                 where: {
-                    code,
+                    number,
                     restaurant_id,
                 },
             });
         } else {
             findTable = await this.ormRepository.findOne({
                 where: {
-                    code,
+                    number,
                 },
             });
         }
@@ -91,16 +111,18 @@ class TableRepository implements ITableRepository {
     }
 
     public async create({
-        code,
+        number,
         capacity,
-        restaurant_id,
-        waiter_id,
+        restaurant,
+        waiter,
+        owner,
     }: ICreateTableDTO): Promise<Table> {
         const table = this.ormRepository.create({
-            code,
+            number,
             capacity,
-            restaurant_id,
-            waiter_id,
+            restaurant,
+            waiter,
+            owner,
         });
 
         await this.ormRepository.save(table);

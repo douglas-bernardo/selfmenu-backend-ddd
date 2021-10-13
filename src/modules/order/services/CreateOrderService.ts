@@ -148,7 +148,7 @@ class CreateOrderService {
         await this.itemRepository.updateQuantity(orderedItemsQuantity);
 
         await this.notificationsRepository.create({
-            content: `Novo pedido realizado na mesa ${table.code}`,
+            content: `Novo pedido realizado na mesa ${table.number}`,
             recipient_id: waiterExist.id,
         });
 
