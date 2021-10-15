@@ -57,6 +57,6 @@ export default class ItemController {
             owner_id: user_id,
         });
 
-        return response.json(item);
+        return response.json(classToClass(item));
     }
 }

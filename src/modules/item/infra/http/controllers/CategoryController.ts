@@ -16,7 +16,7 @@ export default class CategoryController {
 
         const categories = await listCategories.execute({ owner_id });
 
-        return response.json(categories);
+        return response.json(classToClass(categories));
     }
 
     public async create(
@@ -31,6 +31,7 @@ export default class CategoryController {
         const category = await createCategory.execute({
             name,
             owner_id: user_id,
+            image_cover: request.file?.filename,
         });
 
         return response.json(classToClass(category));

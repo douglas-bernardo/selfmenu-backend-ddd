@@ -15,6 +15,7 @@ export default interface IItemRepository {
     findAllByCategoryId(data: IFindAllItemsByCategoryIdDTO): Promise<Item[]>;
     findById(data: IFindByIdItemDTO): Promise<Item | undefined>;
     findByName(data: IFindByNameItemDTO): Promise<Item | undefined>;
+    findAllByName(data: IFindByNameItemDTO): Promise<Item[]>;
     findAllById(items_ids: IFindItems[], owner_id?: string): Promise<Item[]>;
     create(data: ICreateItemDTO): Promise<Item>;
     save(item: Item): Promise<Item>;

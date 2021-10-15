@@ -1,19 +1,19 @@
 import { injectable, inject } from 'tsyringe';
 
-import IUsersRepository from '@modules/users/repositories/IUsersRepository';
 import AppError from '@shared/errors/AppError';
 import IStorageProvider from '@shared/container/providers/StorageProvider/models/IStorageProvider';
-import Category from '../infra/typeorm/entities/Category';
+import IUsersRepository from '@modules/users/repositories/IUsersRepository';
 import ICategoryRepository from '../repositories/ICategoryRepository';
+import Category from '../infra/typeorm/entities/Category';
 
 interface IRequest {
-    name: string;
     owner_id: string;
-    image_cover?: string;
+    category_id: string;
+    imageCoverFilename: string;
 }
 
 @injectable()
-class CreateCategoryService {
+class UpdateCategoryImageCoverService {
     constructor(
         @inject('UsersRepository')
         private usersRepository: IUsersRepository,
@@ -26,44 +26,42 @@ class CreateCategoryService {
     ) {}
 
     public async execute({
-        name,
         owner_id,
-        image_cover,
+        category_id,
+        imageCoverFilename,
     }: IRequest): Promise<Category> {
         const user = await this.usersRepository.findById(owner_id);
 
         if (!user) {
-            throw new AppError('User account not found');
-        }
-
-        if (!user.active) {
             throw new AppError(
-                'Only active accounts can create a new category',
+                'Only authenticated users can change category cover',
+                401,
             );
         }
 
-        const categoryExists = await this.categoryRepository.findByName({
-            name,
+        const category = await this.categoryRepository.findById({
+            id: category_id,
             owner_id,
         });
 
-        if (categoryExists) {
-            throw new AppError('Category already exists.');
+        if (!category) {
+            throw new AppError('Category not found');
         }
 
-        let filename: string | undefined;
-        if (image_cover) {
-            filename = await this.storageProvider.saveFile(image_cover);
+        if (category.image_cover) {
+            await this.storageProvider.deleteFile(user.avatar);
         }
 
-        const category = await this.categoryRepository.create({
-            name,
-            owner: user,
-            image_cover: filename,
-        });
+        const filename = await this.storageProvider.saveFile(
+            imageCoverFilename,
+        );
+
+        category.image_cover = filename;
+
+        await this.categoryRepository.save(category);
 
         return category;
     }
 }
 
-export default CreateCategoryService;
+export default UpdateCategoryImageCoverService;

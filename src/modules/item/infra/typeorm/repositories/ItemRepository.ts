@@ -6,7 +6,7 @@ import IFindByNameItemDTO from '@modules/item/dtos/IFindByNameItemDTO';
 import IUpdateItemsQuantityDTO from '@modules/item/dtos/IUpdateItemsQuantityDTO';
 import Item from '@modules/item/infra/typeorm/entities/Item';
 import IItemRepository from '@modules/item/repositories/IItemRepository';
-import { getRepository, In, Repository } from 'typeorm';
+import { getRepository, In, Repository, Like } from 'typeorm';
 
 interface IFindItems {
     id: string;
@@ -105,6 +105,21 @@ class ItemRepository implements IItemRepository {
         });
 
         return item;
+    }
+
+    public async findAllByName({
+        name,
+        owner_id,
+    }: IFindByNameItemDTO): Promise<Item[]> {
+        const items = await this.ormRepository.find({
+            where: {
+                name: Like(`${name}%`),
+                owner_id,
+            },
+            relations: ['images', 'category'],
+        });
+
+        return items;
     }
 
     public async create(data: ICreateItemDTO): Promise<Item> {

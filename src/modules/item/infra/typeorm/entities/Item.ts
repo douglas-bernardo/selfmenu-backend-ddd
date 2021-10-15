@@ -11,6 +11,7 @@ import {
     PrimaryGeneratedColumn,
     UpdateDateColumn,
 } from 'typeorm';
+import Category from './Category';
 import ItemPhoto from './ItemPhoto';
 
 @Entity('item')
@@ -39,6 +40,10 @@ class Item {
 
     @Column()
     owner_id: string;
+
+    @ManyToOne(() => Category, category => category)
+    @JoinColumn({ name: 'category_id' })
+    category: Category;
 
     @Column()
     category_id: number;

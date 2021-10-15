@@ -57,10 +57,12 @@ class CategoryRepository implements ICategoryRepository {
     public async create({
         name,
         owner,
+        image_cover,
     }: ICreateCategoryDTO): Promise<Category> {
         const category = this.ormRepository.create({
             name,
             owner,
+            image_cover,
         });
 
         await this.ormRepository.save(category);
