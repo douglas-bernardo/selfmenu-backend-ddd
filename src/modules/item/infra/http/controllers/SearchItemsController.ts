@@ -10,11 +10,12 @@ export default class SearchItemsController {
         response: Response,
     ): Promise<Response> {
         const owner_id = request.user.id;
-        const { name } = request.query;
+        const { name, category_id } = request.query;
         const searchItems = container.resolve(SearchItemsService);
-
+        console.log(category_id);
         const item = await searchItems.execute({
-            param: String(name),
+            name: String(name),
+            category_id: Number(category_id),
             owner_id,
         });
 

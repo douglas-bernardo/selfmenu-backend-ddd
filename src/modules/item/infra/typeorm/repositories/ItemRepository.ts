@@ -110,14 +110,28 @@ class ItemRepository implements IItemRepository {
     public async findAllByName({
         name,
         owner_id,
+        category_id,
     }: IFindByNameItemDTO): Promise<Item[]> {
-        const items = await this.ormRepository.find({
-            where: {
-                name: Like(`${name}%`),
-                owner_id,
-            },
-            relations: ['images', 'category'],
-        });
+        let items: Item[] = [];
+
+        if (category_id) {
+            items = await this.ormRepository.find({
+                where: {
+                    name: Like(`${name}%`),
+                    owner_id,
+                    category_id,
+                },
+                relations: ['images', 'category'],
+            });
+        } else {
+            items = await this.ormRepository.find({
+                where: {
+                    name: Like(`${name}%`),
+                    owner_id,
+                },
+                relations: ['images', 'category'],
+            });
+        }
 
         return items;
     }

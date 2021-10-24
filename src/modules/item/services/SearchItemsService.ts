@@ -5,7 +5,8 @@ import Item from '../infra/typeorm/entities/Item';
 
 interface IRequest {
     owner_id: string;
-    param: string;
+    name: string;
+    category_id?: number;
 }
 
 @injectable()
@@ -14,10 +15,15 @@ class SearchItemsService {
         @inject('ItemRepository') private itemRepository: IItemRepository,
     ) {}
 
-    public async execute({ owner_id, param }: IRequest): Promise<Item[]> {
+    public async execute({
+        owner_id,
+        name,
+        category_id,
+    }: IRequest): Promise<Item[]> {
         const items = await this.itemRepository.findAllByName({
             owner_id,
-            name: param.trim(),
+            name: name.trim(),
+            category_id,
         });
 
         return items;
