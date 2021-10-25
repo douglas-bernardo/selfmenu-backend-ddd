@@ -12,7 +12,6 @@ export default class SearchItemsController {
         const owner_id = request.user.id;
         const { name, category_id } = request.query;
         const searchItems = container.resolve(SearchItemsService);
-        console.log(category_id);
         const item = await searchItems.execute({
             name: String(name),
             category_id: Number(category_id),
