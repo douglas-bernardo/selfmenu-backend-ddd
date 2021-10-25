@@ -20,7 +20,9 @@ export default {
             keyPrefix: '',
             tls: {
                 host: process.env.REDIS_HOST,
+                rejectUnauthorized: false,
             },
+            reconnectOnError: () => 1,
         },
     },
 } as ICacheConfig;
