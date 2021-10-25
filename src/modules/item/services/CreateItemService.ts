@@ -3,7 +3,7 @@ import { injectable, inject } from 'tsyringe';
 import IUsersRepository from '@modules/users/repositories/IUsersRepository';
 import AppError from '@shared/errors/AppError';
 import IStorageProvider from '@shared/container/providers/StorageProvider/models/IStorageProvider';
-import ICacheProvider from '@shared/container/providers/CacheProvider/models/ICacheProvider';
+// import ICacheProvider from '@shared/container/providers/CacheProvider/models/ICacheProvider';
 import IItemRepository from '../repositories/IItemRepository';
 import Item from '../infra/typeorm/entities/Item';
 
@@ -27,10 +27,7 @@ class CreateItemService {
         private itemRepository: IItemRepository,
 
         @inject('StorageProvider')
-        private storageProvider: IStorageProvider,
-
-        @inject('CacheProvider')
-        private cacheProvider: ICacheProvider,
+        private storageProvider: IStorageProvider, // @inject('CacheProvider') // private cacheProvider: ICacheProvider,
     ) {}
 
     public async execute({
@@ -84,7 +81,7 @@ class CreateItemService {
                 }),
         });
 
-        await this.cacheProvider.invalidatePrefix('items-list');
+        // await this.cacheProvider.invalidatePrefix('items-list');
 
         return item;
     }
