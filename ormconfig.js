@@ -10,7 +10,7 @@ module.exports = [
             `${process.env.DATABASE_MIGRATIONS}`
         ],
         "cli": {
-            "migrationsDir": "./src/shared/infra/typeorm/migrations"
+            "migrationsDir": `${process.env.DATABASE_MIGRATIONS_DIR}`
         }
     },
     {
