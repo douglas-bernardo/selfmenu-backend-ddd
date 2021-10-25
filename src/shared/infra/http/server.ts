@@ -18,6 +18,7 @@ import '@shared/infra/typeorm';
 /** Dependency injection */
 import '@shared/container';
 
+const port = 3333;
 const app = express();
 
 app.use(rateLimiter);
@@ -53,6 +54,6 @@ app.use((err: Error, request: Request, response: Response, _: NextFunction) => {
     });
 });
 
-app.listen(process.env.PORT || 3333, () => {
-    console.log('🚀️ Server start on port 3333!');
+app.listen(process.env.PORT || port, () => {
+    console.log(`🚀️ Server start on port ${port}!`);
 });
