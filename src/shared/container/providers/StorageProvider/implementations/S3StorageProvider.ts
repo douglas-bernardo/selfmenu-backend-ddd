@@ -6,7 +6,7 @@ import mime from 'mime-types';
 import uploadConfig from '@config/upload';
 import IStorageProvider from '../models/IStorageProvider';
 
-class SESMailProvider implements IStorageProvider {
+class S3StorageProvider implements IStorageProvider {
     private client: S3;
 
     constructor() {
@@ -60,4 +60,4 @@ class SESMailProvider implements IStorageProvider {
     }
 }
 
-export default SESMailProvider;
+export default S3StorageProvider;
