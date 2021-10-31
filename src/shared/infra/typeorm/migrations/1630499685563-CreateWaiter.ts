@@ -21,7 +21,7 @@ export default class CreateWaiter1630499685563 implements MigrationInterface {
                         type: 'varchar',
                     },
                     {
-                        name: 'restaurant_id',
+                        name: 'establishment_id',
                         type: 'varchar',
                     },
                     {
@@ -44,13 +44,13 @@ export default class CreateWaiter1630499685563 implements MigrationInterface {
                     {
                         name: 'fk_waiter_owner',
                         columnNames: ['owner_id'],
-                        referencedTableName: 'user',
+                        referencedTableName: 'account',
                         referencedColumnNames: ['id'],
                     },
                     {
-                        name: 'fk_waiter_restaurant',
-                        columnNames: ['restaurant_id'],
-                        referencedTableName: 'restaurant',
+                        name: 'fk_waiter_establishment',
+                        columnNames: ['establishment_id'],
+                        referencedTableName: 'establishment',
                         referencedColumnNames: ['id'],
                     },
                 ],

@@ -1,6 +1,6 @@
 import Order from '@modules/order/infra/typeorm/entities/Order';
-import Restaurant from '@modules/restaurant/infra/typeorm/entities/Restaurant';
-import User from '@modules/users/infra/typeorm/entities/User';
+import Establishment from '@modules/establishment/infra/typeorm/entities/Establishment';
+import Account from '@modules/account/infra/typeorm/entities/Account';
 import Waiter from '@modules/waiter/infra/typeorm/entities/Waiter';
 import {
     Column,
@@ -29,12 +29,12 @@ class Table {
     @Column()
     capacity: number;
 
-    @ManyToOne(() => Restaurant)
-    @JoinColumn({ name: 'restaurant_id' })
-    restaurant: Restaurant;
+    @ManyToOne(() => Establishment)
+    @JoinColumn({ name: 'establishment_id' })
+    establishment: Establishment;
 
     @Column()
-    restaurant_id: string;
+    establishment_id: string;
 
     @ManyToOne(() => Waiter)
     @JoinColumn({ name: 'waiter_id' })
@@ -43,9 +43,9 @@ class Table {
     @Column()
     waiter_id: string;
 
-    @ManyToOne(() => User)
+    @ManyToOne(() => Account)
     @JoinColumn({ name: 'owner_id' })
-    owner: User;
+    owner: Account;
 
     @Column()
     owner_id: string;

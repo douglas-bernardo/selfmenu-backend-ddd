@@ -1,15 +1,15 @@
-import FakeRestaurantRepository from '@modules/restaurant/repositories/fakes/FakeRestaurantRepository';
+import FakeEstablishmentRepository from '@modules/establishment/repositories/fakes/FakeEstablishmentRepository';
 
-import FakePlanRepository from '@modules/users/repositories/fakes/FakePlanRepository';
-import FakeUsersRepository from '@modules/users/repositories/fakes/FakeUserRepository';
+import FakePlanRepository from '@modules/account/repositories/fakes/FakePlanRepository';
+import FakeAccountsRepository from '@modules/account/repositories/fakes/FakeAccountRepository';
 import FakeWaiterRepository from '@modules/waiter/repositories/fakes/FakeWaiterRepository';
 import AppError from '@shared/errors/AppError';
 import FakeTableRepository from '../repositories/fakes/FakeTableRepository';
 import ShowTableService from './ShowTableService';
 
 let fakePlanRepository: FakePlanRepository;
-let fakeUserRepository: FakeUsersRepository;
-let fakeRestaurantRepository: FakeRestaurantRepository;
+let fakeAccountRepository: FakeAccountsRepository;
+let fakeEstablishmentRepository: FakeEstablishmentRepository;
 let fakeWaiterRepository: FakeWaiterRepository;
 let fakeTableRepository: FakeTableRepository;
 
@@ -18,8 +18,8 @@ let showTableService: ShowTableService;
 describe('ShowTable', () => {
     beforeEach(() => {
         fakePlanRepository = new FakePlanRepository();
-        fakeUserRepository = new FakeUsersRepository();
-        fakeRestaurantRepository = new FakeRestaurantRepository();
+        fakeAccountRepository = new FakeAccountsRepository();
+        fakeEstablishmentRepository = new FakeEstablishmentRepository();
         fakeWaiterRepository = new FakeWaiterRepository();
         fakeTableRepository = new FakeTableRepository();
 
@@ -32,19 +32,19 @@ describe('ShowTable', () => {
             'Selfmenu free plan',
         );
 
-        const user = await fakeUserRepository.create({
+        const account = await fakeAccountRepository.create({
             email: 'john@example.com',
             password: '123456',
             profile_name: 'John Doe',
             plan_id: plan.id,
         });
 
-        const restaurant = await fakeRestaurantRepository.create({
+        const establishment = await fakeEstablishmentRepository.create({
             cnpj: 989865986598,
             name: "Doe's Dinner",
-            description: 'A new restaurant',
-            restaurant_type_id: 1,
-            owner_id: user.id,
+            description: 'A new establishment',
+            establishment_type_id: 1,
+            owner_id: account.id,
             subdomain: 'does-dinner',
         });
 
@@ -53,21 +53,20 @@ describe('ShowTable', () => {
             username: 'moe',
             cpf: 99999999999,
             password: '123456',
-            owner_id: user.id,
-            restaurant_id: restaurant.id,
+            owner_id: account.id,
+            establishment_id: establishment.id,
         });
 
         const table = await fakeTableRepository.create({
             number: 1,
             capacity: 4,
-            restaurant,
+            establishment,
             waiter,
-            owner: user,
+            owner: account,
         });
 
         const findTable = await showTableService.execute({
-            id: table.id,
-            restaurant_id: restaurant.id,
+            table_id: table.id,
         });
 
         expect(findTable.number).toBe(1);
@@ -79,26 +78,25 @@ describe('ShowTable', () => {
             'Selfmenu free plan',
         );
 
-        const user = await fakeUserRepository.create({
+        const account = await fakeAccountRepository.create({
             email: 'john@example.com',
             password: '123456',
             profile_name: 'John Doe',
             plan_id: plan.id,
         });
 
-        const restaurant = await fakeRestaurantRepository.create({
+        await fakeEstablishmentRepository.create({
             cnpj: 98986598659800,
             name: "Doe's Dinner",
-            description: 'A new restaurant',
-            restaurant_type_id: 1,
-            owner_id: user.id,
+            description: 'A new establishment',
+            establishment_type_id: 1,
+            owner_id: account.id,
             subdomain: 'does-dinner',
         });
 
         await expect(
             showTableService.execute({
-                id: 'non-existing-table',
-                restaurant_id: restaurant.id,
+                table_id: 'non-existing-table',
             }),
         ).rejects.toBeInstanceOf(AppError);
     });

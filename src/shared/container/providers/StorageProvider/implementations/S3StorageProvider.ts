@@ -50,14 +50,6 @@ class S3StorageProvider implements IStorageProvider {
             })
             .promise();
     }
-
-    public async saveFiles(files: IImage[]): Promise<void> {
-        throw new Error('Method not implemented.');
-    }
-
-    public async deleteFiles(files: IImage[]): Promise<void> {
-        throw new Error('Method not implemented.');
-    }
 }
 
 export default S3StorageProvider;

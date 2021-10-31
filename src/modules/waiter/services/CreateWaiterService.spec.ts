@@ -1,13 +1,13 @@
-import FakeRestaurantRepository from '@modules/restaurant/repositories/fakes/FakeRestaurantRepository';
-import FakeHashProvider from '@modules/users/providers/HashProvider/fakes/FakeHashProvider';
-import FakePlanRepository from '@modules/users/repositories/fakes/FakePlanRepository';
-import FakeUsersRepository from '@modules/users/repositories/fakes/FakeUserRepository';
+import FakeEstablishmentRepository from '@modules/establishment/repositories/fakes/FakeEstablishmentRepository';
+import FakeHashProvider from '@modules/account/providers/HashProvider/fakes/FakeHashProvider';
+import FakePlanRepository from '@modules/account/repositories/fakes/FakePlanRepository';
+import FakeAccountsRepository from '@modules/account/repositories/fakes/FakeAccountRepository';
 import AppError from '@shared/errors/AppError';
 import FakeWaiterRepository from '../repositories/fakes/FakeWaiterRepository';
 import CreateWaiterService from './CreateWaiterService';
 
-let fakeUserRepository: FakeUsersRepository;
-let fakeRestaurantRepository: FakeRestaurantRepository;
+let fakeAccountRepository: FakeAccountsRepository;
+let fakeEstablishmentRepository: FakeEstablishmentRepository;
 let fakePlanRepository: FakePlanRepository;
 let fakeWaiterRepository: FakeWaiterRepository;
 let fakeHashProvider: FakeHashProvider;
@@ -15,14 +15,14 @@ let createWaiterService: CreateWaiterService;
 
 describe('CreateWaiter', () => {
     beforeEach(() => {
-        fakeUserRepository = new FakeUsersRepository();
-        fakeRestaurantRepository = new FakeRestaurantRepository();
+        fakeAccountRepository = new FakeAccountsRepository();
+        fakeEstablishmentRepository = new FakeEstablishmentRepository();
         fakePlanRepository = new FakePlanRepository();
         fakeWaiterRepository = new FakeWaiterRepository();
         fakeHashProvider = new FakeHashProvider();
         createWaiterService = new CreateWaiterService(
-            fakeUserRepository,
-            fakeRestaurantRepository,
+            fakeAccountRepository,
+            fakeEstablishmentRepository,
             fakeWaiterRepository,
             fakeHashProvider,
         );
@@ -34,21 +34,21 @@ describe('CreateWaiter', () => {
             'Selfmenu premium plan',
         );
 
-        const user = await fakeUserRepository.create({
+        const account = await fakeAccountRepository.create({
             email: 'john@example.com',
             password: '123456',
             profile_name: 'John Doe',
             plan_id: plan.id,
         });
-        user.plan = plan;
-        await fakeUserRepository.save(user);
+        account.plan = plan;
+        await fakeAccountRepository.save(account);
 
-        const restaurant = await fakeRestaurantRepository.create({
+        const establishment = await fakeEstablishmentRepository.create({
             cnpj: 63655798024,
             name: "Doe's Dinner",
-            description: 'A new restaurant',
-            restaurant_type_id: 1,
-            owner_id: user.id,
+            description: 'A new establishment',
+            establishment_type_id: 1,
+            owner_id: account.id,
             subdomain: 'does-dinner',
         });
 
@@ -57,8 +57,8 @@ describe('CreateWaiter', () => {
             username: 'moe',
             cpf: 63655798024,
             password: '123456',
-            owner_id: user.id,
-            restaurant_id: restaurant.id,
+            owner_id: account.id,
+            establishment_id: establishment.id,
         });
 
         expect(waiter).toHaveProperty('id');
@@ -70,21 +70,21 @@ describe('CreateWaiter', () => {
             'Selfmenu premium plan',
         );
 
-        const user = await fakeUserRepository.create({
+        const account = await fakeAccountRepository.create({
             email: 'john@example.com',
             password: '123456',
             profile_name: 'John Doe',
             plan_id: plan.id,
         });
-        user.plan = plan;
-        await fakeUserRepository.save(user);
+        account.plan = plan;
+        await fakeAccountRepository.save(account);
 
-        const restaurant = await fakeRestaurantRepository.create({
+        const establishment = await fakeEstablishmentRepository.create({
             cnpj: 63655798024,
             name: "Doe's Dinner",
-            description: 'A new restaurant',
-            restaurant_type_id: 1,
-            owner_id: user.id,
+            description: 'A new establishment',
+            establishment_type_id: 1,
+            owner_id: account.id,
             subdomain: 'does-dinner',
         });
 
@@ -93,8 +93,8 @@ describe('CreateWaiter', () => {
             username: 'moe',
             cpf: 63655798024,
             password: '123456',
-            owner_id: user.id,
-            restaurant_id: restaurant.id,
+            owner_id: account.id,
+            establishment_id: establishment.id,
         });
 
         await expect(
@@ -103,8 +103,8 @@ describe('CreateWaiter', () => {
                 username: 'moe',
                 cpf: 63655798024,
                 password: '123456',
-                owner_id: user.id,
-                restaurant_id: restaurant.id,
+                owner_id: account.id,
+                establishment_id: establishment.id,
             }),
         ).rejects.toBeInstanceOf(AppError);
     });
@@ -115,21 +115,21 @@ describe('CreateWaiter', () => {
             'Selfmenu premium plan',
         );
 
-        const user = await fakeUserRepository.create({
+        const account = await fakeAccountRepository.create({
             email: 'john@example.com',
             password: '123456',
             profile_name: 'John Doe',
             plan_id: plan.id,
         });
-        user.plan = plan;
-        await fakeUserRepository.save(user);
+        account.plan = plan;
+        await fakeAccountRepository.save(account);
 
-        const restaurant = await fakeRestaurantRepository.create({
+        const establishment = await fakeEstablishmentRepository.create({
             cnpj: 63655798024,
             name: "Doe's Dinner",
-            description: 'A new restaurant',
-            restaurant_type_id: 1,
-            owner_id: user.id,
+            description: 'A new establishment',
+            establishment_type_id: 1,
+            owner_id: account.id,
             subdomain: 'does-dinner',
         });
 
@@ -138,8 +138,8 @@ describe('CreateWaiter', () => {
             username: 'moe',
             cpf: 63655798024,
             password: '123456',
-            owner_id: user.id,
-            restaurant_id: restaurant.id,
+            owner_id: account.id,
+            establishment_id: establishment.id,
         });
 
         await expect(
@@ -149,32 +149,32 @@ describe('CreateWaiter', () => {
                 cpf: 63655798024,
                 password: '123456',
                 owner_id: 'invalid-owner',
-                restaurant_id: restaurant.id,
+                establishment_id: establishment.id,
             }),
         ).rejects.toBeInstanceOf(AppError);
     });
 
-    it('should not be able to create a waiter to invalid restaurant', async () => {
+    it('should not be able to create a waiter to invalid establishment', async () => {
         const plan = await fakePlanRepository.create(
             'Premium',
             'Selfmenu premium plan',
         );
 
-        const user = await fakeUserRepository.create({
+        const account = await fakeAccountRepository.create({
             email: 'john@example.com',
             password: '123456',
             profile_name: 'John Doe',
             plan_id: plan.id,
         });
-        user.plan = plan;
-        await fakeUserRepository.save(user);
+        account.plan = plan;
+        await fakeAccountRepository.save(account);
 
-        const restaurant = await fakeRestaurantRepository.create({
+        const establishment = await fakeEstablishmentRepository.create({
             cnpj: 63655798024,
             name: "Doe's Dinner",
-            description: 'A new restaurant',
-            restaurant_type_id: 1,
-            owner_id: user.id,
+            description: 'A new establishment',
+            establishment_type_id: 1,
+            owner_id: account.id,
             subdomain: 'does-dinner',
         });
 
@@ -183,8 +183,8 @@ describe('CreateWaiter', () => {
             username: 'moe',
             cpf: 63655798024,
             password: '123456',
-            owner_id: user.id,
-            restaurant_id: restaurant.id,
+            owner_id: account.id,
+            establishment_id: establishment.id,
         });
 
         await expect(
@@ -193,38 +193,38 @@ describe('CreateWaiter', () => {
                 username: 'moe',
                 cpf: 63655798024,
                 password: '123456',
-                owner_id: user.id,
-                restaurant_id: 'invalid-restaurant',
+                owner_id: account.id,
+                establishment_id: 'invalid-establishment',
             }),
         ).rejects.toBeInstanceOf(AppError);
     });
 
-    it('should not be able to create a waiter to inactive restaurant', async () => {
+    it('should not be able to create a waiter to inactive establishment', async () => {
         const plan = await fakePlanRepository.create(
             'Premium',
             'Selfmenu premium plan',
         );
 
-        const user = await fakeUserRepository.create({
+        const account = await fakeAccountRepository.create({
             email: 'john@example.com',
             password: '123456',
             profile_name: 'John Doe',
             plan_id: plan.id,
         });
-        user.plan = plan;
-        await fakeUserRepository.save(user);
+        account.plan = plan;
+        await fakeAccountRepository.save(account);
 
-        const restaurant = await fakeRestaurantRepository.create({
+        const establishment = await fakeEstablishmentRepository.create({
             cnpj: 63655798024,
             name: "Doe's Dinner",
-            description: 'A new restaurant',
-            restaurant_type_id: 1,
-            owner_id: user.id,
+            description: 'A new establishment',
+            establishment_type_id: 1,
+            owner_id: account.id,
             subdomain: 'does-dinner',
         });
 
-        restaurant.active = false;
-        await fakeRestaurantRepository.save(restaurant);
+        establishment.active = false;
+        await fakeEstablishmentRepository.save(establishment);
 
         await expect(
             createWaiterService.execute({
@@ -232,8 +232,8 @@ describe('CreateWaiter', () => {
                 username: 'moe',
                 cpf: 63655798024,
                 password: '123456',
-                owner_id: user.id,
-                restaurant_id: restaurant.id,
+                owner_id: account.id,
+                establishment_id: establishment.id,
             }),
         ).rejects.toBeInstanceOf(AppError);
     });

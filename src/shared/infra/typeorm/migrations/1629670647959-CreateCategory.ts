@@ -39,9 +39,9 @@ export default class CreateCategory1629670647959 implements MigrationInterface {
                 ],
                 foreignKeys: [
                     {
-                        name: 'fk_category_user',
+                        name: 'fk_category_account',
                         columnNames: ['owner_id'],
-                        referencedTableName: 'user',
+                        referencedTableName: 'account',
                         referencedColumnNames: ['id'],
                     },
                 ],

@@ -1,4 +1,4 @@
 export default interface IFindByIdTableDTO {
     table_id: string;
-    restaurant_id?: string;
+    establishment_id?: string;
 }

@@ -1,80 +1,80 @@
 import { injectable, inject } from 'tsyringe';
 
 import AppError from '@shared/errors/AppError';
-import IRestaurantRepository from '@modules/restaurant/repositories/IRestaurantRepository';
-import IUsersRepository from '@modules/users/repositories/IUsersRepository';
-import IItemRepository from '@modules/item/repositories/IItemRepository';
+import IEstablishmentRepository from '@modules/establishment/repositories/IEstablishmentRepository';
+import IAccountsRepository from '@modules/account/repositories/IAccountRepository';
+import IProductRepository from '@modules/product/repositories/IProductRepository';
 import IMenuRepository from '../repositories/IMenuRepository';
 import Menu from '../infra/typeorm/entities/Menu';
 
-interface IItem {
-    item_id: string;
+interface IProduct {
+    product_id: string;
 }
 
-interface IRequestItem {
+interface IRequestProduct {
     id: string;
 }
 
 interface IRequest {
-    user_id: string;
+    account_id: string;
     title: string;
     description?: string;
-    restaurant_id: string;
-    items: IRequestItem[];
+    establishment_id: string;
+    products: IRequestProduct[];
 }
 
 @injectable()
 class CreateMenuService {
     constructor(
-        @inject('UsersRepository')
-        private usersRepository: IUsersRepository,
+        @inject('AccountsRepository')
+        private accountsRepository: IAccountsRepository,
 
-        @inject('ItemRepository')
-        private itemRepository: IItemRepository,
+        @inject('ProductRepository')
+        private productRepository: IProductRepository,
 
-        @inject('RestaurantRepository')
-        private restaurantRepository: IRestaurantRepository,
+        @inject('EstablishmentRepository')
+        private establishmentRepository: IEstablishmentRepository,
 
         @inject('MenuRepository')
         private menuRepository: IMenuRepository,
     ) {}
 
     public async execute({
-        user_id,
+        account_id,
         title,
         description,
-        restaurant_id,
-        items,
+        establishment_id,
+        products,
     }: IRequest): Promise<Menu> {
-        const user = await this.usersRepository.findById(user_id);
+        const account = await this.accountsRepository.findById(account_id);
 
-        if (!user) {
-            throw new AppError('User account not found');
+        if (!account) {
+            throw new AppError('Account account not found');
         }
 
-        if (user.plan.name === 'Free') {
+        if (account.plan.name === 'Free') {
             const hasMenuCreated = await this.menuRepository.findAll({
-                owner_id: user.id,
+                owner_id: account.id,
             });
 
             if (hasMenuCreated.length > 0) {
                 throw new AppError(
-                    'Only Premium users can register more than one menu by account.',
+                    'Only Premium accounts can register more than one menu by account.',
                 );
             }
         }
 
-        const restaurant = await this.restaurantRepository.findById({
-            restaurant_id,
-            owner_id: user_id,
+        const establishment = await this.establishmentRepository.findById({
+            establishment_id,
+            owner_id: account_id,
         });
 
-        if (!restaurant) {
-            throw new AppError('Restaurant not found');
+        if (!establishment) {
+            throw new AppError('Establishment not found');
         }
 
-        if (!restaurant.active) {
-            throw new AppError('Restaurant inactive. Not allowed.');
+        if (!establishment.active) {
+            throw new AppError('Establishment inactive. Not allowed.');
         }
 
         const menuTitleExists = await this.menuRepository.findByTitle(title);
@@ -83,40 +83,44 @@ class CreateMenuService {
             throw new AppError('Menu title already used');
         }
 
-        let serializeItems = {} as IItem[];
-        if (items) {
-            const existentItems = await this.itemRepository.findAllById(
-                items,
-                user_id,
+        let serializeProducts = {} as IProduct[];
+        if (products) {
+            const existentProducts = await this.productRepository.findAllById(
+                products,
+                account_id,
             );
 
-            if (!existentItems.length) {
-                throw new AppError('Cannot find any items with the given ids');
-            }
-
-            const existentItemsIds = existentItems.map(item => item.id);
-
-            const checkInexistentItems = items.filter(
-                item => !existentItemsIds.includes(item.id),
-            );
-
-            if (checkInexistentItems.length) {
+            if (!existentProducts.length) {
                 throw new AppError(
-                    `Could not find product ${checkInexistentItems[0].id}`,
+                    'Cannot find any products with the given ids',
                 );
             }
 
-            serializeItems = items.map(item => ({
-                item_id: item.id,
+            const existentProductsIds = existentProducts.map(
+                product => product.id,
+            );
+
+            const checkInexistentProducts = products.filter(
+                product => !existentProductsIds.includes(product.id),
+            );
+
+            if (checkInexistentProducts.length) {
+                throw new AppError(
+                    `Could not find product ${checkInexistentProducts[0].id}`,
+                );
+            }
+
+            serializeProducts = products.map(product => ({
+                product_id: product.id,
             }));
         }
 
         const menu = await this.menuRepository.create({
             title,
             description,
-            owner: user,
-            restaurant,
-            items: serializeItems,
+            owner: account,
+            establishment,
+            products: serializeProducts,
         });
 
         return menu;

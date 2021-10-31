@@ -1,14 +1,14 @@
-import Restaurant from '@modules/restaurant/infra/typeorm/entities/Restaurant';
-import User from '@modules/users/infra/typeorm/entities/User';
+import Establishment from '@modules/establishment/infra/typeorm/entities/Establishment';
+import Account from '@modules/account/infra/typeorm/entities/Account';
 
-interface IItem {
-    item_id: string;
+interface IProduct {
+    product_id: string;
 }
 
 export default interface ICreateMenuDTO {
     title: string;
     description?: string;
-    owner: User;
-    restaurant: Restaurant;
-    items?: IItem[];
+    owner: Account;
+    establishment: Establishment;
+    products?: IProduct[];
 }

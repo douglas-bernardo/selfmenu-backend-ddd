@@ -1,9 +1,9 @@
 import { injectable, inject } from 'tsyringe';
 
 import AppError from '@shared/errors/AppError';
-import IHashProvider from '@modules/users/providers/HashProvider/models/IHashProvider';
-import IUsersRepository from '@modules/users/repositories/IUsersRepository';
-import IRestaurantRepository from '@modules/restaurant/repositories/IRestaurantRepository';
+import IHashProvider from '@modules/account/providers/HashProvider/models/IHashProvider';
+import IAccountsRepository from '@modules/account/repositories/IAccountRepository';
+import IEstablishmentRepository from '@modules/establishment/repositories/IEstablishmentRepository';
 import Waiter from '../infra/typeorm/entities/Waiter';
 import IWaiterRepository from '../repositories/IWaiterRepository';
 
@@ -13,17 +13,17 @@ interface IRequest {
     username: string;
     password: string;
     owner_id: string;
-    restaurant_id: string;
+    establishment_id: string;
 }
 
 @injectable()
 class CreateWaiterService {
     constructor(
-        @inject('UsersRepository')
-        private usersRepository: IUsersRepository,
+        @inject('AccountsRepository')
+        private accountsRepository: IAccountsRepository,
 
-        @inject('RestaurantRepository')
-        private restaurantRepository: IRestaurantRepository,
+        @inject('EstablishmentRepository')
+        private establishmentRepository: IEstablishmentRepository,
 
         @inject('WaiterRepository')
         private waiterRepository: IWaiterRepository,
@@ -38,20 +38,24 @@ class CreateWaiterService {
         username,
         password,
         owner_id,
-        restaurant_id,
+        establishment_id,
     }: IRequest): Promise<Waiter> {
-        const user = await this.usersRepository.findById(owner_id);
+        const account = await this.accountsRepository.findById(owner_id);
 
-        if (!user) {
-            throw new AppError('User account not found');
+        if (!account) {
+            throw new AppError('Account account not found');
         }
 
-        if (user.plan.name === 'Free') {
-            const hasRestaurantCreated =
-                await this.restaurantRepository.findAll({ owner_id: user.id });
+        if (account.plan.name === 'Free') {
+            const hasEstablishmentCreated =
+                await this.establishmentRepository.findAll({
+                    owner_id: account.id,
+                });
 
-            if (hasRestaurantCreated.length > 0) {
-                throw new AppError('Only Premium users can register waiters.');
+            if (hasEstablishmentCreated.length > 0) {
+                throw new AppError(
+                    'Only Premium accounts can register waiters.',
+                );
             }
         }
 
@@ -64,17 +68,17 @@ class CreateWaiterService {
             throw new AppError('Waiter already exists with this cpf');
         }
 
-        const restaurant = await this.restaurantRepository.findById({
-            restaurant_id,
+        const establishment = await this.establishmentRepository.findById({
+            establishment_id,
             owner_id,
         });
 
-        if (!restaurant) {
-            throw new AppError('Restaurant not found');
+        if (!establishment) {
+            throw new AppError('Establishment not found');
         }
 
-        if (!restaurant.active) {
-            throw new AppError('Restaurant inactive. Not allowed.');
+        if (!establishment.active) {
+            throw new AppError('Establishment inactive. Not allowed.');
         }
 
         const hashedPassword = await this.hashProvider.generateHash(password);
@@ -84,8 +88,8 @@ class CreateWaiterService {
             cpf,
             password: hashedPassword,
             username,
-            owner_id: user.id,
-            restaurant_id: restaurant.id,
+            owner_id: account.id,
+            establishment_id: establishment.id,
         });
 
         return waiter;

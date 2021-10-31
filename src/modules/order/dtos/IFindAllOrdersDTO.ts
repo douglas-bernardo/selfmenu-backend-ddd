@@ -1,3 +1,3 @@
 export default interface IFindAllOrdersDTO {
-    restaurant_id: string;
+    establishment_id: string;
 }

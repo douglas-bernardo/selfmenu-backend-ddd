@@ -26,7 +26,7 @@ export default class CreateMenu1629670039168 implements MigrationInterface {
                         type: 'varchar',
                     },
                     {
-                        name: 'restaurant_id',
+                        name: 'establishment_id',
                         type: 'varchar',
                     },
                     {
@@ -47,15 +47,15 @@ export default class CreateMenu1629670039168 implements MigrationInterface {
                 ],
                 foreignKeys: [
                     {
-                        name: 'fk_menu_user',
+                        name: 'fk_menu_account',
                         columnNames: ['owner_id'],
-                        referencedTableName: 'user',
+                        referencedTableName: 'account',
                         referencedColumnNames: ['id'],
                     },
                     {
-                        name: 'fk_menu_restaurant',
-                        columnNames: ['restaurant_id'],
-                        referencedTableName: 'restaurant',
+                        name: 'fk_menu_establishment',
+                        columnNames: ['establishment_id'],
+                        referencedTableName: 'establishment',
                         referencedColumnNames: ['id'],
                     },
                 ],

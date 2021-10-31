@@ -1,9 +1,9 @@
-import FakeUsersRepository from '@modules/users/repositories/fakes/FakeUserRepository';
-import FakeRestaurantRepository from '@modules/restaurant/repositories/fakes/FakeRestaurantRepository';
+import FakeAccountsRepository from '@modules/account/repositories/fakes/FakeAccountRepository';
+import FakeEstablishmentRepository from '@modules/establishment/repositories/fakes/FakeEstablishmentRepository';
 import FakeTableRepository from '@modules/table/repositories/fakes/FakeTableRepository';
 import FakeWaiterRepository from '@modules/waiter/repositories/fakes/FakeWaiterRepository';
-import FakeItemRepository from '@modules/item/repositories/fakes/FakeItemRepository';
-import FakePlanRepository from '@modules/users/repositories/fakes/FakePlanRepository';
+import FakeProductRepository from '@modules/product/repositories/fakes/FakeProductRepository';
+import FakePlanRepository from '@modules/account/repositories/fakes/FakePlanRepository';
 import AppError from '@shared/errors/AppError';
 import UpdateTableTokenService from '@modules/table/services/UpdateTableTokenService';
 import FakeNotificationsRepository from '@modules/notifications/repositories/fakes/FakeNotificationsRepository';
@@ -11,11 +11,11 @@ import CreateOrderService from './CreateOrderService';
 import FakeOrderRepository from '../repositories/fakes/FakeOrderRepository';
 
 let fakePlanRepository: FakePlanRepository;
-let fakeUsersRepository: FakeUsersRepository;
-let fakeRestaurantRepository: FakeRestaurantRepository;
+let fakeAccountsRepository: FakeAccountsRepository;
+let fakeEstablishmentRepository: FakeEstablishmentRepository;
 let fakeTableRepository: FakeTableRepository;
 let fakeWaiterRepository: FakeWaiterRepository;
-let fakeItemRepository: FakeItemRepository;
+let fakeProductRepository: FakeProductRepository;
 let fakeOrderRepository: FakeOrderRepository;
 let fakeNotificationsRepository: FakeNotificationsRepository;
 
@@ -25,11 +25,11 @@ let createOrderService: CreateOrderService;
 describe('CreateOrder', () => {
     beforeEach(() => {
         fakePlanRepository = new FakePlanRepository();
-        fakeUsersRepository = new FakeUsersRepository();
-        fakeRestaurantRepository = new FakeRestaurantRepository();
+        fakeAccountsRepository = new FakeAccountsRepository();
+        fakeEstablishmentRepository = new FakeEstablishmentRepository();
         fakeTableRepository = new FakeTableRepository();
         fakeWaiterRepository = new FakeWaiterRepository();
-        fakeItemRepository = new FakeItemRepository();
+        fakeProductRepository = new FakeProductRepository();
 
         fakeOrderRepository = new FakeOrderRepository();
         fakeNotificationsRepository = new FakeNotificationsRepository();
@@ -39,11 +39,11 @@ describe('CreateOrder', () => {
         );
 
         createOrderService = new CreateOrderService(
-            fakeUsersRepository,
-            fakeRestaurantRepository,
+            fakeAccountsRepository,
+            fakeEstablishmentRepository,
             fakeTableRepository,
             fakeWaiterRepository,
-            fakeItemRepository,
+            fakeProductRepository,
             fakeOrderRepository,
             fakeNotificationsRepository,
         );
@@ -55,21 +55,21 @@ describe('CreateOrder', () => {
             'Selfmenu premium plan',
         );
 
-        const user = await fakeUsersRepository.create({
+        const account = await fakeAccountsRepository.create({
             email: 'john@example.com',
             password: '123456',
             profile_name: 'John Doe',
             plan_id: plan.id,
         });
-        user.plan = plan;
-        await fakeUsersRepository.save(user);
+        account.plan = plan;
+        await fakeAccountsRepository.save(account);
 
-        const restaurant = await fakeRestaurantRepository.create({
+        const establishment = await fakeEstablishmentRepository.create({
             cnpj: 98986598659800,
             name: "Doe's Dinner",
-            description: 'A new restaurant',
-            restaurant_type_id: 1,
-            owner_id: user.id,
+            description: 'A new establishment',
+            establishment_type_id: 1,
+            owner_id: account.id,
             subdomain: 'does-dinner',
         });
 
@@ -78,41 +78,41 @@ describe('CreateOrder', () => {
             username: 'moe',
             cpf: 99999999999,
             password: '123456',
-            owner_id: user.id,
-            restaurant_id: restaurant.id,
+            owner_id: account.id,
+            establishment_id: establishment.id,
         });
 
         const table = await fakeTableRepository.create({
             number: 1,
             capacity: 4,
-            restaurant,
+            establishment,
             waiter,
-            owner: user,
+            owner: account,
         });
 
-        table.restaurant = restaurant;
+        table.establishment = establishment;
         await fakeTableRepository.save(table);
 
-        const item = await fakeItemRepository.create({
+        const product = await fakeProductRepository.create({
             name: 'Bolo de chocolate',
             description: 'Delicioso bolo de chocolate',
             price: 9.9,
             quantity: 10,
             category_id: 1,
-            owner_id: user.id,
+            owner_id: account.id,
         });
 
         const { token } = await updateTableTokenService.execute({
             table_number: table.number,
-            restaurant_id: restaurant.id,
+            establishment_id: establishment.id,
         });
 
         const order = await createOrderService.execute({
             table_token: token,
-            restaurant_id: restaurant.id,
-            items: [
+            establishment_id: establishment.id,
+            products: [
                 {
-                    id: item.id,
+                    id: product.id,
                     quantity: 5,
                 },
             ],
@@ -127,37 +127,37 @@ describe('CreateOrder', () => {
             'Selfmenu premium plan',
         );
 
-        const user = await fakeUsersRepository.create({
+        const account = await fakeAccountsRepository.create({
             email: 'john@example.com',
             password: '123456',
             profile_name: 'John Doe',
             plan_id: plan.id,
         });
-        const restaurant = await fakeRestaurantRepository.create({
+        const establishment = await fakeEstablishmentRepository.create({
             cnpj: 98986598659800,
             name: "Doe's Dinner",
-            description: 'A new restaurant',
-            restaurant_type_id: 1,
-            owner_id: user.id,
+            description: 'A new establishment',
+            establishment_type_id: 1,
+            owner_id: account.id,
             subdomain: 'does-dinner',
         });
 
-        const item = await fakeItemRepository.create({
+        const product = await fakeProductRepository.create({
             name: 'Bolo de chocolate',
             description: 'Delicioso bolo de chocolate',
             price: 9.9,
             quantity: 10,
             category_id: 1,
-            owner_id: user.id,
+            owner_id: account.id,
         });
 
         await expect(
             createOrderService.execute({
                 table_token: 'invalid-table',
-                restaurant_id: restaurant.id,
-                items: [
+                establishment_id: establishment.id,
+                products: [
                     {
-                        id: item.id,
+                        id: product.id,
                         quantity: 5,
                     },
                 ],
@@ -165,27 +165,27 @@ describe('CreateOrder', () => {
         ).rejects.toBeInstanceOf(AppError);
     });
 
-    it('should not be able to create a new order to non existing user account', async () => {
+    it('should not be able to create a new order to non existing account account', async () => {
         const plan = await fakePlanRepository.create(
             'Premium',
             'Selfmenu premium plan',
         );
 
-        const user = await fakeUsersRepository.create({
+        const account = await fakeAccountsRepository.create({
             email: 'john@example.com',
             password: '123456',
             profile_name: 'John Doe',
             plan_id: plan.id,
         });
-        user.plan = plan;
-        await fakeUsersRepository.save(user);
+        account.plan = plan;
+        await fakeAccountsRepository.save(account);
 
-        const restaurant = await fakeRestaurantRepository.create({
+        const establishment = await fakeEstablishmentRepository.create({
             cnpj: 98986598659800,
             name: "Doe's Dinner",
-            description: 'A new restaurant',
-            restaurant_type_id: 1,
-            owner_id: user.id,
+            description: 'A new establishment',
+            establishment_type_id: 1,
+            owner_id: account.id,
             subdomain: 'does-dinner',
         });
 
@@ -194,45 +194,45 @@ describe('CreateOrder', () => {
             username: 'moe',
             cpf: 99999999999,
             password: '123456',
-            owner_id: user.id,
-            restaurant_id: restaurant.id,
+            owner_id: account.id,
+            establishment_id: establishment.id,
         });
 
         const table = await fakeTableRepository.create({
             number: 1,
             capacity: 4,
-            restaurant,
+            establishment,
             waiter,
-            owner: user,
+            owner: account,
         });
 
-        table.restaurant = restaurant;
+        table.establishment = establishment;
         await fakeTableRepository.save(table);
 
-        const item = await fakeItemRepository.create({
+        const product = await fakeProductRepository.create({
             name: 'Bolo de chocolate',
             description: 'Delicioso bolo de chocolate',
             price: 9.9,
             quantity: 10,
             category_id: 1,
-            owner_id: user.id,
+            owner_id: account.id,
         });
 
         const { token } = await updateTableTokenService.execute({
             table_number: table.number,
-            restaurant_id: restaurant.id,
+            establishment_id: establishment.id,
         });
 
-        restaurant.owner_id = 'non-existing-user-account';
-        await fakeRestaurantRepository.save(restaurant);
+        establishment.owner_id = 'non-existing-account-account';
+        await fakeEstablishmentRepository.save(establishment);
 
         await expect(
             createOrderService.execute({
                 table_token: token,
-                restaurant_id: restaurant.id,
-                items: [
+                establishment_id: establishment.id,
+                products: [
                     {
-                        id: item.id,
+                        id: product.id,
                         quantity: 5,
                     },
                 ],
@@ -240,27 +240,27 @@ describe('CreateOrder', () => {
         ).rejects.toBeInstanceOf(AppError);
     });
 
-    it('should not be able to create a new order to non existing restaurant', async () => {
+    it('should not be able to create a new order to non existing establishment', async () => {
         const plan = await fakePlanRepository.create(
             'Premium',
             'Selfmenu premium plan',
         );
 
-        const user = await fakeUsersRepository.create({
+        const account = await fakeAccountsRepository.create({
             email: 'john@example.com',
             password: '123456',
             profile_name: 'John Doe',
             plan_id: plan.id,
         });
-        user.plan = plan;
-        await fakeUsersRepository.save(user);
+        account.plan = plan;
+        await fakeAccountsRepository.save(account);
 
-        const restaurant = await fakeRestaurantRepository.create({
+        const establishment = await fakeEstablishmentRepository.create({
             cnpj: 98986598659800,
             name: "Doe's Dinner",
-            description: 'A new restaurant',
-            restaurant_type_id: 1,
-            owner_id: user.id,
+            description: 'A new establishment',
+            establishment_type_id: 1,
+            owner_id: account.id,
             subdomain: 'does-dinner',
         });
 
@@ -269,32 +269,32 @@ describe('CreateOrder', () => {
             username: 'moe',
             cpf: 99999999999,
             password: '123456',
-            owner_id: user.id,
-            restaurant_id: restaurant.id,
+            owner_id: account.id,
+            establishment_id: establishment.id,
         });
 
         const table = await fakeTableRepository.create({
             number: 1,
             capacity: 4,
-            restaurant,
+            establishment,
             waiter,
-            owner: user,
+            owner: account,
         });
-        table.restaurant = restaurant;
+        table.establishment = establishment;
         await fakeTableRepository.save(table);
 
-        const item = await fakeItemRepository.create({
+        const product = await fakeProductRepository.create({
             name: 'Bolo de chocolate',
             description: 'Delicioso bolo de chocolate',
             price: 9.9,
             quantity: 10,
             category_id: 1,
-            owner_id: user.id,
+            owner_id: account.id,
         });
 
         const { token } = await updateTableTokenService.execute({
             table_number: table.number,
-            restaurant_id: restaurant.id,
+            establishment_id: establishment.id,
         });
 
         await fakeTableRepository.save(table);
@@ -302,10 +302,10 @@ describe('CreateOrder', () => {
         await expect(
             createOrderService.execute({
                 table_token: token,
-                restaurant_id: 'non-existing-restaurant',
-                items: [
+                establishment_id: 'non-existing-establishment',
+                products: [
                     {
-                        id: item.id,
+                        id: product.id,
                         quantity: 5,
                     },
                 ],
@@ -319,21 +319,21 @@ describe('CreateOrder', () => {
             'Selfmenu premium plan',
         );
 
-        const user = await fakeUsersRepository.create({
+        const account = await fakeAccountsRepository.create({
             email: 'john@example.com',
             password: '123456',
             profile_name: 'John Doe',
             plan_id: plan.id,
         });
-        user.plan = plan;
-        await fakeUsersRepository.save(user);
+        account.plan = plan;
+        await fakeAccountsRepository.save(account);
 
-        const restaurant = await fakeRestaurantRepository.create({
+        const establishment = await fakeEstablishmentRepository.create({
             cnpj: 98986598659800,
             name: "Doe's Dinner",
-            description: 'A new restaurant',
-            restaurant_type_id: 1,
-            owner_id: user.id,
+            description: 'A new establishment',
+            establishment_type_id: 1,
+            owner_id: account.id,
             subdomain: 'does-dinner',
         });
 
@@ -342,42 +342,42 @@ describe('CreateOrder', () => {
             username: 'moe',
             cpf: 99999999999,
             password: '123456',
-            owner_id: user.id,
-            restaurant_id: restaurant.id,
+            owner_id: account.id,
+            establishment_id: establishment.id,
         });
 
         const table = await fakeTableRepository.create({
             number: 1,
             capacity: 4,
-            restaurant,
+            establishment,
             waiter,
-            owner: user,
+            owner: account,
         });
-        table.restaurant = restaurant;
+        table.establishment = establishment;
         table.waiter_id = 'invalid-waiter';
         await fakeTableRepository.save(table);
 
-        const item = await fakeItemRepository.create({
+        const product = await fakeProductRepository.create({
             name: 'Bolo de chocolate',
             description: 'Delicioso bolo de chocolate',
             price: 9.9,
             quantity: 10,
             category_id: 1,
-            owner_id: user.id,
+            owner_id: account.id,
         });
 
         const { token } = await updateTableTokenService.execute({
             table_number: table.number,
-            restaurant_id: restaurant.id,
+            establishment_id: establishment.id,
         });
 
         await expect(
             createOrderService.execute({
                 table_token: token,
-                restaurant_id: restaurant.id,
-                items: [
+                establishment_id: establishment.id,
+                products: [
                     {
-                        id: item.id,
+                        id: product.id,
                         quantity: 5,
                     },
                 ],
@@ -391,21 +391,21 @@ describe('CreateOrder', () => {
             'Selfmenu premium plan',
         );
 
-        const user = await fakeUsersRepository.create({
+        const account = await fakeAccountsRepository.create({
             email: 'john@example.com',
             password: '123456',
             profile_name: 'John Doe',
             plan_id: plan.id,
         });
-        user.plan = plan;
-        await fakeUsersRepository.save(user);
+        account.plan = plan;
+        await fakeAccountsRepository.save(account);
 
-        const restaurant = await fakeRestaurantRepository.create({
+        const establishment = await fakeEstablishmentRepository.create({
             cnpj: 98986598659800,
             name: "Doe's Dinner",
-            description: 'A new restaurant',
-            restaurant_type_id: 1,
-            owner_id: user.id,
+            description: 'A new establishment',
+            establishment_type_id: 1,
+            owner_id: account.id,
             subdomain: 'does-dinner',
         });
 
@@ -414,32 +414,32 @@ describe('CreateOrder', () => {
             username: 'moe',
             cpf: 99999999999,
             password: '123456',
-            owner_id: user.id,
-            restaurant_id: restaurant.id,
+            owner_id: account.id,
+            establishment_id: establishment.id,
         });
 
         const table = await fakeTableRepository.create({
             number: 1,
             capacity: 4,
-            restaurant,
+            establishment,
             waiter,
-            owner: user,
+            owner: account,
         });
-        table.restaurant = restaurant;
+        table.establishment = establishment;
         await fakeTableRepository.save(table);
 
         const { token } = await updateTableTokenService.execute({
             table_number: table.number,
-            restaurant_id: restaurant.id,
+            establishment_id: establishment.id,
         });
 
         await expect(
             createOrderService.execute({
                 table_token: token,
-                restaurant_id: restaurant.id,
-                items: [
+                establishment_id: establishment.id,
+                products: [
                     {
-                        id: 'invalid-item',
+                        id: 'invalid-product',
                         quantity: 5,
                     },
                 ],
@@ -447,27 +447,27 @@ describe('CreateOrder', () => {
         ).rejects.toBeInstanceOf(AppError);
     });
 
-    it('should not be able to create a new order to inexistent items', async () => {
+    it('should not be able to create a new order to inexistent products', async () => {
         const plan = await fakePlanRepository.create(
             'Premium',
             'Selfmenu premium plan',
         );
 
-        const user = await fakeUsersRepository.create({
+        const account = await fakeAccountsRepository.create({
             email: 'john@example.com',
             password: '123456',
             profile_name: 'John Doe',
             plan_id: plan.id,
         });
-        user.plan = plan;
-        await fakeUsersRepository.save(user);
+        account.plan = plan;
+        await fakeAccountsRepository.save(account);
 
-        const restaurant = await fakeRestaurantRepository.create({
+        const establishment = await fakeEstablishmentRepository.create({
             cnpj: 98986598659800,
             name: "Doe's Dinner",
-            description: 'A new restaurant',
-            restaurant_type_id: 1,
-            owner_id: user.id,
+            description: 'A new establishment',
+            establishment_type_id: 1,
+            owner_id: account.id,
             subdomain: 'does-dinner',
         });
 
@@ -476,46 +476,46 @@ describe('CreateOrder', () => {
             username: 'moe',
             cpf: 99999999999,
             password: '123456',
-            owner_id: user.id,
-            restaurant_id: restaurant.id,
+            owner_id: account.id,
+            establishment_id: establishment.id,
         });
 
         const table = await fakeTableRepository.create({
             number: 1,
             capacity: 4,
-            restaurant,
+            establishment,
             waiter,
-            owner: user,
+            owner: account,
         });
 
-        table.restaurant = restaurant;
+        table.establishment = establishment;
         await fakeTableRepository.save(table);
 
-        const item = await fakeItemRepository.create({
+        const product = await fakeProductRepository.create({
             name: 'Bolo de chocolate',
             description: 'Delicioso bolo de chocolate',
             price: 9.9,
             quantity: 10,
             category_id: 1,
-            owner_id: user.id,
+            owner_id: account.id,
         });
 
         const { token } = await updateTableTokenService.execute({
             table_number: table.number,
-            restaurant_id: restaurant.id,
+            establishment_id: establishment.id,
         });
 
         await expect(
             createOrderService.execute({
                 table_token: token,
-                restaurant_id: restaurant.id,
-                items: [
+                establishment_id: establishment.id,
+                products: [
                     {
-                        id: item.id,
+                        id: product.id,
                         quantity: 5,
                     },
                     {
-                        id: 'inexistent-item',
+                        id: 'inexistent-product',
                         quantity: 5,
                     },
                 ],
@@ -529,21 +529,21 @@ describe('CreateOrder', () => {
             'Selfmenu premium plan',
         );
 
-        const user = await fakeUsersRepository.create({
+        const account = await fakeAccountsRepository.create({
             email: 'john@example.com',
             password: '123456',
             profile_name: 'John Doe',
             plan_id: plan.id,
         });
-        user.plan = plan;
-        await fakeUsersRepository.save(user);
+        account.plan = plan;
+        await fakeAccountsRepository.save(account);
 
-        const restaurant = await fakeRestaurantRepository.create({
+        const establishment = await fakeEstablishmentRepository.create({
             cnpj: 98986598659800,
             name: "Doe's Dinner",
-            description: 'A new restaurant',
-            restaurant_type_id: 1,
-            owner_id: user.id,
+            description: 'A new establishment',
+            establishment_type_id: 1,
+            owner_id: account.id,
             subdomain: 'does-dinner',
         });
 
@@ -552,41 +552,41 @@ describe('CreateOrder', () => {
             username: 'moe',
             cpf: 99999999999,
             password: '123456',
-            owner_id: user.id,
-            restaurant_id: restaurant.id,
+            owner_id: account.id,
+            establishment_id: establishment.id,
         });
 
         const table = await fakeTableRepository.create({
             number: 1,
             capacity: 4,
-            restaurant,
+            establishment,
             waiter,
-            owner: user,
+            owner: account,
         });
-        table.restaurant = restaurant;
+        table.establishment = establishment;
         await fakeTableRepository.save(table);
 
-        const item = await fakeItemRepository.create({
+        const product = await fakeProductRepository.create({
             name: 'Bolo de chocolate',
             description: 'Delicioso bolo de chocolate',
             price: 9.9,
             quantity: 10,
             category_id: 1,
-            owner_id: user.id,
+            owner_id: account.id,
         });
 
         const { token } = await updateTableTokenService.execute({
             table_number: table.number,
-            restaurant_id: restaurant.id,
+            establishment_id: establishment.id,
         });
 
         await expect(
             createOrderService.execute({
                 table_token: token,
-                restaurant_id: restaurant.id,
-                items: [
+                establishment_id: establishment.id,
+                products: [
                     {
-                        id: item.id,
+                        id: product.id,
                         quantity: 15,
                     },
                 ],

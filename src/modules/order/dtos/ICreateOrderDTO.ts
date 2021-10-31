@@ -1,9 +1,10 @@
-import Restaurant from '@modules/restaurant/infra/typeorm/entities/Restaurant';
+import Account from '@modules/account/infra/typeorm/entities/Account';
+import Establishment from '@modules/establishment/infra/typeorm/entities/Establishment';
 import Table from '@modules/table/infra/typeorm/entities/Table';
 import Waiter from '@modules/waiter/infra/typeorm/entities/Waiter';
 
-interface IItem {
-    item_id: string;
+interface IProduct {
+    product_id: string;
     price: number;
     quantity: number;
     discount?: number;
@@ -12,8 +13,9 @@ interface IItem {
 export default interface ICreateOrderDTO {
     token: string;
     status_order_id: number;
-    restaurant: Restaurant;
+    establishment: Establishment;
     waiter: Waiter;
     table: Table;
-    items: IItem[];
+    owner: Account;
+    products: IProduct[];
 }

@@ -1,4 +1,5 @@
-import Restaurant from '@modules/restaurant/infra/typeorm/entities/Restaurant';
+import Account from '@modules/account/infra/typeorm/entities/Account';
+import Establishment from '@modules/establishment/infra/typeorm/entities/Establishment';
 import Table from '@modules/table/infra/typeorm/entities/Table';
 import Waiter from '@modules/waiter/infra/typeorm/entities/Waiter';
 import {
@@ -11,7 +12,7 @@ import {
     PrimaryGeneratedColumn,
     UpdateDateColumn,
 } from 'typeorm';
-import OrderItem from './OrderItem';
+import OrderProduct from './OrderProduct';
 
 @Entity('order')
 class Order {
@@ -24,16 +25,20 @@ class Order {
     @Column()
     status_order_id: number;
 
-    @ManyToOne(() => Restaurant)
-    @JoinColumn({ name: 'restaurant_id' })
-    restaurant: Restaurant;
+    @ManyToOne(() => Establishment)
+    @JoinColumn({ name: 'establishment_id' })
+    establishment: Establishment;
 
     @Column()
-    restaurant_id: string;
+    establishment_id: string;
 
     @ManyToOne(() => Waiter)
     @JoinColumn({ name: 'waiter_id' })
     waiter: Waiter;
+
+    @ManyToOne(() => Waiter)
+    @JoinColumn({ name: 'owner_id' })
+    owner: Account;
 
     @ManyToOne(() => Table)
     @JoinColumn([
@@ -42,10 +47,10 @@ class Order {
     ])
     table: Table;
 
-    @OneToMany(() => OrderItem, order_items => order_items.order, {
+    @OneToMany(() => OrderProduct, order_products => order_products.order, {
         cascade: true,
     })
-    order_items: OrderItem[];
+    order_products: OrderProduct[];
 
     @CreateDateColumn()
     created_at: Date;

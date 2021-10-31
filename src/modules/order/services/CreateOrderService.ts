@@ -2,34 +2,35 @@ import { inject, injectable } from 'tsyringe';
 
 import AppError from '@shared/errors/AppError';
 
-import IItemRepository from '@modules/item/repositories/IItemRepository';
-import IRestaurantRepository from '@modules/restaurant/repositories/IRestaurantRepository';
+import IProductRepository from '@modules/product/repositories/IProductRepository';
+import IEstablishmentRepository from '@modules/establishment/repositories/IEstablishmentRepository';
 import IWaiterRepository from '@modules/waiter/repositories/IWaiterRepository';
 import ITableRepository from '@modules/table/repositories/ITableRepository';
-import IUsersRepository from '@modules/users/repositories/IUsersRepository';
+import IAccountsRepository from '@modules/account/repositories/IAccountRepository';
 import INotificationsRepository from '@modules/notifications/repositories/INotificationsRepository';
 import IOrderRepository from '../repositories/IOrderRepository';
 import Order from '../infra/typeorm/entities/Order';
 
-interface IItems {
+interface IProducts {
     id: string;
     quantity: number;
+    details?: string;
 }
 
 interface IRequest {
     table_token: string;
-    restaurant_id: string;
-    items: IItems[];
+    establishment_id: string;
+    products: IProducts[];
 }
 
 @injectable()
 class CreateOrderService {
     constructor(
-        @inject('UsersRepository')
-        private usersRepository: IUsersRepository,
+        @inject('AccountsRepository')
+        private accountsRepository: IAccountsRepository,
 
-        @inject('RestaurantRepository')
-        private restaurantRepository: IRestaurantRepository,
+        @inject('EstablishmentRepository')
+        private establishmentRepository: IEstablishmentRepository,
 
         @inject('TableRepository')
         private tableRepository: ITableRepository,
@@ -37,8 +38,8 @@ class CreateOrderService {
         @inject('WaiterRepository')
         private waiterRepository: IWaiterRepository,
 
-        @inject('ItemRepository')
-        private itemRepository: IItemRepository,
+        @inject('ProductRepository')
+        private productRepository: IProductRepository,
 
         @inject('OrderRepository')
         private orderRepository: IOrderRepository,
@@ -49,8 +50,8 @@ class CreateOrderService {
 
     public async execute({
         table_token,
-        restaurant_id,
-        items,
+        establishment_id,
+        products,
     }: IRequest): Promise<Order> {
         const table = await this.tableRepository.findByToken({
             table_token,
@@ -60,35 +61,37 @@ class CreateOrderService {
             throw new AppError('Invalid token or table not found');
         }
 
-        const user = await this.usersRepository.findById(
-            table.restaurant.owner_id,
+        const account = await this.accountsRepository.findById(
+            table.establishment.owner_id,
         );
 
-        if (!user) {
-            throw new AppError('User account not found');
+        if (!account) {
+            throw new AppError('Account account not found');
         }
 
-        const restaurantExist = await this.restaurantRepository.findById({
-            restaurant_id,
-            owner_id: user.id,
+        const establishmentExist = await this.establishmentRepository.findById({
+            establishment_id,
+            owner_id: account.id,
         });
 
-        if (!restaurantExist) {
-            throw new AppError('Cannot find any restaurant with the given id');
+        if (!establishmentExist) {
+            throw new AppError(
+                'Cannot find any establishment with the given id',
+            );
         }
 
         const waiterExist = await this.waiterRepository.findById({
             waiter_id: table.waiter_id,
-            owner_id: user.id,
+            owner_id: account.id,
         });
 
         if (!waiterExist) {
             throw new AppError('Cannot find any waiter with the given id');
         }
         // [3,4,8,9]
-        const existentProducts = await this.itemRepository.findAllById(
-            items,
-            user.id,
+        const existentProducts = await this.productRepository.findAllById(
+            products,
+            account.id,
         );
 
         if (!existentProducts.length) {
@@ -97,8 +100,8 @@ class CreateOrderService {
 
         const existentProductsIds = existentProducts.map(product => product.id);
 
-        const checkInexistentProducts = items.filter(
-            item => !existentProductsIds.includes(item.id),
+        const checkInexistentProducts = products.filter(
+            product => !existentProductsIds.includes(product.id),
         );
 
         // [9]
@@ -108,10 +111,10 @@ class CreateOrderService {
             );
         }
 
-        const findProductsWithNoQuantityAvailable = items.filter(
-            item =>
-                existentProducts.filter(p => p.id === item.id)[0].quantity <
-                item.quantity,
+        const findProductsWithNoQuantityAvailable = products.filter(
+            product =>
+                existentProducts.filter(p => p.id === product.id)[0].quantity <
+                product.quantity,
         );
 
         if (findProductsWithNoQuantityAvailable.length) {
@@ -121,31 +124,33 @@ class CreateOrderService {
             );
         }
 
-        const serializeItems = items.map(item => ({
-            item_id: item.id,
-            quantity: item.quantity,
-            price: existentProducts.filter(p => p.id === item.id)[0].price,
+        const serializeProducts = products.map(product => ({
+            product_id: product.id,
+            quantity: product.quantity,
+            price: existentProducts.filter(p => p.id === product.id)[0].price,
+            details: product.details,
         }));
 
         const order = await this.orderRepository.create({
             token: table_token,
             status_order_id: 1,
-            restaurant: restaurantExist,
+            establishment: establishmentExist,
+            owner: account,
             table,
             waiter: waiterExist,
-            items: serializeItems,
+            products: serializeProducts,
         });
 
-        const { order_items } = order;
+        const { order_products } = order;
 
-        const orderedItemsQuantity = order_items.map(item => ({
-            id: item.item_id,
+        const orderedProductsQuantity = order_products.map(product => ({
+            id: product.product_id,
             quantity:
-                existentProducts.filter(p => p.id === item.item_id)[0]
-                    .quantity - item.quantity,
+                existentProducts.filter(p => p.id === product.product_id)[0]
+                    .quantity - product.quantity,
         }));
 
-        await this.itemRepository.updateQuantity(orderedItemsQuantity);
+        await this.productRepository.updateQuantity(orderedProductsQuantity);
 
         await this.notificationsRepository.create({
             content: `Novo pedido realizado na mesa ${table.number}`,

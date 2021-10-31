@@ -1,15 +1,15 @@
 import { injectable, inject } from 'tsyringe';
 
 import AppError from '@shared/errors/AppError';
-import IRestaurantRepository from '@modules/restaurant/repositories/IRestaurantRepository';
-import IUsersRepository from '@modules/users/repositories/IUsersRepository';
+import IEstablishmentRepository from '@modules/establishment/repositories/IEstablishmentRepository';
+import IAccountsRepository from '@modules/account/repositories/IAccountRepository';
 import IWaiterRepository from '@modules/waiter/repositories/IWaiterRepository';
 import Table from '../infra/typeorm/entities/Table';
 import ITableRepository from '../repositories/ITableRepository';
 
 interface IRequest {
     capacity: number;
-    restaurant_id: string;
+    establishment_id: string;
     waiter_id: string;
     owner_id: string;
 }
@@ -17,11 +17,11 @@ interface IRequest {
 @injectable()
 class CreateTableService {
     constructor(
-        @inject('UsersRepository')
-        private usersRepository: IUsersRepository,
+        @inject('AccountsRepository')
+        private accountsRepository: IAccountsRepository,
 
-        @inject('RestaurantRepository')
-        private restaurantRepository: IRestaurantRepository,
+        @inject('EstablishmentRepository')
+        private establishmentRepository: IEstablishmentRepository,
 
         @inject('TableRepository')
         private tableRepository: ITableRepository,
@@ -32,32 +32,32 @@ class CreateTableService {
 
     public async execute({
         capacity,
-        restaurant_id,
+        establishment_id,
         waiter_id,
         owner_id,
     }: IRequest): Promise<Table> {
-        const user = await this.usersRepository.findById(owner_id);
+        const account = await this.accountsRepository.findById(owner_id);
 
-        if (!user) {
-            throw new AppError('User account not found');
+        if (!account) {
+            throw new AppError('Account account not found');
         }
 
-        const restaurant = await this.restaurantRepository.findById({
-            restaurant_id,
+        const establishment = await this.establishmentRepository.findById({
+            establishment_id,
             owner_id,
         });
 
-        if (!restaurant) {
-            throw new AppError('Restaurant not found');
+        if (!establishment) {
+            throw new AppError('Establishment not found');
         }
 
-        if (!restaurant.active) {
-            throw new AppError('Restaurant inactive. Not allowed.');
+        if (!establishment.active) {
+            throw new AppError('Establishment inactive. Not allowed.');
         }
 
         let table_number = 1;
         const lastTableCreated = await this.tableRepository.findLastCreated(
-            restaurant_id,
+            establishment_id,
         );
 
         if (lastTableCreated) {
@@ -76,9 +76,9 @@ class CreateTableService {
         const table = await this.tableRepository.create({
             number: table_number,
             capacity,
-            restaurant,
+            establishment,
             waiter,
-            owner: user,
+            owner: account,
         });
 
         return table;

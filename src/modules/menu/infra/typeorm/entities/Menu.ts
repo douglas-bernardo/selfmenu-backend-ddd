@@ -1,5 +1,5 @@
-import Restaurant from '@modules/restaurant/infra/typeorm/entities/Restaurant';
-import User from '@modules/users/infra/typeorm/entities/User';
+import Establishment from '@modules/establishment/infra/typeorm/entities/Establishment';
+import Account from '@modules/account/infra/typeorm/entities/Account';
 import {
     Column,
     CreateDateColumn,
@@ -10,7 +10,7 @@ import {
     PrimaryGeneratedColumn,
     UpdateDateColumn,
 } from 'typeorm';
-import MenuItem from './MenuItem';
+import MenuProduct from './MenuProduct';
 
 @Entity('menu')
 class Menu {
@@ -26,21 +26,21 @@ class Menu {
     @Column()
     owner_id: string;
 
-    @ManyToOne(() => User)
+    @ManyToOne(() => Account)
     @JoinColumn({ name: 'owner_id' })
-    owner: User;
+    owner: Account;
 
     @Column()
-    restaurant_id: string;
+    establishment_id: string;
 
-    @ManyToOne(() => Restaurant)
-    @JoinColumn({ name: 'restaurant_id' })
-    restaurant: Restaurant;
+    @ManyToOne(() => Establishment)
+    @JoinColumn({ name: 'establishment_id' })
+    establishment: Establishment;
 
-    @OneToMany(() => MenuItem, menu_items => menu_items.menu, {
+    @OneToMany(() => MenuProduct, menu_products => menu_products.menu, {
         cascade: true,
     })
-    menu_items: MenuItem[];
+    menu_products: MenuProduct[];
 
     @Column()
     active: boolean;

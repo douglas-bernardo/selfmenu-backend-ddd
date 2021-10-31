@@ -3,7 +3,7 @@ import Table from '../infra/typeorm/entities/Table';
 import ITableRepository from '../repositories/ITableRepository';
 
 interface IRequest {
-    restaurant_id?: string;
+    owner_id?: string;
 }
 
 @injectable()
@@ -12,8 +12,8 @@ class ListTablesServices {
         @inject('TableRepository') private tableRepository: ITableRepository,
     ) {}
 
-    public async execute({ restaurant_id }: IRequest): Promise<Table[]> {
-        return this.tableRepository.findAll({ restaurant_id });
+    public async execute({ owner_id }: IRequest): Promise<Table[]> {
+        return this.tableRepository.findAll({ owner_id });
     }
 }
 

@@ -14,15 +14,13 @@ class TableRepository implements ITableRepository {
         this.ormRepository = getRepository(Table);
     }
 
-    public async findAll({
-        restaurant_id,
-    }: IFindAllTablesDTO): Promise<Table[]> {
+    public async findAll({ owner_id }: IFindAllTablesDTO): Promise<Table[]> {
         let tables: Table[] = [];
 
-        if (restaurant_id) {
+        if (owner_id) {
             tables = await this.ormRepository.find({
                 where: {
-                    restaurant_id,
+                    owner_id,
                 },
             });
         } else {
@@ -34,15 +32,15 @@ class TableRepository implements ITableRepository {
 
     public async findById({
         table_id,
-        restaurant_id,
+        establishment_id,
     }: IFindByIdTableDTO): Promise<Table | undefined> {
         let findTable: Table | undefined;
 
-        if (restaurant_id) {
+        if (establishment_id) {
             findTable = await this.ormRepository.findOne({
                 where: {
                     id: table_id,
-                    restaurant_id,
+                    establishment_id,
                 },
                 relations: ['orders'],
             });
@@ -54,7 +52,7 @@ class TableRepository implements ITableRepository {
     }
 
     public async findLastCreated(
-        restaurant_id: string,
+        establishment_id: string,
     ): Promise<Table | undefined> {
         let findTable: Table | undefined;
 
@@ -66,7 +64,7 @@ class TableRepository implements ITableRepository {
             findTable = await this.ormRepository.findOne({
                 where: {
                     number: result.max,
-                    restaurant_id,
+                    establishment_id,
                 },
             });
         }
@@ -76,14 +74,14 @@ class TableRepository implements ITableRepository {
 
     public async findByNumber({
         number,
-        restaurant_id,
+        establishment_id,
     }: IFindByNumberTableDTO): Promise<Table | undefined> {
         let findTable: Table | undefined;
-        if (restaurant_id) {
+        if (establishment_id) {
             findTable = await this.ormRepository.findOne({
                 where: {
                     number,
-                    restaurant_id,
+                    establishment_id,
                 },
             });
         } else {
@@ -104,7 +102,7 @@ class TableRepository implements ITableRepository {
             where: {
                 token: table_token,
             },
-            relations: ['restaurant'],
+            relations: ['establishment'],
         });
 
         return table;
@@ -113,14 +111,14 @@ class TableRepository implements ITableRepository {
     public async create({
         number,
         capacity,
-        restaurant,
+        establishment,
         waiter,
         owner,
     }: ICreateTableDTO): Promise<Table> {
         const table = this.ormRepository.create({
             number,
             capacity,
-            restaurant,
+            establishment,
             waiter,
             owner,
         });

@@ -1,9 +1,5 @@
 import IStorageProvider from '../models/IStorageProvider';
 
-interface IImage {
-    url: string;
-}
-
 class FakeStorageProvider implements IStorageProvider {
     private storage: string[] = [];
 
@@ -17,14 +13,6 @@ class FakeStorageProvider implements IStorageProvider {
             storageFile => storageFile === file,
         );
         this.storage.splice(findIndex, 1);
-    }
-
-    public async saveFiles(files: IImage[]): Promise<void> {
-        throw new Error('Method not implemented.');
-    }
-
-    public async deleteFiles(files: IImage[]): Promise<void> {
-        throw new Error('Method not implemented.');
     }
 }
 

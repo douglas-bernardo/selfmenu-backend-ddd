@@ -22,7 +22,11 @@ export default class CreateOrder1630500909222 implements MigrationInterface {
                         type: 'int',
                     },
                     {
-                        name: 'restaurant_id',
+                        name: 'establishment_id',
+                        type: 'varchar',
+                    },
+                    {
+                        name: 'owner_id',
                         type: 'varchar',
                     },
                     {
@@ -48,9 +52,15 @@ export default class CreateOrder1630500909222 implements MigrationInterface {
                         referencedColumnNames: ['id'],
                     },
                     {
-                        name: 'fk_order_restaurant',
-                        columnNames: ['restaurant_id'],
-                        referencedTableName: 'restaurant',
+                        name: 'fk_order_establishment',
+                        columnNames: ['establishment_id'],
+                        referencedTableName: 'establishment',
+                        referencedColumnNames: ['id'],
+                    },
+                    {
+                        name: 'fk_order_account',
+                        columnNames: ['owner_id'],
+                        referencedTableName: 'account',
                         referencedColumnNames: ['id'],
                     },
                     {

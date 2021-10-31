@@ -4,5 +4,5 @@ export default interface ICreateWaiterDTO {
     username: string;
     password: string;
     owner_id: string;
-    restaurant_id: string;
+    establishment_id: string;
 }

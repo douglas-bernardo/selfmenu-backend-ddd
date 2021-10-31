@@ -9,7 +9,7 @@ export default interface ITableRepository {
     findAll(data?: IFindAllTablesDTO): Promise<Table[]>;
     findById(data: IFindByIdTableDTO): Promise<Table | undefined>;
     findByNumber(data: IFindByNumberTableDTO): Promise<Table | undefined>;
-    findLastCreated(restaurant_id: string): Promise<Table | undefined>;
+    findLastCreated(establishment_id: string): Promise<Table | undefined>;
     findByToken(data: IFindByTokenTableDTO): Promise<Table | undefined>;
     create(data: ICreateTableDTO): Promise<Table>;
     save(table: Table): Promise<Table>;

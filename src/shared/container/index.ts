@@ -1,45 +1,54 @@
 import { container } from 'tsyringe';
 
-import '@modules/users/providers';
+import '@modules/account/providers';
 import './providers';
 
-import IUsersRepository from '@modules/users/repositories/IUsersRepository';
-import UsersRepository from '@modules/users/infra/typeorm/repositories/UsersRepository';
+import IAccountsRepository from '@modules/account/repositories/IAccountRepository';
+import AccountsRepository from '@modules/account/infra/typeorm/repositories/AccountRepository';
 
-import IUserTokenRepository from '@modules/users/repositories/IUserTokenRepository';
-import UserTokenRepository from '@modules/users/infra/typeorm/repositories/UserTokenRepository';
-import IRestaurantRepository from '@modules/restaurant/repositories/IRestaurantRepository';
-import RestaurantRepository from '@modules/restaurant/infra/typeorm/repositories/RestaurantRepository';
-import IPlanRepository from '@modules/users/repositories/IPlanRepository';
-import PlanRepository from '@modules/users/infra/typeorm/repositories/PlanRepository';
+import IAccountTokenRepository from '@modules/account/repositories/IAccountTokenRepository';
+import AccountTokenRepository from '@modules/account/infra/typeorm/repositories/AccountTokenRepository';
+
+import IEstablishmentRepository from '@modules/establishment/repositories/IEstablishmentRepository';
+import EstablishmentRepository from '@modules/establishment/infra/typeorm/repositories/EstablishmentRepository';
+
+import IPlanRepository from '@modules/account/repositories/IPlanRepository';
+import PlanRepository from '@modules/account/infra/typeorm/repositories/PlanRepository';
+
 import IMenuRepository from '@modules/menu/repositories/IMenuRepository';
 import MenuRepository from '@modules/menu/infra/typeorm/repositories/MenuRepository';
-import IItemRepository from '@modules/item/repositories/IItemRepository';
-import ItemRepository from '@modules/item/infra/typeorm/repositories/ItemRepository';
+
+import IProductRepository from '@modules/product/repositories/IProductRepository';
+import ProductRepository from '@modules/product/infra/typeorm/repositories/ProductRepository';
+
 import WaiterRepository from '@modules/waiter/infra/typeorm/repositories/WaiterRepository';
 import IWaiterRepository from '@modules/waiter/repositories/IWaiterRepository';
+
 import ITableRepository from '@modules/table/repositories/ITableRepository';
 import TableRepository from '@modules/table/infra/typeorm/repositories/TableRepository';
+
 import IOrderRepository from '@modules/order/repositories/IOrderRepository';
 import OrdersRepository from '@modules/order/infra/typeorm/repositories/OrderRepository';
-import ICategoryRepository from '@modules/item/repositories/ICategoryRepository';
-import CategoryRepository from '@modules/item/infra/typeorm/repositories/CategoryRepository';
+
+import ICategoryRepository from '@modules/product/repositories/ICategoryRepository';
+import CategoryRepository from '@modules/product/infra/typeorm/repositories/CategoryRepository';
+
 import INotificationsRepository from '@modules/notifications/repositories/INotificationsRepository';
 import NotificationsRepository from '@modules/notifications/infra/typeorm/repositories/NotificationsRepository';
 
-container.registerSingleton<IUsersRepository>(
-    'UsersRepository',
-    UsersRepository,
+container.registerSingleton<IAccountsRepository>(
+    'AccountsRepository',
+    AccountsRepository,
 );
 
-container.registerSingleton<IUserTokenRepository>(
-    'UserTokenRepository',
-    UserTokenRepository,
+container.registerSingleton<IAccountTokenRepository>(
+    'AccountTokenRepository',
+    AccountTokenRepository,
 );
 
-container.registerSingleton<IRestaurantRepository>(
-    'RestaurantRepository',
-    RestaurantRepository,
+container.registerSingleton<IEstablishmentRepository>(
+    'EstablishmentRepository',
+    EstablishmentRepository,
 );
 
 container.registerSingleton<IPlanRepository>('PlanRepository', PlanRepository);
@@ -51,7 +60,10 @@ container.registerSingleton<ICategoryRepository>(
     CategoryRepository,
 );
 
-container.registerSingleton<IItemRepository>('ItemRepository', ItemRepository);
+container.registerSingleton<IProductRepository>(
+    'ProductRepository',
+    ProductRepository,
+);
 
 container.registerSingleton<IWaiterRepository>(
     'WaiterRepository',

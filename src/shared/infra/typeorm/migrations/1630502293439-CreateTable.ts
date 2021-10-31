@@ -26,7 +26,7 @@ export default class CreateTable1630502293439 implements MigrationInterface {
                         type: 'int',
                     },
                     {
-                        name: 'restaurant_id',
+                        name: 'establishment_id',
                         type: 'varchar',
                     },
                     {
@@ -55,9 +55,9 @@ export default class CreateTable1630502293439 implements MigrationInterface {
                 ],
                 foreignKeys: [
                     {
-                        name: 'fk_table_restaurant',
-                        columnNames: ['restaurant_id'],
-                        referencedTableName: 'restaurant',
+                        name: 'fk_table_establishment',
+                        columnNames: ['establishment_id'],
+                        referencedTableName: 'establishment',
                         referencedColumnNames: ['id'],
                     },
                     {
@@ -67,9 +67,9 @@ export default class CreateTable1630502293439 implements MigrationInterface {
                         referencedColumnNames: ['id'],
                     },
                     {
-                        name: 'fk_table_owner',
+                        name: 'fk_table_account',
                         columnNames: ['owner_id'],
-                        referencedTableName: 'user',
+                        referencedTableName: 'account',
                         referencedColumnNames: ['id'],
                     },
                 ],

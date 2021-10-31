@@ -1,12 +1,12 @@
-import FakeRestaurantRepository from '@modules/restaurant/repositories/fakes/FakeRestaurantRepository';
-import FakePlanRepository from '@modules/users/repositories/fakes/FakePlanRepository';
-import FakeUsersRepository from '@modules/users/repositories/fakes/FakeUserRepository';
+import FakeEstablishmentRepository from '@modules/establishment/repositories/fakes/FakeEstablishmentRepository';
+import FakePlanRepository from '@modules/account/repositories/fakes/FakePlanRepository';
+import FakeAccountsRepository from '@modules/account/repositories/fakes/FakeAccountRepository';
 import AppError from '@shared/errors/AppError';
 import FakeWaiterRepository from '../repositories/fakes/FakeWaiterRepository';
 import ShowWaiterService from './ShowWaiterService';
 
-let fakeUserRepository: FakeUsersRepository;
-let fakeRestaurantRepository: FakeRestaurantRepository;
+let fakeAccountRepository: FakeAccountsRepository;
+let fakeEstablishmentRepository: FakeEstablishmentRepository;
 let fakePlanRepository: FakePlanRepository;
 let fakeWaiterRepository: FakeWaiterRepository;
 
@@ -14,8 +14,8 @@ let showWaiterService: ShowWaiterService;
 
 describe('ShowWaiter', () => {
     beforeEach(() => {
-        fakeUserRepository = new FakeUsersRepository();
-        fakeRestaurantRepository = new FakeRestaurantRepository();
+        fakeAccountRepository = new FakeAccountsRepository();
+        fakeEstablishmentRepository = new FakeEstablishmentRepository();
         fakePlanRepository = new FakePlanRepository();
         fakeWaiterRepository = new FakeWaiterRepository();
 
@@ -28,21 +28,21 @@ describe('ShowWaiter', () => {
             'Selfmenu premium plan',
         );
 
-        const user = await fakeUserRepository.create({
+        const account = await fakeAccountRepository.create({
             email: 'john@example.com',
             password: '123456',
             profile_name: 'John Doe',
             plan_id: plan.id,
         });
-        user.plan = plan;
-        await fakeUserRepository.save(user);
+        account.plan = plan;
+        await fakeAccountRepository.save(account);
 
-        const restaurant = await fakeRestaurantRepository.create({
+        const establishment = await fakeEstablishmentRepository.create({
             cnpj: 63655798024,
             name: "Doe's Dinner",
-            description: 'A new restaurant',
-            restaurant_type_id: 1,
-            owner_id: user.id,
+            description: 'A new establishment',
+            establishment_type_id: 1,
+            owner_id: account.id,
             subdomain: 'does-dinner',
         });
 
@@ -51,13 +51,13 @@ describe('ShowWaiter', () => {
             username: 'moe',
             cpf: 63655798024,
             password: '123456',
-            owner_id: user.id,
-            restaurant_id: restaurant.id,
+            owner_id: account.id,
+            establishment_id: establishment.id,
         });
 
         const findWaiter = await showWaiterService.execute({
             id: waiter.id,
-            owner_id: user.id,
+            owner_id: account.id,
         });
 
         expect(findWaiter.name).toBe('Moe');
@@ -69,19 +69,19 @@ describe('ShowWaiter', () => {
             'Selfmenu premium plan',
         );
 
-        const user = await fakeUserRepository.create({
+        const account = await fakeAccountRepository.create({
             email: 'john@example.com',
             password: '123456',
             profile_name: 'John Doe',
             plan_id: plan.id,
         });
-        user.plan = plan;
-        await fakeUserRepository.save(user);
+        account.plan = plan;
+        await fakeAccountRepository.save(account);
 
         await expect(
             showWaiterService.execute({
                 id: 'non-existing-waiter',
-                owner_id: user.id,
+                owner_id: account.id,
             }),
         ).rejects.toBeInstanceOf(AppError);
     });

@@ -5,7 +5,7 @@ import ITableRepository from '../repositories/ITableRepository';
 
 interface IRequest {
     table_number: number;
-    restaurant_id: string;
+    establishment_id: string;
 }
 
 interface IResponse {
@@ -22,15 +22,15 @@ class UpdateTableTokenService {
 
     public async execute({
         table_number,
-        restaurant_id,
+        establishment_id,
     }: IRequest): Promise<IResponse> {
         const table = await this.tableRepository.findByNumber({
             number: table_number,
-            restaurant_id,
+            establishment_id,
         });
 
         if (!table) {
-            throw new AppError('Table not found');
+            throw new AppError('Table or Establishment not found');
         }
 
         const token = (Math.random() + 1)

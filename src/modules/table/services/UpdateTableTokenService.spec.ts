@@ -1,14 +1,14 @@
-import FakeRestaurantRepository from '@modules/restaurant/repositories/fakes/FakeRestaurantRepository';
-import FakePlanRepository from '@modules/users/repositories/fakes/FakePlanRepository';
-import FakeUsersRepository from '@modules/users/repositories/fakes/FakeUserRepository';
+import FakeEstablishmentRepository from '@modules/establishment/repositories/fakes/FakeEstablishmentRepository';
+import FakePlanRepository from '@modules/account/repositories/fakes/FakePlanRepository';
+import FakeAccountsRepository from '@modules/account/repositories/fakes/FakeAccountRepository';
 import FakeWaiterRepository from '@modules/waiter/repositories/fakes/FakeWaiterRepository';
 import AppError from '@shared/errors/AppError';
 import FakeTableRepository from '../repositories/fakes/FakeTableRepository';
 import UpdateTableTokenService from './UpdateTableTokenService';
 
 let fakePlanRepository: FakePlanRepository;
-let fakeUserRepository: FakeUsersRepository;
-let fakeRestaurantRepository: FakeRestaurantRepository;
+let fakeAccountRepository: FakeAccountsRepository;
+let fakeEstablishmentRepository: FakeEstablishmentRepository;
 let fakeWaiterRepository: FakeWaiterRepository;
 
 let fakeTableRepository: FakeTableRepository;
@@ -17,8 +17,8 @@ let updateTableTokenService: UpdateTableTokenService;
 describe('UpdateTableToken', () => {
     beforeEach(() => {
         fakePlanRepository = new FakePlanRepository();
-        fakeUserRepository = new FakeUsersRepository();
-        fakeRestaurantRepository = new FakeRestaurantRepository();
+        fakeAccountRepository = new FakeAccountsRepository();
+        fakeEstablishmentRepository = new FakeEstablishmentRepository();
         fakeWaiterRepository = new FakeWaiterRepository();
         fakeTableRepository = new FakeTableRepository();
 
@@ -33,19 +33,19 @@ describe('UpdateTableToken', () => {
             'Selfmenu free plan',
         );
 
-        const user = await fakeUserRepository.create({
+        const account = await fakeAccountRepository.create({
             email: 'john@example.com',
             password: '123456',
             profile_name: 'John Doe',
             plan_id: plan.id,
         });
 
-        const restaurant = await fakeRestaurantRepository.create({
+        const establishment = await fakeEstablishmentRepository.create({
             cnpj: 98986598659800,
             name: "Doe's Dinner",
-            description: 'A new restaurant',
-            restaurant_type_id: 1,
-            owner_id: user.id,
+            description: 'A new establishment',
+            establishment_type_id: 1,
+            owner_id: account.id,
             subdomain: 'does-dinner',
         });
 
@@ -54,20 +54,20 @@ describe('UpdateTableToken', () => {
             username: 'moe',
             cpf: 99999999999,
             password: '123456',
-            owner_id: user.id,
-            restaurant_id: restaurant.id,
+            owner_id: account.id,
+            establishment_id: establishment.id,
         });
 
         const table = await fakeTableRepository.create({
             number: 1,
             capacity: 4,
-            restaurant,
+            establishment,
             waiter,
-            owner: user,
+            owner: account,
         });
 
         const tableEdited = await updateTableTokenService.execute({
-            restaurant_id: restaurant.id,
+            establishment_id: establishment.id,
             table_number: table.number,
         });
 
@@ -80,25 +80,25 @@ describe('UpdateTableToken', () => {
             'Selfmenu free plan',
         );
 
-        const user = await fakeUserRepository.create({
+        const account = await fakeAccountRepository.create({
             email: 'john@example.com',
             password: '123456',
             profile_name: 'John Doe',
             plan_id: plan.id,
         });
 
-        const restaurant = await fakeRestaurantRepository.create({
+        const establishment = await fakeEstablishmentRepository.create({
             cnpj: 98986598659800,
             name: "Doe's Dinner",
-            description: 'A new restaurant',
-            restaurant_type_id: 1,
-            owner_id: user.id,
+            description: 'A new establishment',
+            establishment_type_id: 1,
+            owner_id: account.id,
             subdomain: 'does-dinner',
         });
 
         await expect(
             updateTableTokenService.execute({
-                restaurant_id: restaurant.id,
+                establishment_id: establishment.id,
                 table_number: 99999,
             }),
         ).rejects.toBeInstanceOf(AppError);

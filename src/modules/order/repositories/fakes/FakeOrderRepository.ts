@@ -11,10 +11,10 @@ class FakeOrderRepository implements IOrderRepository {
     private orders: Order[] = [];
 
     public async findAll({
-        restaurant_id,
+        establishment_id,
     }: IFindAllOrdersDTO): Promise<Order[]> {
         const findOrders = this.orders.filter(
-            order => order.restaurant.id === restaurant_id,
+            order => order.establishment.id === establishment_id,
         );
 
         return findOrders;
@@ -23,11 +23,15 @@ class FakeOrderRepository implements IOrderRepository {
     public async create(data: ICreateOrderDTO): Promise<Order> {
         const order = new Order();
 
-        const order_items = data.items.map(item => item);
+        const order_products = data.products.map(item => item);
 
         Object.assign(
             order,
-            { id: uuid(), restaurant_id: data.restaurant.id, order_items },
+            {
+                id: uuid(),
+                establishment_id: data.establishment.id,
+                order_products,
+            },
             data,
         );
 
@@ -37,14 +41,15 @@ class FakeOrderRepository implements IOrderRepository {
 
     public async findById({
         id,
-        restaurant_id,
+        establishment_id,
     }: IFindByIdOrderDTO): Promise<Order | undefined> {
         let findOrder: Order | undefined;
 
-        if (restaurant_id) {
+        if (establishment_id) {
             findOrder = this.orders.find(
                 order =>
-                    order.id === id && order.restaurant_id === restaurant_id,
+                    order.id === id &&
+                    order.establishment_id === establishment_id,
             );
         } else {
             findOrder = this.orders.find(order => order.id === id);

@@ -14,11 +14,11 @@ class OrdersRepository implements IOrderRepository {
     }
 
     public async findAll({
-        restaurant_id,
+        establishment_id,
     }: IFindAllOrdersDTO): Promise<Order[]> {
         const findOrders = await this.ormRepository.find({
             where: {
-                restaurant_id,
+                establishment_id,
             },
         });
 
@@ -28,18 +28,20 @@ class OrdersRepository implements IOrderRepository {
     public async create({
         token,
         status_order_id,
-        items,
-        restaurant,
+        products,
+        establishment,
         table,
         waiter,
+        owner,
     }: ICreateOrderDTO): Promise<Order> {
         const order = this.ormRepository.create({
             token,
             status_order_id,
-            restaurant,
+            establishment,
             waiter,
             table,
-            order_items: items,
+            owner,
+            order_products: products,
         });
 
         await this.ormRepository.save(order);
@@ -49,17 +51,17 @@ class OrdersRepository implements IOrderRepository {
 
     public async findById({
         id,
-        restaurant_id,
+        establishment_id,
     }: IFindByIdOrderDTO): Promise<Order | undefined> {
         let findOrder: Order | undefined;
 
-        if (restaurant_id) {
+        if (establishment_id) {
             findOrder = await this.ormRepository.findOne({
                 where: {
                     id,
-                    restaurant_id,
+                    establishment_id,
                 },
-                relations: ['order_items', 'table'],
+                relations: ['order_products', 'table'],
             });
         } else {
             findOrder = await this.ormRepository.findOne(id);

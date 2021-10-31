@@ -8,8 +8,7 @@ export default class UpdateTableTokenController {
         request: Request,
         response: Response,
     ): Promise<Response> {
-        const { restaurant_id } = request.params;
-        const { table_number } = request.body;
+        const { table_number, establishment_id } = request.body;
 
         const updateTableTokenService = container.resolve(
             UpdateTableTokenService,
@@ -17,7 +16,7 @@ export default class UpdateTableTokenController {
 
         const { number, token } = await updateTableTokenService.execute({
             table_number,
-            restaurant_id,
+            establishment_id,
         });
 
         return response.json({ number, token });

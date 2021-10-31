@@ -10,10 +10,10 @@ export default class MenuController {
         request: Request,
         response: Response,
     ): Promise<Response> {
-        const user_id = request.user.id;
+        const account_id = request.account.id;
         const listMenuService = container.resolve(ListMenuService);
 
-        const menus = await listMenuService.execute({ user_id });
+        const menus = await listMenuService.execute({ account_id });
         return response.json(menus);
     }
 
@@ -31,19 +31,19 @@ export default class MenuController {
         request: Request,
         response: Response,
     ): Promise<Response> {
-        const user_id = request.user.id;
-        const { title, description, restaurant_id, items } = request.body;
+        const account_id = request.account.id;
+        const { title, description, establishment_id, products } = request.body;
 
         const createMenuService = container.resolve(CreateMenuService);
 
-        const restaurant = await createMenuService.execute({
-            user_id,
+        const establishment = await createMenuService.execute({
+            account_id,
             title,
             description,
-            restaurant_id,
-            items,
+            establishment_id,
+            products,
         });
 
-        return response.json(restaurant);
+        return response.json(establishment);
     }
 }

@@ -1,31 +1,31 @@
 import AppError from '@shared/errors/AppError';
 import FakeMenuRepository from '@modules/menu/repositories/fakes/FakeMenuRepository';
-import FakePlanRepository from '@modules/users/repositories/fakes/FakePlanRepository';
-import FakeUsersRepository from '@modules/users/repositories/fakes/FakeUserRepository';
-import FakeRestaurantRepository from '@modules/restaurant/repositories/fakes/FakeRestaurantRepository';
+import FakePlanRepository from '@modules/account/repositories/fakes/FakePlanRepository';
+import FakeAccountsRepository from '@modules/account/repositories/fakes/FakeAccountRepository';
+import FakeEstablishmentRepository from '@modules/establishment/repositories/fakes/FakeEstablishmentRepository';
 import CreateMenuService from '@modules/menu/services/CreateMenuService';
-import FakeItemRepository from '@modules/item/repositories/fakes/FakeItemRepository';
+import FakeProductRepository from '@modules/product/repositories/fakes/FakeProductRepository';
 
-let fakeUsersRepository: FakeUsersRepository;
+let fakeAccountsRepository: FakeAccountsRepository;
 let fakePlanRepository: FakePlanRepository;
-let fakeItemRepository: FakeItemRepository;
+let fakeProductRepository: FakeProductRepository;
 let fakeMenuRepository: FakeMenuRepository;
-let fakeRestaurantRepository: FakeRestaurantRepository;
+let fakeEstablishmentRepository: FakeEstablishmentRepository;
 
 let createMenuService: CreateMenuService;
 
 describe('CreateMenu', () => {
     beforeEach(() => {
-        fakeUsersRepository = new FakeUsersRepository();
+        fakeAccountsRepository = new FakeAccountsRepository();
         fakePlanRepository = new FakePlanRepository();
-        fakeItemRepository = new FakeItemRepository();
+        fakeProductRepository = new FakeProductRepository();
         fakeMenuRepository = new FakeMenuRepository();
-        fakeRestaurantRepository = new FakeRestaurantRepository();
+        fakeEstablishmentRepository = new FakeEstablishmentRepository();
 
         createMenuService = new CreateMenuService(
-            fakeUsersRepository,
-            fakeItemRepository,
-            fakeRestaurantRepository,
+            fakeAccountsRepository,
+            fakeProductRepository,
+            fakeEstablishmentRepository,
             fakeMenuRepository,
         );
     });
@@ -36,41 +36,41 @@ describe('CreateMenu', () => {
             'Selfmenu free plan',
         );
 
-        const user = await fakeUsersRepository.create({
+        const account = await fakeAccountsRepository.create({
             email: 'john@example.com',
             password: '123456',
             profile_name: 'John Doe',
             plan_id: plan.id,
         });
-        user.plan = plan;
-        await fakeUsersRepository.save(user);
+        account.plan = plan;
+        await fakeAccountsRepository.save(account);
 
-        const restaurant = await fakeRestaurantRepository.create({
+        const establishment = await fakeEstablishmentRepository.create({
             cnpj: 98986598659800,
             name: "Doe's Dinner",
-            description: 'A new restaurant',
-            restaurant_type_id: 1,
-            owner_id: user.id,
+            description: 'A new establishment',
+            establishment_type_id: 1,
+            owner_id: account.id,
             subdomain: 'does-dinner',
         });
 
-        const item = await fakeItemRepository.create({
+        const product = await fakeProductRepository.create({
             name: 'Bolo de chocolate',
             description: 'Delicioso bolo de chocolate',
             price: 9.9,
             quantity: 10,
             category_id: 1,
-            owner_id: user.id,
+            owner_id: account.id,
         });
 
         const menu = await createMenuService.execute({
             title: 'Does Monday Menu',
             description: 'Our best foods',
-            user_id: user.id,
-            restaurant_id: restaurant.id,
-            items: [
+            account_id: account.id,
+            establishment_id: establishment.id,
+            products: [
                 {
-                    id: item.id,
+                    id: product.id,
                 },
             ],
         });
@@ -84,123 +84,123 @@ describe('CreateMenu', () => {
             'Selfmenu free plan',
         );
 
-        const user = await fakeUsersRepository.create({
+        const account = await fakeAccountsRepository.create({
             email: 'john@example.com',
             password: '123456',
             profile_name: 'John Doe',
             plan_id: plan.id,
         });
-        user.plan = plan;
-        await fakeUsersRepository.save(user);
+        account.plan = plan;
+        await fakeAccountsRepository.save(account);
 
-        const item = await fakeItemRepository.create({
+        const product = await fakeProductRepository.create({
             name: 'Bolo de chocolate',
             description: 'Delicioso bolo de chocolate',
             price: 9.9,
             quantity: 10,
             category_id: 1,
-            owner_id: user.id,
+            owner_id: account.id,
         });
 
         await expect(
             createMenuService.execute({
                 title: 'Does Monday Menu',
                 description: 'Our best foods',
-                restaurant_id: 'non-existing restaurant',
-                user_id: 'non-existing-owner',
-                items: [
+                establishment_id: 'non-existing establishment',
+                account_id: 'non-existing-owner',
+                products: [
                     {
-                        id: item.id,
+                        id: product.id,
                     },
                 ],
             }),
         ).rejects.toBeInstanceOf(AppError);
     });
 
-    it('should not be able to create a menu to non-existing restaurant', async () => {
+    it('should not be able to create a menu to non-existing establishment', async () => {
         const plan = await fakePlanRepository.create(
             'Free',
             'Selfmenu free plan',
         );
 
-        const user = await fakeUsersRepository.create({
+        const account = await fakeAccountsRepository.create({
             email: 'john@example.com',
             password: '123456',
             profile_name: 'John Doe',
             plan_id: plan.id,
         });
-        user.plan = plan;
-        await fakeUsersRepository.save(user);
+        account.plan = plan;
+        await fakeAccountsRepository.save(account);
 
-        const item = await fakeItemRepository.create({
+        const product = await fakeProductRepository.create({
             name: 'Bolo de chocolate',
             description: 'Delicioso bolo de chocolate',
             price: 9.9,
             quantity: 10,
             category_id: 1,
-            owner_id: user.id,
+            owner_id: account.id,
         });
 
         await expect(
             createMenuService.execute({
                 title: 'Does Monday Menu',
                 description: 'Our best foods',
-                restaurant_id: 'non-existing-restaurant',
-                user_id: user.id,
-                items: [
+                establishment_id: 'non-existing-establishment',
+                account_id: account.id,
+                products: [
                     {
-                        id: item.id,
+                        id: product.id,
                     },
                 ],
             }),
         ).rejects.toBeInstanceOf(AppError);
     });
 
-    it('should not be able to create a menu to inactive restaurant', async () => {
+    it('should not be able to create a menu to inactive establishment', async () => {
         const plan = await fakePlanRepository.create(
             'Free',
             'Selfmenu free plan',
         );
 
-        const user = await fakeUsersRepository.create({
+        const account = await fakeAccountsRepository.create({
             email: 'john@example.com',
             password: '123456',
             profile_name: 'John Doe',
             plan_id: plan.id,
         });
-        user.plan = plan;
-        await fakeUsersRepository.save(user);
+        account.plan = plan;
+        await fakeAccountsRepository.save(account);
 
-        const restaurant = await fakeRestaurantRepository.create({
+        const establishment = await fakeEstablishmentRepository.create({
             cnpj: 98986598659800,
             name: "Doe's Dinner",
-            description: 'A new restaurant',
-            restaurant_type_id: 1,
-            owner_id: user.id,
+            description: 'A new establishment',
+            establishment_type_id: 1,
+            owner_id: account.id,
             subdomain: 'does-dinner',
         });
 
-        restaurant.active = false;
-        await fakeRestaurantRepository.save(restaurant);
+        establishment.active = false;
+        await fakeEstablishmentRepository.save(establishment);
 
-        const item = await fakeItemRepository.create({
+        const product = await fakeProductRepository.create({
             name: 'Bolo de chocolate',
             description: 'Delicioso bolo de chocolate',
             price: 9.9,
             quantity: 10,
             category_id: 1,
-            owner_id: user.id,
+            owner_id: account.id,
         });
 
         await expect(
             createMenuService.execute({
                 title: 'Does Monday Menu',
                 description: 'Our best foods',
-                user_id: user.id,
-                restaurant_id: restaurant.id,
-                items: [
+                account_id: account.id,
+                establishment_id: establishment.id,
+                products: [
                     {
-                        id: item.id,
+                        id: product.id,
                     },
                 ],
             }),
@@ -213,41 +213,41 @@ describe('CreateMenu', () => {
             'Selfmenu free plan',
         );
 
-        const user = await fakeUsersRepository.create({
+        const account = await fakeAccountsRepository.create({
             email: 'john@example.com',
             password: '123456',
             profile_name: 'John Doe',
             plan_id: plan.id,
         });
-        user.plan = plan;
-        await fakeUsersRepository.save(user);
+        account.plan = plan;
+        await fakeAccountsRepository.save(account);
 
-        const restaurant = await fakeRestaurantRepository.create({
+        const establishment = await fakeEstablishmentRepository.create({
             cnpj: 98986598659800,
             name: "Doe's Dinner",
-            description: 'A new restaurant',
-            restaurant_type_id: 1,
-            owner_id: user.id,
+            description: 'A new establishment',
+            establishment_type_id: 1,
+            owner_id: account.id,
             subdomain: 'does-dinner',
         });
 
-        const item = await fakeItemRepository.create({
+        const product = await fakeProductRepository.create({
             name: 'Bolo de chocolate',
             description: 'Delicioso bolo de chocolate',
             price: 9.9,
             quantity: 10,
             category_id: 1,
-            owner_id: user.id,
+            owner_id: account.id,
         });
 
         await createMenuService.execute({
             title: 'Does Monday Menu',
             description: 'Our best foods',
-            user_id: user.id,
-            restaurant_id: restaurant.id,
-            items: [
+            account_id: account.id,
+            establishment_id: establishment.id,
+            products: [
                 {
-                    id: item.id,
+                    id: product.id,
                 },
             ],
         });
@@ -256,38 +256,38 @@ describe('CreateMenu', () => {
             createMenuService.execute({
                 title: 'Does Monday Menu',
                 description: 'Our best foods',
-                user_id: user.id,
-                restaurant_id: restaurant.id,
-                items: [
+                account_id: account.id,
+                establishment_id: establishment.id,
+                products: [
                     {
-                        id: item.id,
+                        id: product.id,
                     },
                 ],
             }),
         ).rejects.toBeInstanceOf(AppError);
     });
 
-    it('should not be able to create a menu with invalid items', async () => {
+    it('should not be able to create a menu with invalid products', async () => {
         const plan = await fakePlanRepository.create(
             'Free',
             'Selfmenu free plan',
         );
 
-        const user = await fakeUsersRepository.create({
+        const account = await fakeAccountsRepository.create({
             email: 'john@example.com',
             password: '123456',
             profile_name: 'John Doe',
             plan_id: plan.id,
         });
-        user.plan = plan;
-        await fakeUsersRepository.save(user);
+        account.plan = plan;
+        await fakeAccountsRepository.save(account);
 
-        const restaurant = await fakeRestaurantRepository.create({
+        const establishment = await fakeEstablishmentRepository.create({
             cnpj: 98986598659800,
             name: "Doe's Dinner",
-            description: 'A new restaurant',
-            restaurant_type_id: 1,
-            owner_id: user.id,
+            description: 'A new establishment',
+            establishment_type_id: 1,
+            owner_id: account.id,
             subdomain: 'does-dinner',
         });
 
@@ -295,11 +295,11 @@ describe('CreateMenu', () => {
             createMenuService.execute({
                 title: 'Does Monday Menu',
                 description: 'Our best foods',
-                user_id: user.id,
-                restaurant_id: restaurant.id,
-                items: [
+                account_id: account.id,
+                establishment_id: establishment.id,
+                products: [
                     {
-                        id: 'inexistent-item',
+                        id: 'inexistent-product',
                     },
                 ],
             }),

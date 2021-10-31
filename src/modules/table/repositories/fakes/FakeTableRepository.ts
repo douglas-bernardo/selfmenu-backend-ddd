@@ -12,7 +12,7 @@ class FakeTableRepository implements ITableRepository {
     private tables: Table[] = [];
 
     public async findLastCreated(
-        restaurant_id: string,
+        establishment_id: string,
     ): Promise<Table | undefined> {
         let findTable: Table | undefined;
 
@@ -24,7 +24,7 @@ class FakeTableRepository implements ITableRepository {
             findTable = this.tables.find(
                 table =>
                     table.number === maxTableNumber &&
-                    table.restaurant_id === restaurant_id,
+                    table.establishment_id === establishment_id,
             );
         }
 
@@ -41,15 +41,11 @@ class FakeTableRepository implements ITableRepository {
         return findTable;
     }
 
-    public async findAll({
-        restaurant_id,
-    }: IFindAllTablesDTO): Promise<Table[]> {
+    public async findAll({ owner_id }: IFindAllTablesDTO): Promise<Table[]> {
         let { tables } = this;
 
-        if (restaurant_id) {
-            tables = this.tables.filter(
-                table => table.restaurant_id === restaurant_id,
-            );
+        if (owner_id) {
+            tables = this.tables.filter(table => table.owner_id === owner_id);
         }
 
         return tables;
@@ -57,15 +53,15 @@ class FakeTableRepository implements ITableRepository {
 
     public async findById({
         table_id,
-        restaurant_id,
+        establishment_id,
     }: IFindByIdTableDTO): Promise<Table | undefined> {
         let findTable: Table | undefined;
 
-        if (restaurant_id) {
+        if (establishment_id) {
             findTable = this.tables.find(
                 table =>
                     table.id === table_id &&
-                    table.restaurant.id === restaurant_id,
+                    table.establishment.id === establishment_id,
             );
         } else {
             findTable = this.tables.find(table => table.id === table_id);
@@ -76,15 +72,15 @@ class FakeTableRepository implements ITableRepository {
 
     public async findByNumber({
         number,
-        restaurant_id,
+        establishment_id,
     }: IFindByNumberTableDTO): Promise<Table | undefined> {
         let findTable: Table | undefined;
 
-        if (restaurant_id) {
+        if (establishment_id) {
             findTable = this.tables.find(
                 table =>
                     table.number === number &&
-                    table.restaurant.id === restaurant_id,
+                    table.establishment.id === establishment_id,
             );
         } else {
             findTable = this.tables.find(table => table.number === number);

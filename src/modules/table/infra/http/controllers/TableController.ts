@@ -11,10 +11,10 @@ export default class TableController {
         request: Request,
         response: Response,
     ): Promise<Response> {
-        const { restaurant_id } = request.params;
+        const account_id = request.account.id;
         const showTable = container.resolve(ListTablesServices);
 
-        const tables = await showTable.execute({ restaurant_id });
+        const tables = await showTable.execute({ owner_id: account_id });
         return response.json(classToClass(tables));
     }
 
@@ -22,27 +22,26 @@ export default class TableController {
         request: Request,
         response: Response,
     ): Promise<Response> {
-        const user_id = request.user.id;
-        const { restaurant_id } = request.params;
-        const { capacity, waiter_id } = request.body;
+        const account_id = request.account.id;
+        const { capacity, establishment_id, waiter_id } = request.body;
 
         const createTableService = container.resolve(CreateTableService);
 
         const table = await createTableService.execute({
             capacity,
-            restaurant_id,
+            establishment_id,
             waiter_id,
-            owner_id: user_id,
+            owner_id: account_id,
         });
 
-        return response.json(classToClass(table));
+        return response.json(table);
     }
 
     public async show(request: Request, response: Response): Promise<Response> {
-        const { restaurant_id, id } = request.params;
+        const { id } = request.params;
         const showTable = container.resolve(ShowTableService);
 
-        const table = await showTable.execute({ id, restaurant_id });
+        const table = await showTable.execute({ table_id: id });
         return response.json(table);
     }
 }

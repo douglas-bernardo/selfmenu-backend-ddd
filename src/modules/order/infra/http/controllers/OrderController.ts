@@ -10,11 +10,13 @@ export default class OrderController {
         request: Request,
         response: Response,
     ): Promise<Response> {
-        const { restaurant_id } = request.params;
+        const { establishment_id } = request.query;
 
         const listOrders = container.resolve(ListOrdersService);
 
-        const orders = await listOrders.execute({ restaurant_id });
+        const orders = await listOrders.execute({
+            establishment_id: String(establishment_id),
+        });
 
         return response.json(orders);
     }
@@ -23,29 +25,26 @@ export default class OrderController {
         request: Request,
         response: Response,
     ): Promise<Response> {
-        const { restaurant_id } = request.params;
-
-        const { table_token, items } = request.body;
+        const { table_token, establishment_id, products } = request.body;
 
         const createOrder = container.resolve(CreateOrderService);
 
         const order = await createOrder.execute({
             table_token,
-            restaurant_id,
-            items,
+            establishment_id,
+            products,
         });
 
         return response.json(order);
     }
 
     public async show(request: Request, response: Response): Promise<Response> {
-        const { restaurant_id, id } = request.params;
+        const { id } = request.params;
 
         const findOrder = container.resolve(ShowOrderService);
 
         const order = await findOrder.execute({
             id,
-            restaurant_id,
         });
 
         return response.json(order);

@@ -1,11 +1,11 @@
-import Restaurant from '@modules/restaurant/infra/typeorm/entities/Restaurant';
-import User from '@modules/users/infra/typeorm/entities/User';
+import Establishment from '@modules/establishment/infra/typeorm/entities/Establishment';
+import Account from '@modules/account/infra/typeorm/entities/Account';
 import Waiter from '@modules/waiter/infra/typeorm/entities/Waiter';
 
 export default interface ICreateTableDTO {
     number: number;
     capacity: number;
-    restaurant: Restaurant;
+    establishment: Establishment;
     waiter: Waiter;
-    owner: User;
+    owner: Account;
 }

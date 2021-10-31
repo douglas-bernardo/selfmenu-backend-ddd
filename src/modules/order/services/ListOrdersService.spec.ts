@@ -1,19 +1,19 @@
-import FakeUsersRepository from '@modules/users/repositories/fakes/FakeUserRepository';
-import FakeRestaurantRepository from '@modules/restaurant/repositories/fakes/FakeRestaurantRepository';
+import FakeAccountsRepository from '@modules/account/repositories/fakes/FakeAccountRepository';
+import FakeEstablishmentRepository from '@modules/establishment/repositories/fakes/FakeEstablishmentRepository';
 import FakeTableRepository from '@modules/table/repositories/fakes/FakeTableRepository';
 import FakeWaiterRepository from '@modules/waiter/repositories/fakes/FakeWaiterRepository';
-import FakeItemRepository from '@modules/item/repositories/fakes/FakeItemRepository';
-import FakePlanRepository from '@modules/users/repositories/fakes/FakePlanRepository';
+import FakeProductRepository from '@modules/product/repositories/fakes/FakeProductRepository';
+import FakePlanRepository from '@modules/account/repositories/fakes/FakePlanRepository';
 import UpdateTableTokenService from '@modules/table/services/UpdateTableTokenService';
 import FakeOrderRepository from '../repositories/fakes/FakeOrderRepository';
 import ListOrdersService from './ListOrdersService';
 
 let fakePlanRepository: FakePlanRepository;
-let fakeUsersRepository: FakeUsersRepository;
-let fakeRestaurantRepository: FakeRestaurantRepository;
+let fakeAccountsRepository: FakeAccountsRepository;
+let fakeEstablishmentRepository: FakeEstablishmentRepository;
 let fakeTableRepository: FakeTableRepository;
 let fakeWaiterRepository: FakeWaiterRepository;
-let fakeItemRepository: FakeItemRepository;
+let fakeProductRepository: FakeProductRepository;
 let fakeOrderRepository: FakeOrderRepository;
 
 let updateTableTokenService: UpdateTableTokenService;
@@ -22,11 +22,11 @@ let listOrdersService: ListOrdersService;
 describe('ListOrders', () => {
     beforeEach(() => {
         fakePlanRepository = new FakePlanRepository();
-        fakeUsersRepository = new FakeUsersRepository();
-        fakeRestaurantRepository = new FakeRestaurantRepository();
+        fakeAccountsRepository = new FakeAccountsRepository();
+        fakeEstablishmentRepository = new FakeEstablishmentRepository();
         fakeTableRepository = new FakeTableRepository();
         fakeWaiterRepository = new FakeWaiterRepository();
-        fakeItemRepository = new FakeItemRepository();
+        fakeProductRepository = new FakeProductRepository();
 
         fakeOrderRepository = new FakeOrderRepository();
 
@@ -43,21 +43,21 @@ describe('ListOrders', () => {
             'Selfmenu premium plan',
         );
 
-        const user = await fakeUsersRepository.create({
+        const account = await fakeAccountsRepository.create({
             email: 'john@example.com',
             password: '123456',
             profile_name: 'John Doe',
             plan_id: plan.id,
         });
-        user.plan = plan;
-        await fakeUsersRepository.save(user);
+        account.plan = plan;
+        await fakeAccountsRepository.save(account);
 
-        const restaurant = await fakeRestaurantRepository.create({
+        const establishment = await fakeEstablishmentRepository.create({
             cnpj: 989865986598,
             name: "Doe's Dinner",
-            description: 'A new restaurant',
-            restaurant_type_id: 1,
-            owner_id: user.id,
+            description: 'A new establishment',
+            establishment_type_id: 1,
+            owner_id: account.id,
             subdomain: 'does-dinner',
         });
 
@@ -66,44 +66,45 @@ describe('ListOrders', () => {
             username: 'moe',
             cpf: 99999999999,
             password: '123456',
-            owner_id: user.id,
-            restaurant_id: restaurant.id,
+            owner_id: account.id,
+            establishment_id: establishment.id,
         });
 
         const table = await fakeTableRepository.create({
             number: 1,
             capacity: 4,
-            restaurant,
+            establishment,
             waiter,
-            owner: user,
+            owner: account,
         });
 
-        table.restaurant = restaurant;
+        table.establishment = establishment;
         await fakeTableRepository.save(table);
 
-        const item = await fakeItemRepository.create({
+        const product = await fakeProductRepository.create({
             name: 'Chocolate Cake',
             description: 'Delicious Chocolate Cake',
             price: 9.9,
             quantity: 10,
             category_id: 1,
-            owner_id: user.id,
+            owner_id: account.id,
         });
 
         const { token } = await updateTableTokenService.execute({
             table_number: table.number,
-            restaurant_id: restaurant.id,
+            establishment_id: establishment.id,
         });
 
         const order1 = await fakeOrderRepository.create({
             token,
-            restaurant,
+            establishment,
             table,
             waiter,
             status_order_id: 1,
-            items: [
+            owner: account,
+            products: [
                 {
-                    item_id: item.id,
+                    product_id: product.id,
                     quantity: 1,
                     price: 10.99,
                 },
@@ -112,13 +113,14 @@ describe('ListOrders', () => {
 
         const order2 = await fakeOrderRepository.create({
             token,
-            restaurant,
+            establishment,
             table,
             waiter,
             status_order_id: 1,
-            items: [
+            owner: account,
+            products: [
                 {
-                    item_id: item.id,
+                    product_id: product.id,
                     quantity: 1,
                     price: 10.99,
                 },
@@ -126,7 +128,7 @@ describe('ListOrders', () => {
         });
 
         const list = await listOrdersService.execute({
-            restaurant_id: restaurant.id,
+            establishment_id: establishment.id,
         });
 
         expect(list).toEqual([order1, order2]);

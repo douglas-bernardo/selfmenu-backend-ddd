@@ -2,7 +2,7 @@ import { injectable, inject } from 'tsyringe';
 
 import AppError from '@shared/errors/AppError';
 import IWaiterRepository from '@modules/waiter/repositories/IWaiterRepository';
-import IRestaurantRepository from '@modules/restaurant/repositories/IRestaurantRepository';
+import IEstablishmentRepository from '@modules/establishment/repositories/IEstablishmentRepository';
 import ITableRepository from '../repositories/ITableRepository';
 
 interface IRequest {
@@ -12,9 +12,10 @@ interface IRequest {
 interface IResponse {
     table_id: string;
     table_number: number;
-    establishment_name?: string;
+    establishment_name: string;
+    establishment_id: string;
     owner_id: string;
-    waiter?: string;
+    waiter: string;
 }
 
 @injectable()
@@ -26,8 +27,8 @@ class AuthenticateTableService {
         @inject('WaiterRepository')
         private waiterRepository: IWaiterRepository,
 
-        @inject('RestaurantRepository')
-        private restaurantRepository: IRestaurantRepository,
+        @inject('EstablishmentRepository')
+        private establishmentRepository: IEstablishmentRepository,
     ) {}
 
     public async execute({ id }: IRequest): Promise<IResponse> {
@@ -36,22 +37,31 @@ class AuthenticateTableService {
         });
 
         if (!table) {
-            throw new AppError('Table not found');
+            throw new AppError('table not found');
         }
 
         const waiter = await this.waiterRepository.findById({
             waiter_id: table.waiter_id,
         });
 
-        const establishment = await this.restaurantRepository.findById({
-            restaurant_id: table.restaurant_id,
+        if (!waiter) {
+            throw new AppError('waiter not found');
+        }
+
+        const establishment = await this.establishmentRepository.findById({
+            establishment_id: table.establishment_id,
         });
+
+        if (!establishment) {
+            throw new AppError('establishment not found');
+        }
 
         return {
             table_id: table.id,
             table_number: table.number,
-            waiter: waiter?.name,
-            establishment_name: establishment?.name,
+            waiter: waiter.name,
+            establishment_name: establishment.name,
+            establishment_id: establishment.id,
             owner_id: table.owner_id,
         };
     }

@@ -29,7 +29,7 @@ class Waiter {
     owner_id: string;
 
     @Column()
-    restaurant_id: string;
+    establishment_id: string;
 
     @Column()
     active: boolean;
