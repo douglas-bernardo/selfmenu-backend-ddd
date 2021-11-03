@@ -18,7 +18,9 @@ interface IProducts {
 }
 
 interface IRequest {
+    owner_id: string;
     table_token: string;
+    costumer_name: string;
     establishment_id: string;
     products: IProducts[];
 }
@@ -49,7 +51,9 @@ class CreateOrderService {
     ) {}
 
     public async execute({
+        owner_id,
         table_token,
+        costumer_name,
         establishment_id,
         products,
     }: IRequest): Promise<Order> {
@@ -61,9 +65,7 @@ class CreateOrderService {
             throw new AppError('Invalid token or table not found');
         }
 
-        const account = await this.accountsRepository.findById(
-            table.establishment.owner_id,
-        );
+        const account = await this.accountsRepository.findById(owner_id);
 
         if (!account) {
             throw new AppError('Account account not found');
@@ -132,7 +134,8 @@ class CreateOrderService {
         }));
 
         const order = await this.orderRepository.create({
-            token: table_token,
+            table_token,
+            costumer_name,
             status_order_id: 1,
             establishment: establishmentExist,
             owner: account,

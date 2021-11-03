@@ -1,3 +1,4 @@
 export default interface IFindAllOrdersDTO {
-    establishment_id: string;
+    owner_id: string;
+    table_id?: string;
 }

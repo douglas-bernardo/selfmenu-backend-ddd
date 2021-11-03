@@ -13,7 +13,7 @@ export default class CreateTable1630502293439 implements MigrationInterface {
                         generationStrategy: 'uuid',
                     },
                     {
-                        name: 'token',
+                        name: 'table_token',
                         type: 'varchar',
                         isNullable: true,
                     },

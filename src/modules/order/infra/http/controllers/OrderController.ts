@@ -10,12 +10,14 @@ export default class OrderController {
         request: Request,
         response: Response,
     ): Promise<Response> {
-        const { establishment_id } = request.query;
+        const { id } = request.account;
+        const { table_id } = request.query;
 
         const listOrders = container.resolve(ListOrdersService);
 
         const orders = await listOrders.execute({
-            establishment_id: String(establishment_id),
+            owner_id: id,
+            table_id: String(table_id),
         });
 
         return response.json(orders);
@@ -25,12 +27,16 @@ export default class OrderController {
         request: Request,
         response: Response,
     ): Promise<Response> {
-        const { table_token, establishment_id, products } = request.body;
+        const { id } = request.account;
+        const { table_token, costumer_name, establishment_id, products } =
+            request.body;
 
         const createOrder = container.resolve(CreateOrderService);
 
         const order = await createOrder.execute({
+            owner_id: id,
             table_token,
+            costumer_name,
             establishment_id,
             products,
         });

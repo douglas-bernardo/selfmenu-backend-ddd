@@ -3,7 +3,8 @@ import Order from '../infra/typeorm/entities/Order';
 import IOrderRepository from '../repositories/IOrderRepository';
 
 interface IRequest {
-    establishment_id: string;
+    owner_id: string;
+    table_id?: string;
 }
 
 @injectable()
@@ -12,8 +13,11 @@ class ListOrdersService {
         @inject('OrderRepository') private orderRepository: IOrderRepository,
     ) {}
 
-    public async execute({ establishment_id }: IRequest): Promise<Order[]> {
-        return this.orderRepository.findAll({ establishment_id });
+    public async execute({ owner_id, table_id }: IRequest): Promise<Order[]> {
+        return this.orderRepository.findAll({
+            owner_id,
+            table_id,
+        });
     }
 }
 

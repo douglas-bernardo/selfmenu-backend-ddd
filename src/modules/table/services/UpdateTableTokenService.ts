@@ -35,7 +35,7 @@ class UpdateTableTokenService {
 
         const token = (Math.random() + 1)
             .toString(36)
-            .substring(3)
+            .substring(6)
             .toUpperCase();
 
         table.token = token;

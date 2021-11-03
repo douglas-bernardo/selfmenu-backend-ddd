@@ -20,7 +20,7 @@ class Order {
     id: string;
 
     @Column()
-    token: string;
+    table_token: string;
 
     @Column()
     status_order_id: number;
@@ -36,6 +36,9 @@ class Order {
     @JoinColumn({ name: 'waiter_id' })
     waiter: Waiter;
 
+    @Column()
+    owner_id: string;
+
     @ManyToOne(() => Waiter)
     @JoinColumn({ name: 'owner_id' })
     owner: Account;
@@ -43,9 +46,15 @@ class Order {
     @ManyToOne(() => Table)
     @JoinColumn([
         { name: 'table_id', referencedColumnName: 'id' },
-        { name: 'token', referencedColumnName: 'token' },
+        { name: 'table_token', referencedColumnName: 'token' },
     ])
     table: Table;
+
+    @Column()
+    table_id: string;
+
+    @Column()
+    costumer_name: string;
 
     @OneToMany(() => OrderProduct, order_products => order_products.order, {
         cascade: true,

@@ -11,7 +11,8 @@ interface IProduct {
 }
 
 export default interface ICreateOrderDTO {
-    token: string;
+    table_token: string;
+    costumer_name: string;
     status_order_id: number;
     establishment: Establishment;
     waiter: Waiter;

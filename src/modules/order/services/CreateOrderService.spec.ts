@@ -108,7 +108,9 @@ describe('CreateOrder', () => {
         });
 
         const order = await createOrderService.execute({
+            owner_id: account.id,
             table_token: token,
+            costumer_name: 'fulano',
             establishment_id: establishment.id,
             products: [
                 {
@@ -153,7 +155,9 @@ describe('CreateOrder', () => {
 
         await expect(
             createOrderService.execute({
+                owner_id: account.id,
                 table_token: 'invalid-table',
+                costumer_name: 'fulano',
                 establishment_id: establishment.id,
                 products: [
                     {
@@ -228,7 +232,9 @@ describe('CreateOrder', () => {
 
         await expect(
             createOrderService.execute({
+                owner_id: account.id,
                 table_token: token,
+                costumer_name: 'fulano',
                 establishment_id: establishment.id,
                 products: [
                     {
@@ -301,7 +307,9 @@ describe('CreateOrder', () => {
 
         await expect(
             createOrderService.execute({
+                owner_id: account.id,
                 table_token: token,
+                costumer_name: 'fulano',
                 establishment_id: 'non-existing-establishment',
                 products: [
                     {
@@ -373,7 +381,9 @@ describe('CreateOrder', () => {
 
         await expect(
             createOrderService.execute({
+                owner_id: account.id,
                 table_token: token,
+                costumer_name: 'fulano',
                 establishment_id: establishment.id,
                 products: [
                     {
@@ -435,7 +445,9 @@ describe('CreateOrder', () => {
 
         await expect(
             createOrderService.execute({
+                owner_id: account.id,
                 table_token: token,
+                costumer_name: 'fulano',
                 establishment_id: establishment.id,
                 products: [
                     {
@@ -507,7 +519,9 @@ describe('CreateOrder', () => {
 
         await expect(
             createOrderService.execute({
+                owner_id: account.id,
                 table_token: token,
+                costumer_name: 'fulano',
                 establishment_id: establishment.id,
                 products: [
                     {
@@ -582,7 +596,9 @@ describe('CreateOrder', () => {
 
         await expect(
             createOrderService.execute({
+                owner_id: account.id,
                 table_token: token,
+                costumer_name: 'fulano',
                 establishment_id: establishment.id,
                 products: [
                     {

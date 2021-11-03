@@ -1,4 +1,5 @@
 import ICreateOrderDTO from '@modules/order/dtos/ICreateOrderDTO';
+import IFindAllOrdersByEstablishmentIdDTO from '@modules/order/dtos/IFindAllOrdersByEstablishmentIdDTO';
 import IFindAllOrdersDTO from '@modules/order/dtos/IFindAllOrdersDTO';
 import IFindByIdOrderDTO from '@modules/order/dtos/IFindByIdOrderDTO';
 import IOrderRepository from '@modules/order/repositories/IOrderRepository';
@@ -14,19 +15,49 @@ class OrdersRepository implements IOrderRepository {
     }
 
     public async findAll({
-        establishment_id,
+        owner_id,
+        table_id,
     }: IFindAllOrdersDTO): Promise<Order[]> {
+        let findOrders: Order[] = [];
+
+        if (table_id) {
+            findOrders = await this.ormRepository.find({
+                where: {
+                    owner_id,
+                    table_id,
+                },
+                relations: ['order_products', 'table'],
+            });
+        } else {
+            findOrders = await this.ormRepository.find({
+                where: {
+                    owner_id,
+                },
+                relations: ['order_products', 'table'],
+            });
+        }
+
+        return findOrders;
+    }
+
+    public async findAllByEstablishmentId({
+        owner_id,
+        establishment_id,
+    }: IFindAllOrdersByEstablishmentIdDTO): Promise<Order[]> {
         const findOrders = await this.ormRepository.find({
             where: {
+                owner_id,
                 establishment_id,
             },
+            relations: ['order_products', 'table'],
         });
 
         return findOrders;
     }
 
     public async create({
-        token,
+        table_token,
+        costumer_name,
         status_order_id,
         products,
         establishment,
@@ -35,7 +66,8 @@ class OrdersRepository implements IOrderRepository {
         owner,
     }: ICreateOrderDTO): Promise<Order> {
         const order = this.ormRepository.create({
-            token,
+            table_token,
+            costumer_name,
             status_order_id,
             establishment,
             waiter,

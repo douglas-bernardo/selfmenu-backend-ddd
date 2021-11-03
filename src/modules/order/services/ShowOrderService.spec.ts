@@ -96,9 +96,10 @@ describe('ShowOrder', () => {
         });
 
         const order = await fakeOrderRepository.create({
-            token,
+            table_token: token,
             status_order_id: 1,
             waiter,
+            costumer_name: 'fulano',
             establishment,
             table,
             owner: account,

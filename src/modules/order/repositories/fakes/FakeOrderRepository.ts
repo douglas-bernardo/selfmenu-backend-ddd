@@ -5,16 +5,40 @@ import Order from '@modules/order/infra/typeorm/entities/Order';
 
 import IFindAllOrdersDTO from '@modules/order/dtos/IFindAllOrdersDTO';
 import IFindByIdOrderDTO from '@modules/order/dtos/IFindByIdOrderDTO';
+import IFindAllOrdersByEstablishmentIdDTO from '@modules/order/dtos/IFindAllOrdersByEstablishmentIdDTO';
 import IOrderRepository from '../IOrderRepository';
 
 class FakeOrderRepository implements IOrderRepository {
     private orders: Order[] = [];
 
     public async findAll({
-        establishment_id,
+        owner_id,
+        table_id,
     }: IFindAllOrdersDTO): Promise<Order[]> {
+        let findOrders: Order[] = [];
+
+        if (table_id) {
+            findOrders = this.orders.filter(
+                order =>
+                    order.owner.id === owner_id && order.table.id === table_id,
+            );
+        } else {
+            findOrders = this.orders.filter(
+                order => order.owner.id === owner_id,
+            );
+        }
+
+        return findOrders;
+    }
+
+    public async findAllByEstablishmentId({
+        owner_id,
+        establishment_id,
+    }: IFindAllOrdersByEstablishmentIdDTO): Promise<Order[]> {
         const findOrders = this.orders.filter(
-            order => order.establishment.id === establishment_id,
+            order =>
+                order.owner.id === owner_id &&
+                order.establishment_id === establishment_id,
         );
 
         return findOrders;

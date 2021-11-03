@@ -96,9 +96,10 @@ describe('ListOrders', () => {
         });
 
         const order1 = await fakeOrderRepository.create({
-            token,
+            table_token: token,
             establishment,
             table,
+            costumer_name: 'fulano',
             waiter,
             status_order_id: 1,
             owner: account,
@@ -112,9 +113,10 @@ describe('ListOrders', () => {
         });
 
         const order2 = await fakeOrderRepository.create({
-            token,
+            table_token: token,
             establishment,
             table,
+            costumer_name: 'fulano',
             waiter,
             status_order_id: 1,
             owner: account,
@@ -128,7 +130,8 @@ describe('ListOrders', () => {
         });
 
         const list = await listOrdersService.execute({
-            establishment_id: establishment.id,
+            owner_id: account.id,
+            table_id: table.id,
         });
 
         expect(list).toEqual([order1, order2]);

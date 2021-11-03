@@ -18,8 +18,9 @@ import tableSessionsRouter from '@modules/table/infra/http/routes/table.sessions
 import orderRouter from '@modules/order/infra/http/routes/order.routes';
 
 import appRestaurantRouter from '@modules/establishment/infra/http/routes/app.establishment.routes';
-import appCategoryRoutes from '@modules/product/infra/http/routes/app.category.routes';
-import appProductsRoutes from '@modules/product/infra/http/routes/app.product.routes';
+import appCategoryRouter from '@modules/product/infra/http/routes/app.category.routes';
+import appProductsRouter from '@modules/product/infra/http/routes/app.product.routes';
+import appOrderRouter from '@modules/order/infra/http/routes/app.order.routes';
 
 const routes = Router();
 
@@ -48,7 +49,8 @@ routes.use('/orders', orderRouter);
  */
 routes.use('/app/tables', tableSessionsRouter);
 routes.use('/app/establishments', appRestaurantRouter);
-routes.use('/app/categories', appCategoryRoutes);
-routes.use('/app/products', appProductsRoutes);
+routes.use('/app/categories', appCategoryRouter);
+routes.use('/app/products', appProductsRouter);
+routes.use('/app/orders', appOrderRouter);
 
 export default routes;

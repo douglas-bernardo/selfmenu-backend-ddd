@@ -3,12 +3,12 @@ import { Router } from 'express';
 import appAuthenticated from '@modules/account/infra/http/middlewares/appAuthenticated';
 import CategoryController from '../controllers/CategoryController';
 
-const appCategoryRoutes = Router();
+const appCategoryRouter = Router();
 
 const categoryController = new CategoryController();
 
-appCategoryRoutes.use(appAuthenticated);
+appCategoryRouter.use(appAuthenticated);
 
-appCategoryRoutes.get('/', categoryController.index);
+appCategoryRouter.get('/', categoryController.index);
 
-export default appCategoryRoutes;
+export default appCategoryRouter;
