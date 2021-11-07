@@ -13,6 +13,7 @@ import {
     UpdateDateColumn,
 } from 'typeorm';
 import OrderProduct from './OrderProduct';
+import StatusOrder from './StatusOrder';
 
 @Entity('order')
 class Order {
@@ -21,6 +22,10 @@ class Order {
 
     @Column()
     table_token: string;
+
+    @ManyToOne(() => StatusOrder)
+    @JoinColumn({ name: 'status_order_id' })
+    status_order: StatusOrder;
 
     @Column()
     status_order_id: number;
@@ -54,7 +59,7 @@ class Order {
     table_id: string;
 
     @Column()
-    costumer_name: string;
+    customer_name: string;
 
     @OneToMany(() => OrderProduct, order_products => order_products.order, {
         cascade: true,

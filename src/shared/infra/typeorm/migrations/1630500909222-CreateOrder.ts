@@ -13,7 +13,7 @@ export default class CreateOrder1630500909222 implements MigrationInterface {
                         generationStrategy: 'uuid',
                     },
                     {
-                        name: 'token',
+                        name: 'table_token',
                         type: 'varchar',
                         isNullable: true,
                     },

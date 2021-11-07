@@ -11,6 +11,15 @@ import IOrderRepository from '../IOrderRepository';
 class FakeOrderRepository implements IOrderRepository {
     private orders: Order[] = [];
 
+    public async save(order: Order): Promise<Order> {
+        const findIndex = this.orders.findIndex(
+            findOrder => findOrder.id === order.id,
+        );
+
+        this.orders[findIndex] = order;
+        return order;
+    }
+
     public async findAll({
         owner_id,
         table_id,

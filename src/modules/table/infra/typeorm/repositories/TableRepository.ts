@@ -45,7 +45,9 @@ class TableRepository implements ITableRepository {
                 relations: ['orders'],
             });
         } else {
-            findTable = await this.ormRepository.findOne(table_id);
+            findTable = await this.ormRepository.findOne(table_id, {
+                relations: ['orders'],
+            });
         }
 
         return findTable;

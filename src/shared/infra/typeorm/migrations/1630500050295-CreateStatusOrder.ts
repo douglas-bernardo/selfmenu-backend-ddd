@@ -24,15 +24,23 @@ export default class CreateStatusOrder1630500050295
         );
 
         await queryRunner.query(
-            `INSERT INTO status_order (name) VALUES ('Pedido Aceito')`,
+            `INSERT INTO status_order (name) VALUES ('Aceito')`,
         );
 
         await queryRunner.query(
-            `INSERT INTO status_order (name) VALUES ('Pedido Em Preparação')`,
+            `INSERT INTO status_order (name) VALUES ('Em Preparação')`,
         );
 
         await queryRunner.query(
-            `INSERT INTO status_order (name) VALUES ('Pedido Entregue')`,
+            `INSERT INTO status_order (name) VALUES ('Entregue')`,
+        );
+
+        await queryRunner.query(
+            `INSERT INTO status_order (name) VALUES ('Encerrado')`,
+        );
+
+        await queryRunner.query(
+            `INSERT INTO status_order (name) VALUES ('Cancelado')`,
         );
     }
 

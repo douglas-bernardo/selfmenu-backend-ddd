@@ -3,7 +3,7 @@ import IFindAllOrdersByEstablishmentIdDTO from '@modules/order/dtos/IFindAllOrde
 import IFindAllOrdersDTO from '@modules/order/dtos/IFindAllOrdersDTO';
 import IFindByIdOrderDTO from '@modules/order/dtos/IFindByIdOrderDTO';
 import IOrderRepository from '@modules/order/repositories/IOrderRepository';
-import { getRepository, Repository } from 'typeorm';
+import { getRepository, In, Repository } from 'typeorm';
 
 import Order from '../entities/Order';
 
@@ -17,16 +17,19 @@ class OrdersRepository implements IOrderRepository {
     public async findAll({
         owner_id,
         table_id,
+        table_token,
     }: IFindAllOrdersDTO): Promise<Order[]> {
         let findOrders: Order[] = [];
 
-        if (table_id) {
+        if (table_id && table_token) {
             findOrders = await this.ormRepository.find({
                 where: {
                     owner_id,
                     table_id,
+                    table_token,
+                    status_order_id: In([1, 2, 3, 4]),
                 },
-                relations: ['order_products', 'table'],
+                relations: ['order_products', 'status_order'],
             });
         } else {
             findOrders = await this.ormRepository.find({
@@ -57,7 +60,7 @@ class OrdersRepository implements IOrderRepository {
 
     public async create({
         table_token,
-        costumer_name,
+        customer_name,
         status_order_id,
         products,
         establishment,
@@ -67,7 +70,7 @@ class OrdersRepository implements IOrderRepository {
     }: ICreateOrderDTO): Promise<Order> {
         const order = this.ormRepository.create({
             table_token,
-            costumer_name,
+            customer_name,
             status_order_id,
             establishment,
             waiter,
@@ -93,13 +96,19 @@ class OrdersRepository implements IOrderRepository {
                     id,
                     establishment_id,
                 },
-                relations: ['order_products', 'table'],
+                relations: ['order_products', 'status_order'],
             });
         } else {
-            findOrder = await this.ormRepository.findOne(id);
+            findOrder = await this.ormRepository.findOne(id, {
+                relations: ['order_products', 'status_order'],
+            });
         }
 
         return findOrder;
+    }
+
+    public async save(order: Order): Promise<Order> {
+        return this.ormRepository.save(order);
     }
 }
 

@@ -110,7 +110,7 @@ describe('CreateOrder', () => {
         const order = await createOrderService.execute({
             owner_id: account.id,
             table_token: token,
-            costumer_name: 'fulano',
+            customer_name: 'fulano',
             establishment_id: establishment.id,
             products: [
                 {
@@ -157,7 +157,7 @@ describe('CreateOrder', () => {
             createOrderService.execute({
                 owner_id: account.id,
                 table_token: 'invalid-table',
-                costumer_name: 'fulano',
+                customer_name: 'fulano',
                 establishment_id: establishment.id,
                 products: [
                     {
@@ -234,7 +234,7 @@ describe('CreateOrder', () => {
             createOrderService.execute({
                 owner_id: account.id,
                 table_token: token,
-                costumer_name: 'fulano',
+                customer_name: 'fulano',
                 establishment_id: establishment.id,
                 products: [
                     {
@@ -309,7 +309,7 @@ describe('CreateOrder', () => {
             createOrderService.execute({
                 owner_id: account.id,
                 table_token: token,
-                costumer_name: 'fulano',
+                customer_name: 'fulano',
                 establishment_id: 'non-existing-establishment',
                 products: [
                     {
@@ -383,7 +383,7 @@ describe('CreateOrder', () => {
             createOrderService.execute({
                 owner_id: account.id,
                 table_token: token,
-                costumer_name: 'fulano',
+                customer_name: 'fulano',
                 establishment_id: establishment.id,
                 products: [
                     {
@@ -447,7 +447,7 @@ describe('CreateOrder', () => {
             createOrderService.execute({
                 owner_id: account.id,
                 table_token: token,
-                costumer_name: 'fulano',
+                customer_name: 'fulano',
                 establishment_id: establishment.id,
                 products: [
                     {
@@ -521,7 +521,7 @@ describe('CreateOrder', () => {
             createOrderService.execute({
                 owner_id: account.id,
                 table_token: token,
-                costumer_name: 'fulano',
+                customer_name: 'fulano',
                 establishment_id: establishment.id,
                 products: [
                     {
@@ -598,7 +598,7 @@ describe('CreateOrder', () => {
             createOrderService.execute({
                 owner_id: account.id,
                 table_token: token,
-                costumer_name: 'fulano',
+                customer_name: 'fulano',
                 establishment_id: establishment.id,
                 products: [
                     {

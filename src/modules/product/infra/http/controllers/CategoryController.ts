@@ -34,7 +34,7 @@ export default class CategoryController {
             image_cover: request.file?.filename,
         });
 
-        return response.json(category);
+        return response.json(classToClass(category));
     }
 
     public async show(request: Request, response: Response): Promise<Response> {

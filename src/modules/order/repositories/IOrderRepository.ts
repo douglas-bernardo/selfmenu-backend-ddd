@@ -9,4 +9,5 @@ export default interface IOrderRepository {
     findAllByEstablishmentId(data: IFindAllEstablishmentsDTO): Promise<Order[]>;
     create(data: ICreateOrderDTO): Promise<Order>;
     findById(data: IFindByIdOrderDTO): Promise<Order | undefined>;
+    save(order: Order): Promise<Order>;
 }
