@@ -1,4 +1,4 @@
-import OrderCancelService from '@modules/order/services/OrderCancelService';
+import UpdateStatusOrderService from '@modules/order/services/UpdateStatusOrderService';
 import { Request, Response } from 'express';
 
 import { container } from 'tsyringe';
@@ -9,11 +9,15 @@ export default class OrderCancelController {
         response: Response,
     ): Promise<Response> {
         const { id } = request.params;
+        const { status_order_id } = request.body;
 
-        const orderCancelService = container.resolve(OrderCancelService);
+        const updateStatusOrderService = container.resolve(
+            UpdateStatusOrderService,
+        );
 
-        await orderCancelService.execute({
+        await updateStatusOrderService.execute({
             order_id: id,
+            status_order_id,
         });
 
         return response.status(204).json();

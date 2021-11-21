@@ -1,5 +1,5 @@
 import CreateOrderService from '@modules/order/services/CreateOrderService';
-import ListOrdersService from '@modules/order/services/ListOrdersService';
+import ListOrdersByTableService from '@modules/order/services/ListOrdersByTableService';
 import ShowOrderService from '@modules/order/services/ShowOrderService';
 import { classToClass } from 'class-transformer';
 import { Request, Response } from 'express';
@@ -14,7 +14,7 @@ export default class OrderController {
         const { id } = request.account;
         const { table_id, table_token } = request.query;
 
-        const listOrders = container.resolve(ListOrdersService);
+        const listOrders = container.resolve(ListOrdersByTableService);
 
         const orders = await listOrders.execute({
             owner_id: id,
@@ -30,13 +30,19 @@ export default class OrderController {
         response: Response,
     ): Promise<Response> {
         const { id } = request.account;
-        const { table_token, customer_name, establishment_id, products } =
-            request.body;
+        const {
+            table_token,
+            table_id,
+            customer_name,
+            establishment_id,
+            products,
+        } = request.body;
 
         const createOrder = container.resolve(CreateOrderService);
 
         const order = await createOrder.execute({
             owner_id: id,
+            table_id,
             table_token,
             customer_name,
             establishment_id,

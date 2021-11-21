@@ -24,7 +24,7 @@ export default class CreateStatusOrder1630500050295
         );
 
         await queryRunner.query(
-            `INSERT INTO status_order (name) VALUES ('Aceito')`,
+            `INSERT INTO status_order (name) VALUES ('Recebido Na Cozinha')`,
         );
 
         await queryRunner.query(
@@ -32,7 +32,15 @@ export default class CreateStatusOrder1630500050295
         );
 
         await queryRunner.query(
-            `INSERT INTO status_order (name) VALUES ('Entregue')`,
+            `INSERT INTO status_order (name) VALUES ('Pronto')`,
+        );
+
+        await queryRunner.query(
+            `INSERT INTO status_order (name) VALUES ('Enviado ao cliente')`,
+        );
+
+        await queryRunner.query(
+            `INSERT INTO status_order (name) VALUES ('Aguardando Pagamento')`,
         );
 
         await queryRunner.query(

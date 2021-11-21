@@ -4,6 +4,7 @@ import { container } from 'tsyringe';
 import CreateEstablishmentService from '@modules/establishment/services/CreateEstablishmentService';
 import ListEstablishmentsService from '@modules/establishment/services/ListEstablishmentsService';
 import ShowEstablishmentService from '@modules/establishment/services/ShowEstablishmentService';
+import UpdateEstablishmentService from '@modules/establishment/services/UpdateEstablishmentService';
 
 export default class EstablishmentController {
     public async index(
@@ -51,6 +52,33 @@ export default class EstablishmentController {
         const establishment = await showEstablishment.execute({
             id,
             owner_id: account_id,
+        });
+
+        return response.json(establishment);
+    }
+
+    public async update(
+        request: Request,
+        response: Response,
+    ): Promise<Response> {
+        const account_id = request.account.id;
+
+        const { id } = request.params;
+        const { name, cnpj, description, establishment_type_id, active } =
+            request.body;
+
+        const updateEstablishmentService = container.resolve(
+            UpdateEstablishmentService,
+        );
+
+        const establishment = await updateEstablishmentService.execute({
+            owner_id: account_id,
+            establishment_id: id,
+            name,
+            cnpj,
+            description,
+            active,
+            establishment_type_id,
         });
 
         return response.json(establishment);

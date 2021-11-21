@@ -1,3 +1,3 @@
-export default interface IFindAllEstablishmentsDTO {
+export interface IFindAllEstablishmentsDTO {
     owner_id?: string;
 }

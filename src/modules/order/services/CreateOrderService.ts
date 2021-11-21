@@ -19,6 +19,7 @@ interface IProducts {
 
 interface IRequest {
     owner_id: string;
+    table_id: string;
     table_token: string;
     customer_name: string;
     establishment_id: string;
@@ -52,12 +53,14 @@ class CreateOrderService {
 
     public async execute({
         owner_id,
+        table_id,
         table_token,
         customer_name,
         establishment_id,
         products,
     }: IRequest): Promise<Order> {
         const table = await this.tableRepository.findByToken({
+            table_id,
             table_token,
         });
 

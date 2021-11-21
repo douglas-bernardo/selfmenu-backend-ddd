@@ -10,6 +10,8 @@ import 'express-async-errors';
 import uploadConfig from '@config/upload';
 import AppError from '@shared/errors/AppError';
 import rateLimiter from './middlewares/rateLimiter';
+import setHeaders from './middlewares/setHeaders';
+
 import routes from './routes';
 
 /** Connection */
@@ -21,7 +23,7 @@ import '@shared/container';
 const port = 3333;
 const app = express();
 
-app.use(rateLimiter);
+app.use(setHeaders);
 app.use(cors());
 app.use(express.json());
 
@@ -29,6 +31,7 @@ app.use(express.json());
  * Access storage files
  */
 app.use('/files', express.static(uploadConfig.uploadsFolder));
+app.use(rateLimiter);
 app.use(routes);
 
 /**

@@ -36,7 +36,7 @@ class CreateAccountService {
             email,
             password: hashedPassword,
             profile_name,
-            plan_id: 1, // by default account is created with a free plan - improve this later
+            plan_id: 2, // by default account is created with a free plan - improve this later
         });
 
         return account;

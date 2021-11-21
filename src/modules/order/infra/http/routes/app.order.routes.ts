@@ -5,6 +5,7 @@ import appAuthenticated from '@modules/account/infra/http/middlewares/appAuthent
 import OrderController from '../controllers/OrderController';
 import OrderProductController from '../controllers/OrderProductController';
 import OrderCancelController from '../controllers/OrderCancelController';
+import RequestPaymentOrderController from '../controllers/RequestPaymentOrderController';
 
 const appOrderRouter = Router();
 appOrderRouter.use(appAuthenticated);
@@ -12,6 +13,7 @@ appOrderRouter.use(appAuthenticated);
 const orderController = new OrderController();
 const orderProductController = new OrderProductController();
 const orderCancelController = new OrderCancelController();
+const requestPaymentOrderController = new RequestPaymentOrderController();
 
 /**
  * List current table's orders
@@ -42,6 +44,7 @@ appOrderRouter.post(
     celebrate({
         [Segments.BODY]: {
             table_token: Joi.string().required(),
+            table_id: Joi.string().required(),
             customer_name: Joi.string().required(),
             establishment_id: Joi.string().required(),
             products: Joi.array().items(product).required(),
@@ -62,6 +65,24 @@ appOrderRouter.delete(
     orderProductController.delete,
 );
 
-appOrderRouter.patch('/:id/cancel', orderCancelController.update);
+appOrderRouter.patch(
+    '/:id/cancel',
+    celebrate({
+        [Segments.BODY]: {
+            status_order_id: Joi.number().required(),
+        },
+    }),
+    orderCancelController.update,
+);
+
+appOrderRouter.patch(
+    '/:id/request-payment',
+    celebrate({
+        [Segments.BODY]: {
+            status_order_id: Joi.number().required(),
+        },
+    }),
+    requestPaymentOrderController.update,
+);
 
 export default appOrderRouter;

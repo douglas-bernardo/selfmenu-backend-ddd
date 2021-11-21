@@ -10,6 +10,10 @@ interface IFindProducts {
     id: string;
 }
 
+interface ICountRecords {
+    [key: string]: any;
+}
+
 export default interface IProductRepository {
     findAll(data: IFindAllProductsDTO): Promise<Product[]>;
     findAllByCategoryId(
@@ -25,4 +29,5 @@ export default interface IProductRepository {
     create(data: ICreateProductDTO): Promise<Product>;
     save(product: Product): Promise<Product>;
     updateQuantity(products: IUpdateProductsQuantityDTO[]): Promise<Product[]>;
+    count(data: ICountRecords): Promise<number>;
 }

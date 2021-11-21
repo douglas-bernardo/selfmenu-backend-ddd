@@ -4,6 +4,7 @@ import AppError from '@shared/errors/AppError';
 import IHashProvider from '@modules/account/providers/HashProvider/models/IHashProvider';
 import IAccountsRepository from '@modules/account/repositories/IAccountRepository';
 import IEstablishmentRepository from '@modules/establishment/repositories/IEstablishmentRepository';
+import IStorageProvider from '@shared/container/providers/StorageProvider/models/IStorageProvider';
 import Waiter from '../infra/typeorm/entities/Waiter';
 import IWaiterRepository from '../repositories/IWaiterRepository';
 
@@ -14,6 +15,7 @@ interface IRequest {
     password: string;
     owner_id: string;
     establishment_id: string;
+    avatar?: string;
 }
 
 @injectable()
@@ -30,6 +32,9 @@ class CreateWaiterService {
 
         @inject('HashProvider')
         private hashProvider: IHashProvider,
+
+        @inject('StorageProvider')
+        private storageProvider: IStorageProvider,
     ) {}
 
     public async execute({
@@ -39,11 +44,12 @@ class CreateWaiterService {
         password,
         owner_id,
         establishment_id,
+        avatar,
     }: IRequest): Promise<Waiter> {
         const account = await this.accountsRepository.findById(owner_id);
 
         if (!account) {
-            throw new AppError('Account account not found');
+            throw new AppError('Conta não encontrada');
         }
 
         if (account.plan.name === 'Free') {
@@ -54,7 +60,7 @@ class CreateWaiterService {
 
             if (hasEstablishmentCreated.length > 0) {
                 throw new AppError(
-                    'Only Premium accounts can register waiters.',
+                    'Somente contas Premium podem registrar novos garçons',
                 );
             }
         }
@@ -65,7 +71,7 @@ class CreateWaiterService {
         });
 
         if (waiterExists) {
-            throw new AppError('Waiter already exists with this cpf');
+            throw new AppError('Já existe um garçom cadastrado com este CPF');
         }
 
         const establishment = await this.establishmentRepository.findById({
@@ -74,11 +80,18 @@ class CreateWaiterService {
         });
 
         if (!establishment) {
-            throw new AppError('Establishment not found');
+            throw new AppError('Estabelecimento não encontrado');
         }
 
         if (!establishment.active) {
-            throw new AppError('Establishment inactive. Not allowed.');
+            throw new AppError(
+                'Estabelecimento inativo. Operação não permitida',
+            );
+        }
+
+        let filename: string | undefined;
+        if (avatar) {
+            filename = await this.storageProvider.saveFile(avatar);
         }
 
         const hashedPassword = await this.hashProvider.generateHash(password);
@@ -90,6 +103,7 @@ class CreateWaiterService {
             username,
             owner_id: account.id,
             establishment_id: establishment.id,
+            avatar: filename,
         });
 
         return waiter;

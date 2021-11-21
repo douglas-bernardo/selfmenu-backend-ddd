@@ -1,6 +1,6 @@
 import ICreateOrderDTO from '@modules/order/dtos/ICreateOrderDTO';
-import IFindAllOrdersByEstablishmentIdDTO from '@modules/order/dtos/IFindAllOrdersByEstablishmentIdDTO';
-import IFindAllOrdersDTO from '@modules/order/dtos/IFindAllOrdersDTO';
+import { IFindAllByEstablishmentDTO } from '@modules/order/dtos/IFindAllByEstablishmentDTO';
+import { IFindAllOrdersByTableDTO } from '@modules/order/dtos/IFindAllOrdersByTableDTO';
 import IFindByIdOrderDTO from '@modules/order/dtos/IFindByIdOrderDTO';
 import IOrderRepository from '@modules/order/repositories/IOrderRepository';
 import { getRepository, In, Repository } from 'typeorm';
@@ -14,11 +14,11 @@ class OrdersRepository implements IOrderRepository {
         this.ormRepository = getRepository(Order);
     }
 
-    public async findAll({
+    public async findAllByTable({
         owner_id,
         table_id,
         table_token,
-    }: IFindAllOrdersDTO): Promise<Order[]> {
+    }: IFindAllOrdersByTableDTO): Promise<Order[]> {
         let findOrders: Order[] = [];
 
         if (table_id && table_token) {
@@ -27,7 +27,7 @@ class OrdersRepository implements IOrderRepository {
                     owner_id,
                     table_id,
                     table_token,
-                    status_order_id: In([1, 2, 3, 4]),
+                    status_order_id: In([1, 2, 3, 4, 5]),
                 },
                 relations: ['order_products', 'status_order'],
             });
@@ -44,16 +44,27 @@ class OrdersRepository implements IOrderRepository {
     }
 
     public async findAllByEstablishmentId({
-        owner_id,
         establishment_id,
-    }: IFindAllOrdersByEstablishmentIdDTO): Promise<Order[]> {
-        const findOrders = await this.ormRepository.find({
-            where: {
-                owner_id,
-                establishment_id,
-            },
-            relations: ['order_products', 'table'],
-        });
+        status_order_id,
+    }: IFindAllByEstablishmentDTO): Promise<Order[]> {
+        let findOrders: Order[] = [];
+
+        if (status_order_id) {
+            findOrders = await this.ormRepository.find({
+                where: {
+                    establishment_id,
+                    status_order_id: In(status_order_id),
+                },
+                relations: ['order_products', 'table'],
+            });
+        } else {
+            findOrders = await this.ormRepository.find({
+                where: {
+                    establishment_id,
+                },
+                relations: ['order_products'],
+            });
+        }
 
         return findOrders;
     }
@@ -86,23 +97,10 @@ class OrdersRepository implements IOrderRepository {
 
     public async findById({
         id,
-        establishment_id,
     }: IFindByIdOrderDTO): Promise<Order | undefined> {
-        let findOrder: Order | undefined;
-
-        if (establishment_id) {
-            findOrder = await this.ormRepository.findOne({
-                where: {
-                    id,
-                    establishment_id,
-                },
-                relations: ['order_products', 'status_order'],
-            });
-        } else {
-            findOrder = await this.ormRepository.findOne(id, {
-                relations: ['order_products', 'status_order'],
-            });
-        }
+        const findOrder = await this.ormRepository.findOne(id, {
+            relations: ['order_products', 'status_order'],
+        });
 
         return findOrder;
     }

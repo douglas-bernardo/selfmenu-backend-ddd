@@ -1,3 +1,3 @@
-export default interface IFindByCNPJEstablishmentDTO {
+export interface IFindByCNPJEstablishmentDTO {
     cnpj: number;
 }

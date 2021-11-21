@@ -33,13 +33,11 @@ class CreateCategoryService {
         const account = await this.accountsRepository.findById(owner_id);
 
         if (!account) {
-            throw new AppError('Account account not found');
+            throw new AppError('Conta não localizada');
         }
 
         if (!account.active) {
-            throw new AppError(
-                'Only active accounts can create a new category',
-            );
+            throw new AppError('Apenas contas ativas podem criar categorias');
         }
 
         const categoryExists = await this.categoryRepository.findByName({
@@ -48,7 +46,7 @@ class CreateCategoryService {
         });
 
         if (categoryExists) {
-            throw new AppError('Category already exists.');
+            throw new AppError('Já existe uma categoria com esse nome.');
         }
 
         let filename: string | undefined;

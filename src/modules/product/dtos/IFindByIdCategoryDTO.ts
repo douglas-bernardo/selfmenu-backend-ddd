@@ -1,4 +1,4 @@
 export default interface IFindByIdCategoryDTO {
-    id: string;
+    id: number;
     owner_id?: string;
 }

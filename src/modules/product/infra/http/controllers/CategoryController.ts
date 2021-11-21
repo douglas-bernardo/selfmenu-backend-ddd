@@ -5,6 +5,7 @@ import { container } from 'tsyringe';
 import CreateCategoryService from '@modules/product/services/CreateCategoryService';
 import ListCategoriesService from '@modules/product/services/ListCategoriesService';
 import ShowCategoryService from '@modules/product/services/ShowCategoryService';
+import UpdateCategoryService from '@modules/product/services/UpdateCategoryService';
 
 export default class CategoryController {
     public async index(
@@ -42,11 +43,32 @@ export default class CategoryController {
         const { id } = request.params;
         const showCategory = container.resolve(ShowCategoryService);
 
-        const item = await showCategory.execute({
+        const category = await showCategory.execute({
             id,
             owner_id: account_id,
         });
 
-        return response.json(item);
+        return response.json(classToClass(category));
+    }
+
+    public async update(
+        request: Request,
+        response: Response,
+    ): Promise<Response> {
+        const account_id = request.account.id;
+        const { id } = request.params;
+        const { name, active } = request.body;
+
+        const updateCategoryService = container.resolve(UpdateCategoryService);
+
+        const category = await updateCategoryService.execute({
+            category_id: Number(id),
+            name,
+            owner_id: account_id,
+            active,
+            image_cover: request.file?.filename,
+        });
+
+        return response.json(classToClass(category));
     }
 }

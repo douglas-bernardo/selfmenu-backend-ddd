@@ -18,11 +18,31 @@ class TableRepository implements ITableRepository {
         let tables: Table[] = [];
 
         if (owner_id) {
-            tables = await this.ormRepository.find({
-                where: {
-                    owner_id,
-                },
-            });
+            // tables = await this.ormRepository.find({
+            //     where: {
+            //         owner_id,
+            //     },
+            //     relations: ['waiter', 'orders', 'status_table'],
+            //     order: {
+            //         number: 'ASC',
+            //     },
+            // });
+            tables = await this.ormRepository
+                .createQueryBuilder('table')
+                .leftJoinAndSelect('table.waiter', 'waiter')
+                .leftJoinAndSelect('table.status_table', 'status_table')
+                .leftJoinAndSelect('table.orders', 'orders')
+                .select([
+                    'table',
+                    'waiter.name',
+                    'waiter.avatar',
+                    'status_table.name',
+                    'orders.id',
+                    'orders.status_order_id',
+                ])
+                .where('table.owner_id = :owner_id', { owner_id })
+                .orderBy('table.number')
+                .getMany();
         } else {
             tables = await this.ormRepository.find();
         }
@@ -99,9 +119,11 @@ class TableRepository implements ITableRepository {
 
     public async findByToken({
         table_token,
+        table_id,
     }: IFindByTokenTableDTO): Promise<Table | undefined> {
         const table = await this.ormRepository.findOne({
             where: {
+                id: table_id,
                 token: table_token,
             },
             relations: ['establishment'],

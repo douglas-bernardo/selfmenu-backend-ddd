@@ -1,4 +1,4 @@
-export default interface ICreateEstablishmentDTO {
+export interface ICreateEstablishmentDTO {
     name: string;
     subdomain: string;
     cnpj: number;

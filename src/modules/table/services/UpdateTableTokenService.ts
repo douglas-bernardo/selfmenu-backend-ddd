@@ -39,6 +39,7 @@ class UpdateTableTokenService {
             .toUpperCase();
 
         table.token = token;
+        table.status_table_id = 2;
 
         await this.tableRepository.save(table);
 

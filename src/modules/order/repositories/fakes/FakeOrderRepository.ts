@@ -3,9 +3,9 @@ import { v4 as uuid } from 'uuid';
 import ICreateOrderDTO from '@modules/order/dtos/ICreateOrderDTO';
 import Order from '@modules/order/infra/typeorm/entities/Order';
 
-import IFindAllOrdersDTO from '@modules/order/dtos/IFindAllOrdersDTO';
+import { IFindAllOrdersByTableDTO } from '@modules/order/dtos/IFindAllOrdersByTableDTO';
 import IFindByIdOrderDTO from '@modules/order/dtos/IFindByIdOrderDTO';
-import IFindAllOrdersByEstablishmentIdDTO from '@modules/order/dtos/IFindAllOrdersByEstablishmentIdDTO';
+import { IFindAllByEstablishmentDTO } from '@modules/order/dtos/IFindAllByEstablishmentDTO';
 import IOrderRepository from '../IOrderRepository';
 
 class FakeOrderRepository implements IOrderRepository {
@@ -20,10 +20,10 @@ class FakeOrderRepository implements IOrderRepository {
         return order;
     }
 
-    public async findAll({
+    public async findAllByTable({
         owner_id,
         table_id,
-    }: IFindAllOrdersDTO): Promise<Order[]> {
+    }: IFindAllOrdersByTableDTO): Promise<Order[]> {
         let findOrders: Order[] = [];
 
         if (table_id) {
@@ -41,13 +41,10 @@ class FakeOrderRepository implements IOrderRepository {
     }
 
     public async findAllByEstablishmentId({
-        owner_id,
         establishment_id,
-    }: IFindAllOrdersByEstablishmentIdDTO): Promise<Order[]> {
+    }: IFindAllByEstablishmentDTO): Promise<Order[]> {
         const findOrders = this.orders.filter(
-            order =>
-                order.owner.id === owner_id &&
-                order.establishment_id === establishment_id,
+            order => order.establishment_id === establishment_id,
         );
 
         return findOrders;
@@ -74,19 +71,8 @@ class FakeOrderRepository implements IOrderRepository {
 
     public async findById({
         id,
-        establishment_id,
     }: IFindByIdOrderDTO): Promise<Order | undefined> {
-        let findOrder: Order | undefined;
-
-        if (establishment_id) {
-            findOrder = this.orders.find(
-                order =>
-                    order.id === id &&
-                    order.establishment_id === establishment_id,
-            );
-        } else {
-            findOrder = this.orders.find(order => order.id === id);
-        }
+        const findOrder = this.orders.find(order => order.id === id);
 
         return findOrder;
     }

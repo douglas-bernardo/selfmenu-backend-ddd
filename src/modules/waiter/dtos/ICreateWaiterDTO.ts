@@ -5,4 +5,5 @@ export default interface ICreateWaiterDTO {
     password: string;
     owner_id: string;
     establishment_id: string;
+    avatar?: string;
 }

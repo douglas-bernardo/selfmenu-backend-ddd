@@ -4,10 +4,15 @@ import IFindByCPFWaiterDTO from '../dtos/IFindByCPFWaiterDTO';
 import IFindByIdWaiterDTO from '../dtos/IFindByIdWaiterDTO';
 import Waiter from '../infra/typeorm/entities/Waiter';
 
+interface ICountRecords {
+    [key: string]: any;
+}
+
 export default interface IWaiterRepository {
     findAll(data?: IFindAllWaiterDTO): Promise<Waiter[]>;
     findById(data: IFindByIdWaiterDTO): Promise<Waiter | undefined>;
     findByCPF(data: IFindByCPFWaiterDTO): Promise<Waiter | undefined>;
     create(data: ICreateWaiterDTO): Promise<Waiter>;
     save(waiter: Waiter): Promise<Waiter>;
+    count(data: ICountRecords): Promise<number>;
 }

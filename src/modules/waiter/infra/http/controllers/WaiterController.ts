@@ -1,6 +1,8 @@
 import CreateWaiterService from '@modules/waiter/services/CreateWaiterService';
 import ListWaitersService from '@modules/waiter/services/ListWaitersService';
 import ShowWaiterService from '@modules/waiter/services/ShowWaiterService';
+import UpdateWaiterService from '@modules/waiter/services/UpdateWaiterService';
+import { classToClass } from 'class-transformer';
 import { Request, Response } from 'express';
 import { container } from 'tsyringe';
 
@@ -10,12 +12,18 @@ export default class WaiterController {
         response: Response,
     ): Promise<Response> {
         const account_id = request.account.id;
+        const { offset, limit } = request.query;
 
         const listWaiters = container.resolve(ListWaitersService);
 
-        const waiters = await listWaiters.execute({ owner_id: account_id });
+        const { waiters, total } = await listWaiters.execute({
+            owner_id: account_id,
+            offset: Number(offset),
+            limit: Number(limit),
+        });
 
-        return response.json(waiters);
+        response.setHeader('x-total-count', total);
+        return response.json(classToClass(waiters));
     }
 
     public async create(
@@ -28,16 +36,17 @@ export default class WaiterController {
 
         const createWaiterService = container.resolve(CreateWaiterService);
 
-        const restaurant = await createWaiterService.execute({
+        const waiter = await createWaiterService.execute({
             name,
             cpf,
             username,
             password,
             owner_id: account_id,
             establishment_id,
+            avatar: request.file?.filename,
         });
 
-        return response.json(restaurant);
+        return response.json(classToClass(waiter));
     }
 
     public async show(request: Request, response: Response): Promise<Response> {
@@ -51,6 +60,32 @@ export default class WaiterController {
             owner_id: account_id,
         });
 
-        return response.json(waiter);
+        return response.json(classToClass(waiter));
+    }
+
+    public async update(
+        request: Request,
+        response: Response,
+    ): Promise<Response> {
+        const account_id = request.account.id;
+        const { id } = request.params;
+        const { name, cpf, username, password, establishment_id, active } =
+            request.body;
+
+        const updateWaiterService = container.resolve(UpdateWaiterService);
+
+        const waiter = await updateWaiterService.execute({
+            waiter_id: id,
+            name,
+            cpf,
+            username,
+            password,
+            owner_id: account_id,
+            establishment_id,
+            avatar: request.file?.filename,
+            active,
+        });
+
+        return response.json(classToClass(waiter));
     }
 }

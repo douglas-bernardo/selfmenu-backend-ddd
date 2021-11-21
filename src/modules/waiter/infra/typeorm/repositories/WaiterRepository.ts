@@ -7,6 +7,10 @@ import IFindAllWaiterDTO from '@modules/waiter/dtos/IFindAllWaiterDTO';
 import IFindByIdWaiterDTO from '@modules/waiter/dtos/IFindByIdWaiterDTO';
 import IFindByCPFWaiterDTO from '@modules/waiter/dtos/IFindByCPFWaiterDTO';
 
+interface ICountRecords {
+    [key: string]: any;
+}
+
 class WaiterRepository implements IWaiterRepository {
     private ormRepository: Repository<Waiter>;
 
@@ -14,7 +18,17 @@ class WaiterRepository implements IWaiterRepository {
         this.ormRepository = getRepository(Waiter);
     }
 
-    public async findAll({ owner_id }: IFindAllWaiterDTO): Promise<Waiter[]> {
+    public async count(data: ICountRecords): Promise<number> {
+        return this.ormRepository.count({
+            where: data,
+        });
+    }
+
+    public async findAll({
+        owner_id,
+        offset,
+        limit,
+    }: IFindAllWaiterDTO): Promise<Waiter[]> {
         let waiters: Waiter[];
 
         if (owner_id) {
@@ -22,6 +36,9 @@ class WaiterRepository implements IWaiterRepository {
                 where: {
                     owner_id,
                 },
+                skip: offset || 0, // offset
+                take: limit || 10, // limit
+                relations: ['establishment'],
             });
         } else {
             waiters = await this.ormRepository.find();
@@ -42,9 +59,12 @@ class WaiterRepository implements IWaiterRepository {
                     id: waiter_id,
                     owner_id,
                 },
+                relations: ['establishment'],
             });
         } else {
-            waiter = await this.ormRepository.findOne(waiter_id);
+            waiter = await this.ormRepository.findOne(waiter_id, {
+                relations: ['establishment'],
+            });
         }
         return waiter;
     }

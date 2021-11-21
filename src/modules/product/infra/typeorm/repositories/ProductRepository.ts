@@ -12,6 +12,10 @@ interface IFindProducts {
     id: string;
 }
 
+interface ICountRecords {
+    [key: string]: any;
+}
+
 class ProductRepository implements IProductRepository {
     private ormRepository: Repository<Product>;
 
@@ -19,14 +23,27 @@ class ProductRepository implements IProductRepository {
         this.ormRepository = getRepository(Product);
     }
 
+    public async count(data: ICountRecords): Promise<number> {
+        return this.ormRepository.count({
+            where: data,
+        });
+    }
+
     public async findAllByCategoryId({
         owner_id,
         category_id,
+        offset,
+        limit,
     }: IFindAllProductsByCategoryIdDTO): Promise<Product[]> {
         const products = await this.ormRepository.find({
             where: {
                 owner_id,
                 category_id,
+            },
+            skip: offset || 0, // offset
+            take: limit || 10, // limit
+            order: {
+                name: 'ASC',
             },
         });
 
@@ -51,6 +68,8 @@ class ProductRepository implements IProductRepository {
 
     public async findAll({
         owner_id,
+        offset,
+        limit,
     }: IFindAllProductsDTO): Promise<Product[]> {
         let products: Product[] = [];
 
@@ -58,6 +77,11 @@ class ProductRepository implements IProductRepository {
             products = await this.ormRepository.find({
                 where: {
                     owner_id,
+                },
+                skip: offset || 0, // offset
+                take: limit || 10, // limit
+                order: {
+                    name: 'ASC',
                 },
             });
         } else {

@@ -10,13 +10,10 @@ import menuRouter from '@modules/menu/infra/http/routes/menu.routes';
 import categoryRoutes from '@modules/product/infra/http/routes/category.routes';
 import productsRoutes from '@modules/product/infra/http/routes/product.routes';
 import waiterRouter from '@modules/waiter/infra/http/routes/waiter.routes';
-
 import tableRouter from '@modules/table/infra/http/routes/table.routes';
 import tableTokensRouter from '@modules/table/infra/http/routes/table.tokens.routes';
 import tableSessionsRouter from '@modules/table/infra/http/routes/table.sessions.routes';
-
 import orderRouter from '@modules/order/infra/http/routes/order.routes';
-
 import appRestaurantRouter from '@modules/establishment/infra/http/routes/app.establishment.routes';
 import appCategoryRouter from '@modules/product/infra/http/routes/app.category.routes';
 import appProductsRouter from '@modules/product/infra/http/routes/app.product.routes';
@@ -27,7 +24,6 @@ const routes = Router();
 /**
  * API Routes
  */
-
 routes.use('/account', accountRouter);
 routes.use('/sessions', sessionsRouter);
 routes.use('/plans', plansRouter);
@@ -38,19 +34,17 @@ routes.use('/menus', menuRouter);
 routes.use('/categories', categoryRoutes);
 routes.use('/products', productsRoutes);
 routes.use('/waiters', waiterRouter);
-
 routes.use('/tables', tableRouter);
 routes.use('/table-tokens', tableTokensRouter);
-
 routes.use('/orders', orderRouter);
 
 /**
  * App Routes
  */
-routes.use('/app/tables', tableSessionsRouter);
 routes.use('/app/establishments', appRestaurantRouter);
-routes.use('/app/categories', appCategoryRouter);
 routes.use('/app/products', appProductsRouter);
+routes.use('/app/categories', appCategoryRouter);
+routes.use('/app/tables', tableSessionsRouter);
 routes.use('/app/orders', appOrderRouter);
 
 export default routes;

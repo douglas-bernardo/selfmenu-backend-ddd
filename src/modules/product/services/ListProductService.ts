@@ -6,7 +6,14 @@ import Product from '../infra/typeorm/entities/Product';
 
 interface IRequest {
     owner_id: string;
-    category_id: number;
+    category_id?: number;
+    offset?: number;
+    limit?: number;
+}
+
+interface IResponse {
+    products: Product[];
+    total: number;
 }
 
 @injectable()
@@ -22,20 +29,39 @@ class ListProductsService {
     public async execute({
         owner_id,
         category_id,
-    }: IRequest): Promise<Product[]> {
+        offset,
+        limit,
+    }: IRequest): Promise<IResponse> {
         await this.cacheProvider.invalidatePrefix('products-list');
+
+        let count = 0;
         let products = await this.cacheProvider.recover<Product[]>(
             `products-list:${owner_id}-${category_id}`,
         );
 
         if (!products) {
-            if (category_id !== 0) {
-                products = await this.productRepository.findAllByCategoryId({
+            if (category_id && category_id !== 0) {
+                count = await this.productRepository.count({
                     owner_id,
                     category_id,
                 });
+
+                products = await this.productRepository.findAllByCategoryId({
+                    owner_id,
+                    category_id,
+                    offset,
+                    limit,
+                });
             } else {
-                products = await this.productRepository.findAll({ owner_id });
+                count = await this.productRepository.count({
+                    owner_id,
+                });
+
+                products = await this.productRepository.findAll({
+                    owner_id,
+                    offset,
+                    limit,
+                });
             }
 
             await this.cacheProvider.save(
@@ -44,7 +70,7 @@ class ListProductsService {
             );
         }
 
-        return products;
+        return { products, total: count };
     }
 }
 

@@ -4,27 +4,26 @@ import IOrderRepository from '../repositories/IOrderRepository';
 
 interface IRequest {
     owner_id: string;
-    table_id?: string;
-    table_token?: string;
+    establishment_id: string;
+    status_order_id?: string;
 }
 
 @injectable()
-class ListOrdersService {
+export class ListOrdersByEstablishmentService {
     constructor(
         @inject('OrderRepository') private orderRepository: IOrderRepository,
     ) {}
 
     public async execute({
-        owner_id,
-        table_id,
-        table_token,
+        establishment_id,
+        status_order_id,
     }: IRequest): Promise<Order[]> {
-        return this.orderRepository.findAll({
-            owner_id,
-            table_id,
-            table_token,
+        const status_ids = status_order_id?.split(',');
+        return this.orderRepository.findAllByEstablishmentId({
+            establishment_id,
+            status_order_id: status_ids,
         });
     }
 }
 
-export default ListOrdersService;
+export default ListOrdersByEstablishmentService;

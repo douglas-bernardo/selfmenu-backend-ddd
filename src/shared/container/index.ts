@@ -12,6 +12,9 @@ import AccountTokenRepository from '@modules/account/infra/typeorm/repositories/
 import IEstablishmentRepository from '@modules/establishment/repositories/IEstablishmentRepository';
 import EstablishmentRepository from '@modules/establishment/infra/typeorm/repositories/EstablishmentRepository';
 
+import IEstablishmentTypeRepository from '@modules/establishment/repositories/IEstablishmentTypeRepository';
+import EstablishmentTypeRepository from '@modules/establishment/infra/typeorm/repositories/EstablishmentTypeRepository';
+
 import IPlanRepository from '@modules/account/repositories/IPlanRepository';
 import PlanRepository from '@modules/account/infra/typeorm/repositories/PlanRepository';
 
@@ -49,6 +52,11 @@ container.registerSingleton<IAccountTokenRepository>(
 container.registerSingleton<IEstablishmentRepository>(
     'EstablishmentRepository',
     EstablishmentRepository,
+);
+
+container.registerSingleton<IEstablishmentTypeRepository>(
+    'EstablishmentTypeRepository',
+    EstablishmentTypeRepository,
 );
 
 container.registerSingleton<IPlanRepository>('PlanRepository', PlanRepository);

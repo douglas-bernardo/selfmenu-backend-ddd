@@ -56,9 +56,12 @@ class EstablishmentRepository implements IEstablishmentRepository {
                 where: {
                     owner_id,
                 },
+                relations: ['establishment_type'],
             });
         } else {
-            establishments = await this.ormRepository.find();
+            establishments = await this.ormRepository.find({
+                relations: ['establishment_type'],
+            });
         }
 
         return establishments;
@@ -70,6 +73,10 @@ class EstablishmentRepository implements IEstablishmentRepository {
         await this.ormRepository.save(establishment);
 
         return establishment;
+    }
+
+    public async save(establishment: Establishment): Promise<Establishment> {
+        return this.ormRepository.save(establishment);
     }
 }
 

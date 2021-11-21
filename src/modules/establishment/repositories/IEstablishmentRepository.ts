@@ -1,14 +1,17 @@
-import ICreateRestaurantDTO from '../dtos/ICreateEstablishmentDTO';
-import IFindAllRestaurantsDTO from '../dtos/IFindAllEstablishmentDTO';
-import IFindByCNPJRestaurantDTO from '../dtos/IFindByCNPJEstablishmentDTO';
-import IFindByIdRestaurantDTO from '../dtos/IFindByIdEstablishmentDTO';
+import { ICreateEstablishmentDTO } from '../dtos/ICreateEstablishmentDTO';
+import { IFindAllEstablishmentsDTO } from '../dtos/IFindAllEstablishmentDTO';
+import { IFindByCNPJEstablishmentDTO } from '../dtos/IFindByCNPJEstablishmentDTO';
+import { IFindByIdEstablishmentDTO } from '../dtos/IFindByIdEstablishmentDTO';
 import Establishment from '../infra/typeorm/entities/Establishment';
 
 export default interface IEstablishmentRepository {
-    findAll(data: IFindAllRestaurantsDTO): Promise<Establishment[]>;
-    findById(data: IFindByIdRestaurantDTO): Promise<Establishment | undefined>;
-    findByCNPJ(
-        data: IFindByCNPJRestaurantDTO,
+    findAll(data: IFindAllEstablishmentsDTO): Promise<Establishment[]>;
+    findById(
+        data: IFindByIdEstablishmentDTO,
     ): Promise<Establishment | undefined>;
-    create(data: ICreateRestaurantDTO): Promise<Establishment>;
+    findByCNPJ(
+        data: IFindByCNPJEstablishmentDTO,
+    ): Promise<Establishment | undefined>;
+    create(data: ICreateEstablishmentDTO): Promise<Establishment>;
+    save(establishment: Establishment): Promise<Establishment>;
 }

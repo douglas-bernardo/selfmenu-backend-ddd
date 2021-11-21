@@ -9,6 +9,7 @@ import {
 } from 'typeorm';
 
 import Account from '@modules/account/infra/typeorm/entities/Account';
+import EstablishmentType from './EstablishmentType';
 
 @Entity('establishment')
 class Establishment {
@@ -36,6 +37,10 @@ class Establishment {
 
     @Column()
     description: string;
+
+    @ManyToOne(() => EstablishmentType)
+    @JoinColumn({ name: 'establishment_type_id' })
+    establishment_type: EstablishmentType;
 
     @Column()
     establishment_type_id: number;

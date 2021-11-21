@@ -14,6 +14,7 @@ import {
 } from 'typeorm';
 
 import { Expose } from 'class-transformer';
+import StatusTable from './StatusTable';
 
 @Entity('table')
 class Table {
@@ -58,7 +59,14 @@ class Table {
     orders: Order[];
 
     @Column()
-    available: boolean;
+    active: boolean;
+
+    @ManyToOne(() => StatusTable)
+    @JoinColumn({ name: 'status_table_id' })
+    status_table: StatusTable;
+
+    @Column()
+    status_table_id: number;
 
     @CreateDateColumn()
     created_at: Date;

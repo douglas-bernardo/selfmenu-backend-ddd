@@ -6,7 +6,7 @@ import IMailProvider from '../models/IMailProvider';
 
 @injectable()
 class EtherealMailProvider implements IMailProvider {
-    private cliente: Transporter;
+    private client: Transporter;
 
     constructor(
         @inject('MailTemplateProvider')
@@ -23,7 +23,7 @@ class EtherealMailProvider implements IMailProvider {
                 },
             });
 
-            this.cliente = transporter;
+            this.client = transporter;
         });
     }
 
@@ -33,7 +33,7 @@ class EtherealMailProvider implements IMailProvider {
         subject,
         templateData,
     }: ISendMailDTO): Promise<void> {
-        const message = await this.cliente.sendMail({
+        const message = await this.client.sendMail({
             from: {
                 name:
                     from?.name ||

@@ -8,7 +8,7 @@ import Category from '../infra/typeorm/entities/Category';
 
 interface IRequest {
     owner_id: string;
-    category_id: string;
+    category_id: number;
     imageCoverFilename: string;
 }
 
@@ -49,7 +49,7 @@ class UpdateCategoryImageCoverService {
         }
 
         if (category.image_cover) {
-            await this.storageProvider.deleteFile(account.avatar);
+            await this.storageProvider.deleteFile(category.image_cover);
         }
 
         const filename = await this.storageProvider.saveFile(

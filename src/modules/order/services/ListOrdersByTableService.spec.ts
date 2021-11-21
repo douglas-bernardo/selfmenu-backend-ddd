@@ -6,7 +6,7 @@ import FakeProductRepository from '@modules/product/repositories/fakes/FakeProdu
 import FakePlanRepository from '@modules/account/repositories/fakes/FakePlanRepository';
 import UpdateTableTokenService from '@modules/table/services/UpdateTableTokenService';
 import FakeOrderRepository from '../repositories/fakes/FakeOrderRepository';
-import ListOrdersService from './ListOrdersService';
+import ListOrdersService from './ListOrdersByTableService';
 
 let fakePlanRepository: FakePlanRepository;
 let fakeAccountsRepository: FakeAccountsRepository;
@@ -99,7 +99,7 @@ describe('ListOrders', () => {
             table_token: token,
             establishment,
             table,
-            costumer_name: 'fulano',
+            customer_name: 'fulano',
             waiter,
             status_order_id: 1,
             owner: account,
@@ -116,7 +116,7 @@ describe('ListOrders', () => {
             table_token: token,
             establishment,
             table,
-            costumer_name: 'fulano',
+            customer_name: 'fulano',
             waiter,
             status_order_id: 1,
             owner: account,

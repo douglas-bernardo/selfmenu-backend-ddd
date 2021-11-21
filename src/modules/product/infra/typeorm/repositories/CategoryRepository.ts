@@ -18,12 +18,18 @@ class CategoryRepository implements ICategoryRepository {
         id,
         owner_id,
     }: IFindByIdCategoryDTO): Promise<Category | undefined> {
-        const findCategory = await this.ormRepository.findOne({
-            where: {
-                id,
-                owner_id,
-            },
-        });
+        let findCategory: Category | undefined;
+
+        if (owner_id) {
+            findCategory = await this.ormRepository.findOne({
+                where: {
+                    id,
+                    owner_id,
+                },
+            });
+        } else {
+            findCategory = await this.ormRepository.findOne(id);
+        }
 
         return findCategory;
     }
@@ -48,6 +54,9 @@ class CategoryRepository implements ICategoryRepository {
         const categories = await this.ormRepository.find({
             where: {
                 owner_id,
+            },
+            order: {
+                name: 'ASC',
             },
         });
 
