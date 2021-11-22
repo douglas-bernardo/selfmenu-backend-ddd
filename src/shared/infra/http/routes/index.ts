@@ -18,6 +18,7 @@ import appRestaurantRouter from '@modules/establishment/infra/http/routes/app.es
 import appCategoryRouter from '@modules/product/infra/http/routes/app.category.routes';
 import appProductsRouter from '@modules/product/infra/http/routes/app.product.routes';
 import appOrderRouter from '@modules/order/infra/http/routes/app.order.routes';
+import notificationRouter from '@modules/notifications/infra/http/routes/notifications.routes';
 
 const routes = Router();
 
@@ -37,6 +38,7 @@ routes.use('/waiters', waiterRouter);
 routes.use('/tables', tableRouter);
 routes.use('/table-tokens', tableTokensRouter);
 routes.use('/orders', orderRouter);
+routes.use('/notifications', notificationRouter);
 
 /**
  * App Routes

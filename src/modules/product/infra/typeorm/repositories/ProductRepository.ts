@@ -83,6 +83,7 @@ class ProductRepository implements IProductRepository {
                 order: {
                     name: 'ASC',
                 },
+                relations: ['category'],
             });
         } else {
             products = await this.ormRepository.find();

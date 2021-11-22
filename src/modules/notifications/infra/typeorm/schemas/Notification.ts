@@ -5,6 +5,7 @@ import {
     CreateDateColumn,
     UpdateDateColumn,
     ObjectIdColumn,
+    BeforeInsert,
 } from 'typeorm';
 
 @Entity('notifications')
@@ -18,8 +19,16 @@ class Notification {
     @Column('uuid')
     recipient_id: string;
 
+    @Column('uuid')
+    establishment_id: string;
+
     @Column({ default: false })
     read: boolean;
+
+    @BeforeInsert()
+    beforeInsertActions() {
+        this.read = false;
+    }
 
     @CreateDateColumn()
     created_at: Date;
