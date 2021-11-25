@@ -5,6 +5,7 @@ import CreateTableService from '@modules/table/services/CreateTableService';
 import ListTablesServices from '@modules/table/services/ListTablesService';
 import ShowTableService from '@modules/table/services/ShowTableService';
 import { classToClass } from 'class-transformer';
+import UpdateStatusTableService from '@modules/table/services/UpdateStatusTableService';
 
 export default class TableController {
     public async index(
@@ -43,5 +44,27 @@ export default class TableController {
 
         const table = await showTable.execute({ table_id: id });
         return response.json(table);
+    }
+
+    public async update(
+        request: Request,
+        response: Response,
+    ): Promise<Response> {
+        const account_id = request.account.id;
+
+        const { id } = request.params;
+        const { status_table_id } = request.body;
+
+        const updateStatusTableService = container.resolve(
+            UpdateStatusTableService,
+        );
+
+        await updateStatusTableService.execute({
+            owner_id: account_id,
+            table_id: id,
+            status_table_id,
+        });
+
+        return response.status(204).json();
     }
 }

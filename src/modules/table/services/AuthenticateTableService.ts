@@ -13,6 +13,7 @@ interface IResponse {
     table_id: string;
     table_token: string;
     table_number: number;
+    status_table_id: number;
     establishment_name: string;
     establishment_id: string;
     owner_id: string;
@@ -61,6 +62,7 @@ class AuthenticateTableService {
             table_id: table.id,
             table_number: table.number,
             table_token: table.token,
+            status_table_id: table.status_table_id,
             waiter: waiter.name,
             establishment_name: establishment.name,
             establishment_id: establishment.id,

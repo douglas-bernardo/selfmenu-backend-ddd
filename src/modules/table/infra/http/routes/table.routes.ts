@@ -25,4 +25,14 @@ tableRouter.get('/', tableController.index);
 
 tableRouter.get('/:id', tableController.show);
 
+tableRouter.patch(
+    '/:id',
+    celebrate({
+        [Segments.BODY]: {
+            status_table_id: Joi.number().required(),
+        },
+    }),
+    tableController.update,
+);
+
 export default tableRouter;

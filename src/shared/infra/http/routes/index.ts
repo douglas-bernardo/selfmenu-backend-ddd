@@ -11,6 +11,7 @@ import categoryRoutes from '@modules/product/infra/http/routes/category.routes';
 import productsRoutes from '@modules/product/infra/http/routes/product.routes';
 import waiterRouter from '@modules/waiter/infra/http/routes/waiter.routes';
 import tableRouter from '@modules/table/infra/http/routes/table.routes';
+import appTableRouter from '@modules/table/infra/http/routes/app.table.routes';
 import tableTokensRouter from '@modules/table/infra/http/routes/table.tokens.routes';
 import tableSessionsRouter from '@modules/table/infra/http/routes/table.sessions.routes';
 import orderRouter from '@modules/order/infra/http/routes/order.routes';
@@ -46,7 +47,8 @@ routes.use('/notifications', notificationRouter);
 routes.use('/app/establishments', appRestaurantRouter);
 routes.use('/app/products', appProductsRouter);
 routes.use('/app/categories', appCategoryRouter);
-routes.use('/app/tables', tableSessionsRouter);
+routes.use('/app/sessions/tables', tableSessionsRouter);
+routes.use('/app/tables', appTableRouter);
 routes.use('/app/orders', appOrderRouter);
 
 export default routes;

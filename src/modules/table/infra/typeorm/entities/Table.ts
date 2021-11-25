@@ -76,7 +76,7 @@ class Table {
 
     @Expose({ name: 'url_authenticate' })
     getUrlAuthenticate(): string {
-        return `${process.env.APP_API_URL}/app/tables/${this.id}`;
+        return `${process.env.APP_API_URL}/app/sessions/tables/${this.id}`;
     }
 }
 
