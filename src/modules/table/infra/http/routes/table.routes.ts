@@ -3,9 +3,11 @@ import { celebrate, Segments, Joi } from 'celebrate';
 
 import ensureAuthenticated from '@modules/account/infra/http/middlewares/ensureAuthenticated';
 import TableController from '../controllers/TableController';
+import CloseTableController from '../controllers/CloseTableController';
 
 const tableRouter = Router();
 const tableController = new TableController();
+const closeTableController = new CloseTableController();
 
 tableRouter.use(ensureAuthenticated);
 
@@ -34,5 +36,7 @@ tableRouter.patch(
     }),
     tableController.update,
 );
+
+tableRouter.patch('/:id/close', closeTableController.update);
 
 export default tableRouter;

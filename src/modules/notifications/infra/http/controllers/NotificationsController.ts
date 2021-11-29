@@ -12,7 +12,6 @@ export default class NotificationsController {
             ListNotificationsService,
         );
 
-        console.log('owner_id', owner_id);
         const notifications = await listNotificationsService.execute({
             owner_id,
         });

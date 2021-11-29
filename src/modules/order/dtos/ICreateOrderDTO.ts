@@ -1,6 +1,6 @@
 import Account from '@modules/account/infra/typeorm/entities/Account';
 import Establishment from '@modules/establishment/infra/typeorm/entities/Establishment';
-import Table from '@modules/table/infra/typeorm/entities/Table';
+// import Table from '@modules/table/infra/typeorm/entities/Table';
 import Waiter from '@modules/waiter/infra/typeorm/entities/Waiter';
 
 interface IProduct {
@@ -16,7 +16,7 @@ export default interface ICreateOrderDTO {
     status_order_id: number;
     establishment: Establishment;
     waiter: Waiter;
-    table: Table;
+    table_id: string;
     owner: Account;
     products: IProduct[];
 }

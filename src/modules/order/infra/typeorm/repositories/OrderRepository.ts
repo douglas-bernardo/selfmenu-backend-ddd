@@ -75,7 +75,7 @@ class OrdersRepository implements IOrderRepository {
         status_order_id,
         products,
         establishment,
-        table,
+        table_id,
         waiter,
         owner,
     }: ICreateOrderDTO): Promise<Order> {
@@ -85,7 +85,7 @@ class OrdersRepository implements IOrderRepository {
             status_order_id,
             establishment,
             waiter,
-            table,
+            table_id,
             owner,
             order_products: products,
         });

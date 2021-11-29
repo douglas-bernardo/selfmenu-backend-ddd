@@ -1,4 +1,5 @@
 import { injectable, inject } from 'tsyringe';
+import Notification from '../infra/typeorm/schemas/Notification';
 import INotificationsRepository from '../repositories/INotificationsRepository';
 
 interface IRequest {

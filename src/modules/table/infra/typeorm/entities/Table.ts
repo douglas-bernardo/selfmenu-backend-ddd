@@ -21,8 +21,11 @@ class Table {
     @PrimaryGeneratedColumn('uuid')
     id: string;
 
-    @Column()
-    token: string;
+    @Column({
+        type: String,
+        nullable: true,
+    })
+    token!: string | null;
 
     @Column()
     number: number;
@@ -53,8 +56,8 @@ class Table {
 
     @OneToMany(() => Order, order => order.table)
     @JoinColumn([
-        { name: 'table_id', referencedColumnName: 'id' },
-        { name: 'token', referencedColumnName: 'token' },
+        // { name: 'table_id', referencedColumnName: 'id' },
+        { name: 'table_token', referencedColumnName: 'token' },
     ])
     orders: Order[];
 

@@ -23,7 +23,7 @@ class Order {
     @Column()
     table_token: string;
 
-    @ManyToOne(() => StatusOrder)
+    @ManyToOne(() => StatusOrder, { eager: true })
     @JoinColumn({ name: 'status_order_id' })
     status_order: StatusOrder;
 
@@ -50,8 +50,8 @@ class Order {
 
     @ManyToOne(() => Table)
     @JoinColumn([
-        { name: 'table_id', referencedColumnName: 'id' },
-        // { name: 'table_token', referencedColumnName: 'token' },
+        // { name: 'table_id', referencedColumnName: 'id' },
+        { name: 'table_token', referencedColumnName: 'token' },
     ])
     table: Table;
 

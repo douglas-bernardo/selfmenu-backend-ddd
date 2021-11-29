@@ -142,7 +142,7 @@ class CreateOrderService {
             status_order_id: 1,
             establishment: establishmentExist,
             owner: account,
-            table,
+            table_id: table.id,
             waiter: waiterExist,
             products: serializeProducts,
         });
