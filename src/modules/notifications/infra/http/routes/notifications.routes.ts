@@ -10,5 +10,6 @@ const notificationsController = new NotificationsController();
 notificationRouter.use(ensureAuthenticated);
 
 notificationRouter.get('/', notificationsController.index);
+notificationRouter.patch('/:id', notificationsController.update);
 
 export default notificationRouter;

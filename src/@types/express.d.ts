@@ -4,5 +4,8 @@ declare namespace Express {
         account: {
             id: string;
         };
+        socketConnectInfo: {
+            client_id?: string;
+        };
     }
 }

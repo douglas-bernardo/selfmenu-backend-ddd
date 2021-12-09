@@ -7,7 +7,7 @@ import IEstablishmentRepository from '@modules/establishment/repositories/IEstab
 import IWaiterRepository from '@modules/waiter/repositories/IWaiterRepository';
 import ITableRepository from '@modules/table/repositories/ITableRepository';
 import IAccountsRepository from '@modules/account/repositories/IAccountRepository';
-import INotificationsRepository from '@modules/notifications/repositories/INotificationsRepository';
+import { INotificationsRepository } from '@modules/notifications/repositories/INotificationsRepository';
 import IOrderRepository from '../repositories/IOrderRepository';
 import Order from '../infra/typeorm/entities/Order';
 
@@ -158,11 +158,13 @@ class CreateOrderService {
 
         await this.productRepository.updateQuantity(orderedProductsQuantity);
 
-        await this.notificationsRepository.create({
+        const infoToNotify = {
             content: `Novo pedido realizado em ${establishmentExist.name} | mesa: ${table.number}`,
             recipient_id: account.id,
             establishment_id: establishmentExist.id,
-        });
+        };
+
+        await this.notificationsRepository.create(infoToNotify);
 
         return order;
     }

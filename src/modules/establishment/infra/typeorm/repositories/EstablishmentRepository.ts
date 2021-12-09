@@ -1,11 +1,11 @@
 import { getRepository, Repository } from 'typeorm';
 
-import ICreateEstablishmentDTO from '@modules/establishment/dtos/ICreateEstablishmentDTO';
+import { ICreateEstablishmentDTO } from '@modules/establishment/dtos/ICreateEstablishmentDTO';
 import Establishment from '@modules/establishment/infra/typeorm/entities/Establishment';
 import IEstablishmentRepository from '@modules/establishment/repositories/IEstablishmentRepository';
-import IFindAllEstablishmentsDTO from '@modules/establishment/dtos/IFindAllEstablishmentDTO';
-import IFindByIdEstablishmentDTO from '@modules/establishment/dtos/IFindByIdEstablishmentDTO';
-import IFindByCNPJEstablishmentDTO from '@modules/establishment/dtos/IFindByCNPJEstablishmentDTO';
+import { IFindAllEstablishmentsDTO } from '@modules/establishment/dtos/IFindAllEstablishmentDTO';
+import { IFindByIdEstablishmentDTO } from '@modules/establishment/dtos/IFindByIdEstablishmentDTO';
+import { IFindByCNPJEstablishmentDTO } from '@modules/establishment/dtos/IFindByCNPJEstablishmentDTO';
 
 class EstablishmentRepository implements IEstablishmentRepository {
     private ormRepository: Repository<Establishment>;
